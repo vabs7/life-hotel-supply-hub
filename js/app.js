@@ -81,7 +81,13 @@ async function deleteFirebaseDoc(collectionName, docId) {
 }
 
 function saveDataStore() {
-    // Live Firebase handles data sync
+    try {
+        localStorage.setItem('lhs_users', JSON.stringify(appData.users));
+        localStorage.setItem('lhs_attendance', JSON.stringify(appData.attendance));
+        localStorage.setItem('lhs_salary_history', JSON.stringify(appData.salary_history));
+    } catch (e) {
+        console.warn('LocalStorage save error:', e);
+    }
 }
 
 // Clock & Time Helper
@@ -123,19 +129,40 @@ function getTodayString() {
 
 function getDateTimeString() {
     const now = new Date();
-    const today = getTodayString();
-    const time = now.toLocaleTimeString('en-GB', { timeZone: 'America/Chicago' });
-    return `${today} ${time}`;
+    const datePart = getTodayString();
+    const timePart = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: false });
+    return `${datePart} ${timePart}`;
 }
 
-// Auth Management
+function formatDate(dateStr) {
+    if (!dateStr) return '-';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    const dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    return dateObj.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function formatTime(dateTimeStr) {
+    if (!dateTimeStr) return '-';
+    const parts = dateTimeStr.split(' ');
+    if (parts.length < 2) return dateTimeStr;
+    const timeParts = parts[1].split(':');
+    let hours = parseInt(timeParts[0]);
+    const minutes = timeParts[1];
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    return `${hours}:${minutes} ${ampm}`;
+}
+
+// Authentication Logic
 function checkAuthSession() {
-    const savedUser = localStorage.getItem('lhs_current_user');
+    const savedUser = sessionStorage.getItem('lhs_current_user');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         onUserAuthenticated();
     } else {
-        document.getElementById('authOverlay').style.display = 'flex';
+        showLoginOverlay();
     }
 }
 
@@ -147,7 +174,7 @@ function fillPassword(val) {
 
 function handleLogin(e) {
     e.preventDefault();
-    const inputVal = document.getElementById('loginUsername').value.trim().toLowerCase();
+    const usernameInput = document.getElementById('loginUsername').value.trim().toLowerCase();
     const passwordInput = document.getElementById('loginPassword').value.trim();
     const errEl = document.getElementById('loginError');
 
@@ -259,7 +286,7 @@ function switchView(viewName) {
 
     // Render view contents
     if (viewName === 'dashboard') renderDashboard();
-    if (viewName === 'myAttendance') renderMyAttendance();
+    if (viewName === 'myAttendance') renderMyAttendance(true);
     if (viewName === 'teamAttendance') renderTeamAttendance();
     if (viewName === 'employees') renderEmployeesRoster();
     if (viewName === 'salaryPayroll') renderSalaryPayroll();
@@ -393,12 +420,14 @@ function toggleClockAction() {
         };
         appData.attendance.unshift(newRecord);
         saveDataStore();
+        saveFirebaseDoc('attendance', newRecord.id, newRecord);
         alert('Clocked In Successfully!');
     } else if (todayRecord && !todayRecord.logout_time) {
         // Clock Out
         todayRecord.logout_time = nowStr;
         if (remarks) todayRecord.remarks = (todayRecord.remarks ? todayRecord.remarks + ' | ' : '') + remarks;
         saveDataStore();
+        saveFirebaseDoc('attendance', todayRecord.id, todayRecord);
         alert('Clocked Out Successfully!');
     } else {
         alert('You have already clocked in and out for today.');
@@ -409,10 +438,27 @@ function toggleClockAction() {
 }
 
 // VIEW 2: MY ATTENDANCE HISTORY
-function renderMyAttendance() {
+function renderMyAttendance(autoSelectLatest = false) {
     if (!currentUser) return;
-    const month = parseInt(document.getElementById('myMonthFilter').value);
-    const year = parseInt(document.getElementById('myYearFilter').value);
+
+    const monthEl = document.getElementById('myMonthFilter');
+    const yearEl = document.getElementById('myYearFilter');
+
+    if (autoSelectLatest) {
+        const myUserRecords = appData.attendance.filter(a => String(a.user_id) === String(currentUser.id))
+            .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        if (myUserRecords.length > 0) {
+            const parts = myUserRecords[0].date.split('-');
+            if (parts.length === 3) {
+                yearEl.value = parts[0];
+                monthEl.value = String(parseInt(parts[1]));
+            }
+        }
+    }
+
+    const month = parseInt(monthEl.value);
+    const year = parseInt(yearEl.value);
 
     const records = appData.attendance.filter(a => {
         if (String(a.user_id) !== String(currentUser.id)) return false;
