@@ -493,9 +493,8 @@ function renderTeamAttendance() {
     const month = parseInt(document.getElementById('teamMonthFilter').value);
     const year = parseInt(document.getElementById('teamYearFilter').value);
 
-    // HR should not see herself in team logs
+    // Build allowed users list
     let allowedUsers = appData.users.filter(u => String(u.id) !== String(currentUser.id));
-
     if (!showExEmployeesGlobal) {
         allowedUsers = allowedUsers.filter(u => !u.offboard_date);
     }
@@ -503,36 +502,68 @@ function renderTeamAttendance() {
         allowedUsers = allowedUsers.filter(u => u.username !== 'kedar_is');
     }
 
-    const select = document.getElementById('teamUserFilter');
-    if (select) {
-        const label = showExEmployeesGlobal ? 'All Team (Including Ex-Employees)' : 'All Active Employees';
-        select.innerHTML = `<option value="ALL">${label}</option>` + allowedUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)} ${u.offboard_date ? '(Ex)' : ''}</option>`).join('');
+    // Render Summary Panel
+    document.getElementById('teamSummaryPanel').style.display = 'block';
+    document.getElementById('teamDetailPanel').style.display = 'none';
+
+    const monthName = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
+    const summaryTbody = document.getElementById('teamSummaryTableBody');
+
+    if (allowedUsers.length === 0) {
+        summaryTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No employees found.</td></tr>`;
+        return;
     }
 
-    const selectedUserId = select ? select.value : 'ALL';
-    const allowedUserIds = allowedUsers.map(u => String(u.id));
+    summaryTbody.innerHTML = allowedUsers.map(u => {
+        const userRecords = appData.attendance.filter(a => {
+            if (String(a.user_id) !== String(u.id)) return false;
+            const d = new Date(a.date);
+            return (d.getMonth() + 1) === month && d.getFullYear() === year;
+        });
+        const present = userRecords.filter(a => a.status === 'Present').length;
+        const absent = userRecords.filter(a => a.status === 'Absent').length;
+        const halfDay = userRecords.filter(a => a.status === 'Half Day').length;
+        const total = userRecords.length;
+        const exTag = u.offboard_date ? '<span style="color:#ef4444; font-size:0.75rem; margin-left:4px;">(Ex)</span>' : '';
+
+        return `
+            <tr style="cursor:pointer;" onclick="drillDownEmployee('${u.id}', '${escapeHtml(u.display_name)}')">
+                <td><strong style="color:var(--primary);">${escapeHtml(u.display_name)}</strong>${exTag}</td>
+                <td><span class="badge badge-present">${present} P</span></td>
+                <td><span class="badge badge-absent">${absent} A</span></td>
+                <td><span class="badge badge-halfday">${halfDay} H</span></td>
+                <td style="color:var(--text-muted);">${total} days</td>
+            </tr>
+        `;
+    }).join('');
+}
+
+function drillDownEmployee(userId, displayName) {
+    const month = parseInt(document.getElementById('teamMonthFilter').value);
+    const year = parseInt(document.getElementById('teamYearFilter').value);
+    const monthName = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
+
+    document.getElementById('teamSummaryPanel').style.display = 'none';
+    document.getElementById('teamDetailPanel').style.display = 'block';
+    document.getElementById('teamDetailTitle').textContent = `${displayName} — ${monthName} ${year}`;
 
     const records = appData.attendance.filter(a => {
-        if (!allowedUserIds.includes(String(a.user_id))) return false;
-        if (selectedUserId !== 'ALL' && String(a.user_id) !== String(selectedUserId)) return false;
+        if (String(a.user_id) !== String(userId)) return false;
         const d = new Date(a.date);
         return (d.getMonth() + 1) === month && d.getFullYear() === year;
     }).sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const tbody = document.getElementById('teamAttendanceTableBody');
     if (records.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No team attendance records found for this selection.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No records found for this month.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = records.map(r => {
-        const user = appData.users.find(u => String(u.id) === String(r.user_id));
         const badgeClass = r.status === 'Present' ? 'badge-present' : (r.status === 'Absent' ? 'badge-absent' : 'badge-halfday');
-
         return `
             <tr>
-                <td><strong>${escapeHtml(user ? user.display_name : `User ${r.user_id}`)}</strong> ${user && user.offboard_date ? '<span style="color:#ef4444; font-size:0.75rem;">(Ex)</span>' : ''}</td>
-                <td>${formatDate(r.date)}</td>
+                <td><strong>${formatDate(r.date)}</strong></td>
                 <td>${formatTime(r.login_time)}</td>
                 <td>${formatTime(r.logout_time)}</td>
                 <td><span class="badge ${badgeClass}">${r.status}</span></td>
@@ -544,6 +575,11 @@ function renderTeamAttendance() {
             </tr>
         `;
     }).join('');
+}
+
+function backToTeamSummary() {
+    document.getElementById('teamSummaryPanel').style.display = 'block';
+    document.getElementById('teamDetailPanel').style.display = 'none';
 }
 
 function renderEmployeesRoster() {

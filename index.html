@@ -238,11 +238,8 @@
         <section id="view-teamAttendance" class="view-section">
           <div class="table-container">
             <div class="table-header-bar">
-              <h3 class="table-title">All Employee Attendance Logs</h3>
+              <h3 class="table-title">Team Monthly Summary</h3>
               <div class="filter-bar">
-                <select id="teamUserFilter" class="form-select" onchange="renderTeamAttendance()">
-                  <option value="all">All Active Employees</option>
-                </select>
                 <select id="teamMonthFilter" class="form-select" onchange="renderTeamAttendance()">
                   <option value="1">January</option>
                   <option value="2">February</option>
@@ -265,22 +262,49 @@
                 <button class="btn btn-primary btn-sm" onclick="openAddAttendanceModal()">+ Add Record</button>
               </div>
             </div>
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Employee</th>
-                  <th>Clock In</th>
-                  <th>Clock Out</th>
-                  <th>Status</th>
-                  <th>Notes</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="teamAttendanceTableBody">
-                <!-- Dynamically Rendered -->
-              </tbody>
-            </table>
+
+            <!-- SUMMARY TABLE (default view) -->
+            <div id="teamSummaryPanel">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Employee</th>
+                    <th>Present</th>
+                    <th>Absent</th>
+                    <th>Half Day</th>
+                    <th>Total Days</th>
+                  </tr>
+                </thead>
+                <tbody id="teamSummaryTableBody">
+                  <!-- Dynamically Rendered -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- DETAIL TABLE (shown when an employee is selected) -->
+            <div id="teamDetailPanel" style="display:none;">
+              <div class="table-header-bar" style="margin-bottom: 1rem;">
+                <button class="btn btn-secondary btn-sm" onclick="backToTeamSummary()">← Back to Summary</button>
+                <h4 id="teamDetailTitle" style="margin: 0; font-size: 1rem;"></h4>
+                <select id="teamUserFilter" class="form-select" style="display:none;"></select>
+              </div>
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Clock In</th>
+                    <th>Clock Out</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="teamAttendanceTableBody">
+                  <!-- Dynamically Rendered -->
+                </tbody>
+              </table>
+            </div>
+
           </div>
         </section>
 
