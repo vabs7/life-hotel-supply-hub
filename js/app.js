@@ -183,7 +183,7 @@ function handleLogin(e) {
         errEl.textContent = '';
     }
 
-    if (!inputVal) {
+    if (!usernameInput) {
         if (errEl) {
             errEl.textContent = 'Please enter your email or username.';
             errEl.style.display = 'block';
@@ -191,9 +191,9 @@ function handleLogin(e) {
         return;
     }
 
-    const user = appData.users.find(u => 
-        (u.username && u.username.toLowerCase() === inputVal) || 
-        (u.email && u.email.toLowerCase() === inputVal)
+    const user = appData.users.find(u =>
+        (u.username && u.username.toLowerCase() === usernameInput) ||
+        (u.email && u.email.toLowerCase() === usernameInput)
     );
 
     if (!user) {
