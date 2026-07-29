@@ -33,49 +33,129 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// Initialize Data Store directly from live Firebase Cloud Firestore
+// Initialize Data Store — reads from localStorage cache first, Firestore only when cache is stale
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
 async function initDataStore() {
+    // Check localStorage cache freshness
+    const cacheTs = parseInt(localStorage.getItem('lhs_cache_ts') || '0');
+    const cacheAge = Date.now() - cacheTs;
+    const isCacheFresh = cacheAge < CACHE_TTL_MS;
+
+    const cachedUsers = localStorage.getItem('lhs_users');
+    const cachedAtt = localStorage.getItem('lhs_attendance');
+    const cachedSal = localStorage.getItem('lhs_salary_history');
+
+    if (isCacheFresh && cachedUsers && cachedAtt) {
+        // Serve from localStorage — zero Firestore reads
+        try {
+            appData.users = JSON.parse(cachedUsers) || [];
+            appData.attendance = JSON.parse(cachedAtt) || [];
+            appData.salary_history = JSON.parse(cachedSal) || [];
+            console.log(`Data loaded from cache (${Math.round(cacheAge / 60000)}m old). Skipped Firestore reads.`);
+            return;
+        } catch (e) {
+            console.warn('Cache parse error, falling back to Firestore:', e);
+        }
+    }
+
+    // Cache stale or missing — fetch from Firestore
+    console.log('Cache stale or missing — fetching from Firestore...');
     try {
         if (typeof firebaseDb !== 'undefined' && firebaseDb) {
-            // 3.5s timeout race so slow Firebase network calls fallback gracefully without hanging UI
-            const timeoutPromise = new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Firebase fetch timeout')), 3500)
+            const timeoutPromise = new Promise((_, reject) =>
+                setTimeout(() => reject(new Error('Firebase fetch timeout')), 5000)
             );
 
-            const fetchPromise = Promise.all([
-                firebaseDb.collection('users').get(),
-                firebaseDb.collection('attendance').get(),
-                firebaseDb.collection('salary_history').get()
-            ]);
+            let attQuery = null;
+            let salQuery = null;
 
-            const [usersSnap, attSnap, salSnap] = await Promise.race([fetchPromise, timeoutPromise]);
+            if (currentUser) {
+                const isAdmin = currentUser.username === 'kedar_is' || currentUser.email === 'lifehotelsupply@gmail.com';
+                if (currentUser.role === 'Employee' && !isAdmin) {
+                    // Regular employees only fetch their own records
+                    attQuery = firebaseDb.collection('attendance').where('user_id', '==', String(currentUser.id)).get();
+                    salQuery = firebaseDb.collection('salary_history').where('user_id', '==', String(currentUser.id)).get();
+                } else {
+                    // HR and Admin fetch all records
+                    attQuery = firebaseDb.collection('attendance').get();
+                    salQuery = firebaseDb.collection('salary_history').get();
+                }
+            }
 
-            if (!usersSnap.empty) {
-                appData.users = usersSnap.docs.map(doc => doc.data());
+            let queries = [];
+            if (currentUser) {
+                queries.push(firebaseDb.collection('users').get());
+                if (attQuery) queries.push(attQuery);
+                if (salQuery) queries.push(salQuery);
             }
-            if (!attSnap.empty) {
-                appData.attendance = attSnap.docs.map(doc => doc.data());
+
+            if (queries.length === 0) {
+                console.log('No user logged in. Skipping all Firebase reads.');
+                return;
             }
-            if (!salSnap.empty) {
-                appData.salary_history = salSnap.docs.map(doc => doc.data());
-            }
+
+            const fetchPromise = Promise.all(queries);
+
+            const results = await Promise.race([fetchPromise, timeoutPromise]);
+
+            const usersSnap = results[0];
+            const attSnap = attQuery ? results[1] : null;
+            const salSnap = salQuery ? results[2] : null;
+
+            if (usersSnap && !usersSnap.empty) appData.users = usersSnap.docs.map(doc => doc.data());
+            if (attSnap && !attSnap.empty) appData.attendance = attSnap.docs.map(doc => doc.data());
+            else if (!attSnap) appData.attendance = [];
+            
+            if (salSnap && !salSnap.empty) appData.salary_history = salSnap.docs.map(doc => doc.data());
+            else if (!salSnap) appData.salary_history = [];
+
+            // Persist to localStorage and stamp the cache
+            saveDataStore();
+            console.log(`Firestore fetch complete (${appData.users.length} users, ${appData.attendance.length} attendance, ${appData.salary_history.length} salary). Cache updated.`);
+            return;
         }
     } catch (err) {
-        console.warn('Data Store initialization note (falling back to local storage/JSON if needed):', err);
-    }
-
-    // Fallback load if Firebase network is slow or offline
-    if (!appData.users || appData.users.length === 0) {
-        try {
-            const res = await fetch('migrated_data.json');
-            const initialData = await res.json();
-            appData.users = initialData.users || [];
-            appData.attendance = initialData.attendance || [];
-            appData.salary_history = initialData.salary_history || [];
-        } catch (e) {
-            console.error('Fallback JSON fetch error:', e);
+        console.warn('Firestore fetch failed, using local cache if available:', err);
+        // Use whatever stale cache we have rather than showing nothing
+        if (cachedUsers) {
+            try {
+                appData.users = JSON.parse(cachedUsers) || [];
+                appData.attendance = JSON.parse(cachedAtt) || [];
+                appData.salary_history = JSON.parse(cachedSal) || [];
+                return;
+            } catch (e) {}
         }
     }
+
+    // Last resort: seed from bundled JSON
+    try {
+        const res = await fetch('migrated_data.json');
+        const initialData = await res.json();
+        appData.users = initialData.users || [];
+        appData.attendance = initialData.attendance || [];
+        appData.salary_history = initialData.salary_history || [];
+        saveDataStore();
+    } catch (e) {
+        console.error('All data sources failed:', e);
+    }
+}
+
+function saveDataStore() {
+    try {
+        localStorage.setItem('lhs_users', JSON.stringify(appData.users));
+        localStorage.setItem('lhs_attendance', JSON.stringify(appData.attendance));
+        localStorage.setItem('lhs_salary_history', JSON.stringify(appData.salary_history));
+        localStorage.setItem('lhs_cache_ts', String(Date.now())); // stamp cache
+    } catch (e) {
+        console.warn('LocalStorage save error:', e);
+    }
+}
+
+// Force a fresh Firestore sync (call after significant remote changes)
+async function forceRefreshFromFirestore() {
+    localStorage.removeItem('lhs_cache_ts'); // invalidate cache
+    await initDataStore();
 }
 
 // Save document directly to Firebase Cloud Firestore
@@ -204,7 +284,7 @@ function fillPassword(val) {
     }
 }
 
-function handleLogin(e) {
+async function handleLogin(e) {
     e.preventDefault();
     const usernameInput = document.getElementById('loginUsername').value.trim().toLowerCase();
     const passwordInput = document.getElementById('loginPassword').value.trim();
@@ -223,15 +303,44 @@ function handleLogin(e) {
         return;
     }
 
-    const user = appData.users.find(u =>
-        (u.username && u.username.toLowerCase() === usernameInput) ||
-        (u.email && u.email.toLowerCase() === usernameInput)
-    );
+    let user = null;
+    const btn = document.querySelector('#authOverlay button');
+    if (btn) {
+        btn.textContent = 'Authenticating...';
+        btn.disabled = true;
+    }
+
+    if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+        try {
+            let snap = await firebaseDb.collection('users').where('username', '==', usernameInput).get();
+            if (snap.empty) {
+                snap = await firebaseDb.collection('users').where('email', '==', usernameInput).get();
+            }
+            if (!snap.empty) {
+                user = snap.docs[0].data();
+            }
+        } catch (e) {
+            console.error('Firestore login query failed:', e);
+            user = appData.users.find(u =>
+                (u.username && u.username.toLowerCase() === usernameInput) ||
+                (u.email && u.email.toLowerCase() === usernameInput)
+            );
+        }
+    } else {
+        user = appData.users.find(u =>
+            (u.username && u.username.toLowerCase() === usernameInput) ||
+            (u.email && u.email.toLowerCase() === usernameInput)
+        );
+    }
 
     if (!user) {
         if (errEl) {
             errEl.textContent = 'Invalid email/username or account not found.';
             errEl.style.display = 'block';
+        }
+        if (btn) {
+            btn.textContent = 'Login';
+            btn.disabled = false;
         }
         return;
     }
@@ -241,6 +350,10 @@ function handleLogin(e) {
         if (errEl) {
             errEl.textContent = 'Access Denied: Offboarded ex-employees cannot log into the system.';
             errEl.style.display = 'block';
+        }
+        if (btn) {
+            btn.textContent = 'Login';
+            btn.disabled = false;
         }
         return;
     }
@@ -252,18 +365,36 @@ function handleLogin(e) {
             errEl.textContent = 'Incorrect password. Please check your password and try again.';
             errEl.style.display = 'block';
         }
+        if (btn) {
+            btn.textContent = 'Login';
+            btn.disabled = false;
+        }
         return;
     }
 
     // Authenticated
     currentUser = user;
     localStorage.setItem('lhs_current_user', JSON.stringify(currentUser));
+    
+    // Invalidate cache and fetch the correct data scope for the newly logged-in user
+    if (btn) {
+        btn.textContent = 'Loading Data...';
+    }
+    await forceRefreshFromFirestore();
+    if (btn) {
+        btn.textContent = 'Login';
+        btn.disabled = false;
+    }
+
     onUserAuthenticated();
 }
 
 function handleLogout() {
     currentUser = null;
     localStorage.removeItem('lhs_current_user');
+    localStorage.removeItem('lhs_cache_ts'); // Invalidate cache on logout
+    appData.attendance = []; // Clear sensitive data from memory
+    appData.salary_history = [];
     showLoginOverlay();
 }
 
