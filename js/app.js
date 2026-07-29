@@ -12,23 +12,43 @@ let appData = {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
-    if (typeof initFirebaseServices === 'function') {
-        await initFirebaseServices();
-    }
-    await initDataStore();
-    initClockTimer();
+    // 1. Immediately verify session from localStorage to display app/login without delay
     checkAuthSession();
+
+    // 2. Load live data from Firebase (or local fallback)
+    try {
+        if (typeof initFirebaseServices === 'function') {
+            await initFirebaseServices();
+        }
+        await initDataStore();
+    } catch (e) {
+        console.error('Initialization error:', e);
+    }
+
+    initClockTimer();
+
+    // 3. Re-render UI with populated data store if user is logged in
+    if (currentUser) {
+        onUserAuthenticated();
+    }
 });
 
 // Initialize Data Store directly from live Firebase Cloud Firestore
 async function initDataStore() {
     try {
         if (typeof firebaseDb !== 'undefined' && firebaseDb) {
-            const [usersSnap, attSnap, salSnap] = await Promise.all([
+            // 3.5s timeout race so slow Firebase network calls fallback gracefully without hanging UI
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Firebase fetch timeout')), 3500)
+            );
+
+            const fetchPromise = Promise.all([
                 firebaseDb.collection('users').get(),
                 firebaseDb.collection('attendance').get(),
                 firebaseDb.collection('salary_history').get()
             ]);
+
+            const [usersSnap, attSnap, salSnap] = await Promise.race([fetchPromise, timeoutPromise]);
 
             if (!usersSnap.empty) {
                 appData.users = usersSnap.docs.map(doc => doc.data());
@@ -41,7 +61,7 @@ async function initDataStore() {
             }
         }
     } catch (err) {
-        console.error('Data Store initialization error from Firebase:', err);
+        console.warn('Data Store initialization note (falling back to local storage/JSON if needed):', err);
     }
 
     // Fallback load if Firebase network is slow or offline
@@ -157,15 +177,22 @@ function formatTime(dateTimeStr) {
 
 // Authentication Logic
 function showLoginOverlay() {
-    document.getElementById('authOverlay').style.display = 'flex';
-    document.getElementById('app').style.display = 'none';
+    const authEl = document.getElementById('authOverlay');
+    const appEl = document.getElementById('app');
+    if (authEl) authEl.style.display = 'flex';
+    if (appEl) appEl.style.display = 'none';
 }
 
 function checkAuthSession() {
     const savedUser = localStorage.getItem('lhs_current_user');
     if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        onUserAuthenticated();
+        try {
+            currentUser = JSON.parse(savedUser);
+            onUserAuthenticated();
+        } catch (e) {
+            console.error('Error parsing saved session:', e);
+            showLoginOverlay();
+        }
     } else {
         showLoginOverlay();
     }
@@ -237,25 +264,36 @@ function handleLogin(e) {
 function handleLogout() {
     currentUser = null;
     localStorage.removeItem('lhs_current_user');
-    document.getElementById('authOverlay').style.display = 'flex';
+    showLoginOverlay();
 }
 
 function onUserAuthenticated() {
-    document.getElementById('authOverlay').style.display = 'none';
+    const authEl = document.getElementById('authOverlay');
+    const appEl = document.getElementById('app');
+    if (authEl) authEl.style.display = 'none';
+    if (appEl) appEl.style.display = 'flex';
     
     // Update User Badge in Sidebar
     const avatarEl = document.getElementById('userAvatar');
     const nameEl = document.getElementById('userName');
     const roleEl = document.getElementById('userRole');
 
-    if (avatarEl) avatarEl.textContent = currentUser.display_name.charAt(0).toUpperCase();
-    if (nameEl) nameEl.textContent = currentUser.display_name;
-    if (roleEl) roleEl.textContent = currentUser.role;
+    const isAdmin = currentUser && (currentUser.username === 'kedar_is' || currentUser.email === 'lifehotelsupply@gmail.com');
 
-    // Toggle HR Visibility
+    if (avatarEl && currentUser) avatarEl.textContent = currentUser.display_name.charAt(0).toUpperCase();
+    if (nameEl && currentUser) nameEl.textContent = currentUser.display_name;
+    if (roleEl && currentUser) roleEl.textContent = isAdmin ? 'Admin' : currentUser.role;
+
+    // Toggle HR Visibility (Team Logs, Employee Roster, Ex-Employees)
     const hrElements = document.querySelectorAll('.hr-only');
     hrElements.forEach(el => {
-        el.style.display = (currentUser.role === 'HR') ? 'flex' : 'none';
+        el.style.display = (currentUser && currentUser.role === 'HR') ? 'flex' : 'none';
+    });
+
+    // Toggle Admin-Only Visibility (Salary & Payroll)
+    const adminElements = document.querySelectorAll('.admin-only');
+    adminElements.forEach(el => {
+        el.style.display = isAdmin ? 'flex' : 'none';
     });
 
     // Render Initial View
@@ -390,17 +428,16 @@ function renderDashboard() {
     }
 }
 
-// Global Ex-Employee Archive Toggle
-let showExEmployeesGlobal = false;
+// Ex-Employee Report Inclusion Helper
 let currentDetailEmployee = null; // tracks which employee is in drill-down
 
-function toggleArchiveExEmployees() {
-    showExEmployeesGlobal = !showExEmployeesGlobal;
-    const btn = document.getElementById('btnArchiveExToggle');
-    if (btn) {
-        btn.textContent = `Include Ex-Employees in Reports: ${showExEmployeesGlobal ? 'ON' : 'OFF'}`;
-        btn.className = showExEmployeesGlobal ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
-    }
+function toggleEmployeeReportInclusion(userId) {
+    const user = appData.users.find(u => String(u.id) === String(userId));
+    if (!user) return;
+    user.include_in_reports = !user.include_in_reports;
+    saveDataStore();
+    saveFirebaseDoc('users', String(user.id), user);
+    renderExEmployees();
 }
 
 // Clock Action Handler
@@ -499,11 +536,9 @@ function renderTeamAttendance() {
     const month = parseInt(document.getElementById('teamMonthFilter').value);
     const year = parseInt(document.getElementById('teamYearFilter').value);
 
-    // Build allowed users list
+    // Build allowed users list (Active OR explicitly included Ex-Employees)
     let allowedUsers = appData.users.filter(u => String(u.id) !== String(currentUser.id));
-    if (!showExEmployeesGlobal) {
-        allowedUsers = allowedUsers.filter(u => !u.offboard_date);
-    }
+    allowedUsers = allowedUsers.filter(u => !u.offboard_date || u.include_in_reports);
     if (currentUser.username !== 'kedar_is') {
         allowedUsers = allowedUsers.filter(u => u.username !== 'kedar_is');
     }
@@ -630,14 +665,17 @@ function openAddEmployeeModal() {
 function saveEmployee(e) {
     e.preventDefault();
     const name = document.getElementById('empName').value.trim();
-    const username = document.getElementById('empUsername').value.trim();
-    const email = document.getElementById('empEmail').value.trim();
+    const username = document.getElementById('empUsername').value.trim().toLowerCase();
+    const email = document.getElementById('empEmail').value.trim().toLowerCase();
     const role = document.getElementById('empRole').value;
     const password = document.getElementById('empPassword').value.trim() || '123456';
 
-    const existing = appData.users.find(u => u.username === username);
-    if (existing) {
-        alert('An account with this username already exists.');
+    const existingUser = appData.users.find(u => 
+        (u.username && u.username.toLowerCase() === username) || 
+        (u.email && u.email.toLowerCase() === email)
+    );
+    if (existingUser) {
+        alert('An account with this username or email already exists.');
         return;
     }
 
@@ -653,9 +691,10 @@ function saveEmployee(e) {
 
     appData.users.push(newEmp);
     saveDataStore();
+    saveFirebaseDoc('users', String(newEmp.id), newEmp);
     closeModal('employeeModal');
     renderEmployeesRoster();
-    alert(`Employee ${name} added successfully! Default Password: ${password}`);
+    alert(`Employee ${name} added successfully!\nUsername: ${username}\nDefault Password: ${password}`);
 }
 
 function resetEmployeePassword(id) {
@@ -666,6 +705,7 @@ function resetEmployeePassword(id) {
     if (newPass && newPass.trim()) {
         user.password = newPass.trim();
         saveDataStore();
+        saveFirebaseDoc('users', String(user.id), user);
         renderEmployeesRoster();
         alert(`Password for ${user.display_name} updated successfully to: ${user.password}`);
     }
@@ -679,6 +719,7 @@ function offboardEmployee(id) {
     if (exitDate && exitDate.trim()) {
         user.offboard_date = exitDate.trim();
         saveDataStore();
+        saveFirebaseDoc('users', String(user.id), user);
         renderEmployeesRoster();
         alert(`${user.display_name} has been offboarded with exit date: ${user.offboard_date}`);
     }
@@ -689,13 +730,18 @@ function rehireEmployee(id) {
     if (!user) return;
     user.offboard_date = null;
     saveDataStore();
-    populateLoginDropdown();
+    saveFirebaseDoc('users', String(user.id), user);
+    renderEmployeesRoster();
     renderExEmployees();
 }
 
-// VIEW 5: SALARY & PAYROLL (HR)
+// VIEW 5: SALARY & PAYROLL (ADMIN ONLY)
 function renderSalaryPayroll() {
-    if (currentUser.role !== 'HR') return;
+    const isAdmin = currentUser && (currentUser.username === 'kedar_is' || currentUser.email === 'lifehotelsupply@gmail.com');
+    if (!isAdmin) {
+        switchView('dashboard');
+        return;
+    }
     renderPayrollMonthlyTab();
     renderSalaryRatesTab();
     populateCalcUserDropdown();
@@ -717,7 +763,7 @@ function renderPayrollMonthlyTab() {
     const totalDays = new Date(year, month, 0).getDate();
     const eomDate = `${year}-${String(month).padStart(2,'0')}-${totalDays}`;
 
-    let users = appData.users.filter(u => showExEmployeesGlobal || !u.offboard_date);
+    let users = appData.users.filter(u => !u.offboard_date || u.include_in_reports);
     if (currentUser.username !== 'kedar_is') {
         users = users.filter(u => u.username !== 'kedar_is');
     }
@@ -757,7 +803,7 @@ function renderSalaryRatesTab() {
     sortedSalaries = sortedSalaries.filter(s => {
         const user = appData.users.find(u => String(u.id) === String(s.user_id));
         if (currentUser.username !== 'kedar_is' && user && user.username === 'kedar_is') return false;
-        if (!showExEmployeesGlobal && user && user.offboard_date) return false;
+        if (user && user.offboard_date && !user.include_in_reports) return false;
         return true;
     });
 
@@ -817,26 +863,34 @@ function calculateQuickPay() {
 function renderExEmployees() {
     if (currentUser.role !== 'HR') return;
 
-    const btn = document.getElementById('btnArchiveExToggle');
-    if (btn) {
-        btn.textContent = `Include Ex-Employees in Reports: ${showExEmployeesGlobal ? 'ON' : 'OFF'}`;
-        btn.className = showExEmployeesGlobal ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
-    }
+    // Reverse chronological order (latest exit date first)
+    const offboardedUsers = appData.users
+        .filter(u => !!u.offboard_date)
+        .sort((a, b) => new Date(b.offboard_date) - new Date(a.offboard_date));
 
-    const offboardedUsers = appData.users.filter(u => !!u.offboard_date);
     const tbody = document.getElementById('exEmployeesTableBody');
 
     if (offboardedUsers.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No offboarded employees recorded.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No offboarded employees recorded.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = offboardedUsers.map(u => {
+        const isIncluded = !!u.include_in_reports;
+        const toggleBtnClass = isIncluded ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+        const toggleText = isIncluded ? '✓ Included in Reports' : '✕ Excluded from Reports';
+
         return `
             <tr>
                 <td><strong>${escapeHtml(u.display_name)}</strong></td>
                 <td>${escapeHtml(u.email)}</td>
                 <td><span style="color:#ef4444; font-weight:600;">${formatDate(u.offboard_date)}</span></td>
+                <td>
+                    <button class="${toggleBtnClass}" onclick="toggleEmployeeReportInclusion('${u.id}')">${toggleText}</button>
+                </td>
+                <td>
+                    <button class="btn btn-secondary btn-sm" onclick="rehireEmployee('${u.id}')">Rehire</button>
+                </td>
             </tr>
         `;
     }).join('');
