@@ -39,36 +39,20 @@ async function initDataStore() {
             saveDataStore();
         }
 
-        // Sync Roma Parmar role to HR
+        // Sync roles
         const roma = appData.users.find(u => u.username === 'roma.parmar');
         if (roma && roma.role !== 'HR') {
             roma.role = 'HR';
             saveDataStore();
         }
-
-        populateLoginDropdown();
+        const kcalpesh = appData.users.find(u => u.username === 'kcalpesh');
+        if (kcalpesh && kcalpesh.role !== 'Employee') {
+            kcalpesh.role = 'Employee';
+            saveDataStore();
+        }
     } catch (err) {
         console.error('Data Store initialization error:', err);
     }
-}
-
-function populateLoginDropdown() {
-    const select = document.getElementById('loginSelect');
-    if (!select) return;
-
-    const activeUsers = appData.users.filter(u => !u.offboard_date);
-    const hrUsers = activeUsers.filter(u => u.role === 'HR');
-    const empUsers = activeUsers.filter(u => u.role !== 'HR');
-
-    let html = `<option value="">-- Choose User Account --</option>`;
-    if (hrUsers.length > 0) {
-        html += `<optgroup label="HR Managers">` + hrUsers.map(u => `<option value="${escapeHtml(u.username)}">${escapeHtml(u.display_name)} (HR)</option>`).join('') + `</optgroup>`;
-    }
-    if (empUsers.length > 0) {
-        html += `<optgroup label="Employees">` + empUsers.map(u => `<option value="${escapeHtml(u.username)}">${escapeHtml(u.display_name)} (Employee)</option>`).join('') + `</optgroup>`;
-    }
-
-    select.innerHTML = html;
 }
 
 function saveDataStore() {
@@ -88,10 +72,13 @@ function updateClock() {
     const clockTimeEl = document.getElementById('clockTime');
     const clockDateEl = document.getElementById('clockDate');
     const currentDateDisplay = document.getElementById('currentDateDisplay');
+    const headerChicagoClock = document.getElementById('headerChicagoClock');
 
-    if (clockTimeEl) {
-        clockTimeEl.textContent = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: true }) + ' (CT)';
-    }
+    const timeStr = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: true }) + ' (CT)';
+
+    if (clockTimeEl) clockTimeEl.textContent = timeStr;
+    if (headerChicagoClock) headerChicagoClock.textContent = timeStr;
+
     const options = { timeZone: 'America/Chicago', weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     const dateStr = now.toLocaleDateString('en-US', options);
     if (clockDateEl) clockDateEl.textContent = dateStr;
@@ -137,7 +124,7 @@ function fillPassword(val) {
 
 function handleLogin(e) {
     e.preventDefault();
-    const selectVal = document.getElementById('loginSelect').value;
+    const inputVal = document.getElementById('loginUsername').value.trim().toLowerCase();
     const passwordInput = document.getElementById('loginPassword').value.trim();
     const errEl = document.getElementById('loginError');
 
@@ -146,18 +133,22 @@ function handleLogin(e) {
         errEl.textContent = '';
     }
 
-    if (!selectVal) {
+    if (!inputVal) {
         if (errEl) {
-            errEl.textContent = 'Please select or enter a user account.';
+            errEl.textContent = 'Please enter your email or username.';
             errEl.style.display = 'block';
         }
         return;
     }
 
-    const user = appData.users.find(u => u.username === selectVal || u.email === selectVal);
+    const user = appData.users.find(u => 
+        (u.username && u.username.toLowerCase() === inputVal) || 
+        (u.email && u.email.toLowerCase() === inputVal)
+    );
+
     if (!user) {
         if (errEl) {
-            errEl.textContent = 'User account not found.';
+            errEl.textContent = 'Invalid email/username or account not found.';
             errEl.style.display = 'block';
         }
         return;
@@ -671,7 +662,7 @@ function renderExEmployees() {
     const tbody = document.getElementById('exEmployeesTableBody');
 
     if (offboardedUsers.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No offboarded employees recorded.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No offboarded employees recorded.</td></tr>`;
         return;
     }
 
@@ -681,9 +672,6 @@ function renderExEmployees() {
                 <td><strong>${escapeHtml(u.display_name)}</strong></td>
                 <td>${escapeHtml(u.email)}</td>
                 <td><span style="color:#ef4444; font-weight:600;">${formatDate(u.offboard_date)}</span></td>
-                <td>
-                    <button class="btn btn-secondary btn-sm" onclick="rehireEmployee('${u.id}')">Re-activate</button>
-                </td>
             </tr>
         `;
     }).join('');
@@ -996,12 +984,23 @@ function formatDate(dateStr) {
 
 function formatTime(dateTimeStr) {
     if (!dateTimeStr) return '-';
-    const d = new Date(dateTimeStr);
-    if (isNaN(d.getTime())) {
-        // Fallback for time strings like 09:00:00
-        return dateTimeStr;
+    // If string contains time part HH:MM:SS, extract it directly to prevent browser timezone shifts
+    if (typeof dateTimeStr === 'string' && dateTimeStr.includes(' ')) {
+        const parts = dateTimeStr.split(' ');
+        if (parts[1]) {
+            const timeParts = parts[1].split(':');
+            if (timeParts.length >= 2) {
+                let hour = parseInt(timeParts[0]);
+                const minute = timeParts[1];
+                const ampm = hour >= 12 ? 'PM' : 'AM';
+                hour = hour % 12 || 12;
+                return `${hour}:${minute} ${ampm}`;
+            }
+        }
     }
-    return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const d = new Date(dateTimeStr);
+    if (isNaN(d.getTime())) return dateTimeStr;
+    return d.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour: '2-digit', minute: '2-digit', hour12: true });
 }
 
 function openModal(modalId) {
