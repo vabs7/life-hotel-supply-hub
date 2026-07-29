@@ -422,8 +422,16 @@
         <!-- VIEW 6: EX-EMPLOYEES ARCHIVE (HR) -->
         <section id="view-exEmployees" class="view-section">
           <div class="table-container">
-            <div class="table-header-bar">
-              <h3 class="table-title">Old / Offboarded Employees Archive</h3>
+            <div class="table-header-bar" style="align-items: center;">
+              <div>
+                <h3 class="table-title">Old / Offboarded Employees Archive</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.25rem 0 0 0;">
+                  Enable toggle to include ex-employees in Team Attendance Logs & Payroll Reports.
+                </p>
+              </div>
+              <button id="btnArchiveExToggle" class="btn btn-secondary btn-sm" onclick="toggleArchiveExEmployees()">
+                Include Ex-Employees in Reports: OFF
+              </button>
             </div>
             <table class="data-table">
               <thead>

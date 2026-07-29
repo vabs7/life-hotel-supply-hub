@@ -29,6 +29,21 @@ async function initDataStore() {
             appData.users = JSON.parse(storedUsers);
             appData.attendance = JSON.parse(storedAtt);
             appData.salary_history = JSON.parse(storedSal);
+
+            // Sanitize & format salary_history schema
+            appData.salary_history = appData.salary_history.map(s => {
+                const realEffectiveDate = (s.updated_at && s.updated_at.length === 10) ? s.updated_at : (s.effective_date ? s.effective_date.split(' ')[0] : '2026-01-01');
+                const realTimestamp = (s.effective_date && s.effective_date.length > 10) ? s.effective_date : (s.updated_at || '2026-01-01 00:00:00');
+                return {
+                    id: String(s.id),
+                    user_id: String(s.user_id),
+                    amount: parseFloat(s.amount),
+                    currency: (['INR', 'USD', 'PHP'].includes(s.currency) ? s.currency : 'INR'),
+                    effective_date: realEffectiveDate,
+                    updated_at: realTimestamp
+                };
+            });
+            saveDataStore();
         } else {
             // Load restored database dump JSON file
             const res = await fetch('migrated_data.json');
@@ -310,7 +325,10 @@ function renderDashboard() {
 
     // Render Today's Team Table for HR
     if (currentUser.role === 'HR') {
-        const activeUsers = appData.users.filter(u => !u.offboard_date);
+        let activeUsers = appData.users.filter(u => !u.offboard_date && String(u.id) !== String(currentUser.id));
+        if (currentUser.username !== 'vaibhav.ajugiya') {
+            activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+        }
         const tbody = document.getElementById('todayTeamTableBody');
         tbody.innerHTML = activeUsers.map(u => {
             const rec = appData.attendance.find(a => String(a.user_id) === String(u.id) && a.date === today);
@@ -329,6 +347,18 @@ function renderDashboard() {
                 </tr>
             `;
         }).join('');
+    }
+}
+
+// Global Ex-Employee Archive Toggle
+let showExEmployeesGlobal = false;
+
+function toggleArchiveExEmployees() {
+    showExEmployeesGlobal = !showExEmployeesGlobal;
+    const btn = document.getElementById('btnArchiveExToggle');
+    if (btn) {
+        btn.textContent = `Include Ex-Employees in Reports: ${showExEmployeesGlobal ? 'ON' : 'OFF'}`;
+        btn.className = showExEmployeesGlobal ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
     }
 }
 
@@ -359,18 +389,18 @@ function toggleClockAction() {
     } else if (todayRecord && !todayRecord.logout_time) {
         // Clock Out
         todayRecord.logout_time = nowStr;
-        if (remarks) {
-            todayRecord.remarks = todayRecord.remarks ? `${todayRecord.remarks} | Out: ${remarks}` : remarks;
-        }
+        if (remarks) todayRecord.remarks = (todayRecord.remarks ? todayRecord.remarks + ' | ' : '') + remarks;
         saveDataStore();
         alert('Clocked Out Successfully!');
+    } else {
+        alert('You have already clocked in and out for today.');
     }
 
     document.getElementById('clockRemarks').value = '';
     renderDashboard();
 }
 
-// VIEW 2: MY ATTENDANCE
+// VIEW 2: MY ATTENDANCE HISTORY
 function renderMyAttendance() {
     if (!currentUser) return;
     const month = parseInt(document.getElementById('myMonthFilter').value);
@@ -384,7 +414,7 @@ function renderMyAttendance() {
 
     const tbody = document.getElementById('myAttendanceTableBody');
     if (records.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No attendance records found for this period.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No attendance records found for this month.</td></tr>`;
         return;
     }
 
@@ -393,54 +423,65 @@ function renderMyAttendance() {
         return `
             <tr>
                 <td><strong>${formatDate(r.date)}</strong></td>
-                <td>${r.login_time ? formatTime(r.login_time) : '-'}</td>
-                <td>${r.logout_time ? formatTime(r.logout_time) : '-'}</td>
+                <td>${formatTime(r.login_time)}</td>
+                <td>${formatTime(r.logout_time)}</td>
                 <td><span class="badge ${badgeClass}">${r.status}</span></td>
-                <td>${escapeHtml(r.ip_address || 'Web')}</td>
+                <td><code>${escapeHtml(r.ip_address || '-')}</code></td>
                 <td>${escapeHtml(r.remarks || '-')}</td>
             </tr>
         `;
     }).join('');
 }
 
-// VIEW 3: TEAM LOGS (HR)
+// VIEW 3: TEAM ATTENDANCE (HR)
 function renderTeamAttendance() {
     if (currentUser.role !== 'HR') return;
 
-    // Populate user filter select
-    const select = document.getElementById('teamUserFilter');
-    if (select.children.length <= 1) {
-        const activeUsers = appData.users.filter(u => !u.offboard_date);
-        select.innerHTML = `<option value="all">All Active Employees</option>` + activeUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
-    }
-
-    const userId = select.value;
     const month = parseInt(document.getElementById('teamMonthFilter').value);
     const year = parseInt(document.getElementById('teamYearFilter').value);
 
+    // HR should not see herself in team logs
+    let allowedUsers = appData.users.filter(u => String(u.id) !== String(currentUser.id));
+
+    if (!showExEmployeesGlobal) {
+        allowedUsers = allowedUsers.filter(u => !u.offboard_date);
+    }
+    if (currentUser.username !== 'vaibhav.ajugiya') {
+        allowedUsers = allowedUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    }
+
+    const select = document.getElementById('teamUserFilter');
+    if (select) {
+        const label = showExEmployeesGlobal ? 'All Team (Including Ex-Employees)' : 'All Active Employees';
+        select.innerHTML = `<option value="ALL">${label}</option>` + allowedUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)} ${u.offboard_date ? '(Ex)' : ''}</option>`).join('');
+    }
+
+    const selectedUserId = select ? select.value : 'ALL';
+    const allowedUserIds = allowedUsers.map(u => String(u.id));
+
     const records = appData.attendance.filter(a => {
-        if (userId !== 'all' && String(a.user_id) !== String(userId)) return false;
+        if (!allowedUserIds.includes(String(a.user_id))) return false;
+        if (selectedUserId !== 'ALL' && String(a.user_id) !== String(selectedUserId)) return false;
         const d = new Date(a.date);
         return (d.getMonth() + 1) === month && d.getFullYear() === year;
     }).sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const tbody = document.getElementById('teamAttendanceTableBody');
     if (records.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No records found.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted);">No team attendance records found for this selection.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = records.map(r => {
         const user = appData.users.find(u => String(u.id) === String(r.user_id));
-        const userName = user ? user.display_name : `User ${r.user_id}`;
         const badgeClass = r.status === 'Present' ? 'badge-present' : (r.status === 'Absent' ? 'badge-absent' : 'badge-halfday');
 
         return `
             <tr>
-                <td><strong>${formatDate(r.date)}</strong></td>
-                <td>${escapeHtml(userName)}</td>
-                <td>${r.login_time ? formatTime(r.login_time) : '-'}</td>
-                <td>${r.logout_time ? formatTime(r.logout_time) : '-'}</td>
+                <td><strong>${escapeHtml(user ? user.display_name : `User ${r.user_id}`)}</strong> ${user && user.offboard_date ? '<span style="color:#ef4444; font-size:0.75rem;">(Ex)</span>' : ''}</td>
+                <td>${formatDate(r.date)}</td>
+                <td>${formatTime(r.login_time)}</td>
+                <td>${formatTime(r.logout_time)}</td>
                 <td><span class="badge ${badgeClass}">${r.status}</span></td>
                 <td>${escapeHtml(r.remarks || '-')}</td>
                 <td>
@@ -455,7 +496,11 @@ function renderTeamAttendance() {
 function renderEmployeesRoster() {
     if (currentUser.role !== 'HR') return;
 
-    const activeUsers = appData.users.filter(u => !u.offboard_date);
+    let activeUsers = appData.users.filter(u => !u.offboard_date);
+    if (currentUser.username !== 'vaibhav.ajugiya') {
+        activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    }
+
     const tbody = document.getElementById('employeesTableBody');
 
     tbody.innerHTML = activeUsers.map(u => {
@@ -509,7 +554,6 @@ function saveEmployee(e) {
 
     appData.users.push(newEmp);
     saveDataStore();
-    populateLoginDropdown();
     closeModal('employeeModal');
     renderEmployeesRoster();
     alert(`Employee ${name} added successfully! Default Password: ${password}`);
@@ -531,11 +575,13 @@ function resetEmployeePassword(id) {
 function offboardEmployee(id) {
     const user = appData.users.find(u => String(u.id) === String(id));
     if (!user) return;
-    if (confirm(`Mark ${user.display_name} as offboarded/ex-employee?`)) {
-        user.offboard_date = getTodayString();
+    const defaultDate = getTodayString();
+    const exitDate = prompt(`Offboard ${user.display_name}:\nPlease enter offboarding exit date (YYYY-MM-DD):`, defaultDate);
+    if (exitDate && exitDate.trim()) {
+        user.offboard_date = exitDate.trim();
         saveDataStore();
-        populateLoginDropdown();
         renderEmployeesRoster();
+        alert(`${user.display_name} has been offboarded with exit date: ${user.offboard_date}`);
     }
 }
 
@@ -572,10 +618,13 @@ function renderPayrollMonthlyTab() {
     const totalDays = new Date(year, month, 0).getDate();
     const eomDate = `${year}-${String(month).padStart(2,'0')}-${totalDays}`;
 
-    const activeUsers = appData.users.filter(u => !u.offboard_date || u.offboard_date >= `${year}-${String(month).padStart(2,'0')}-01`);
+    let users = appData.users.filter(u => showExEmployeesGlobal || !u.offboard_date);
+    if (currentUser.username !== 'vaibhav.ajugiya') {
+        users = users.filter(u => u.username !== 'vaibhav.ajugiya');
+    }
 
     const tbody = document.getElementById('payrollTableBody');
-    tbody.innerHTML = activeUsers.map(u => {
+    tbody.innerHTML = users.map(u => {
         const baseObj = getLatestBaseSalary(u.id, eomDate);
         const stats = getMonthlyCounts(u.id, month, year);
 
@@ -585,7 +634,7 @@ function renderPayrollMonthlyTab() {
 
         return `
             <tr>
-                <td><strong>${escapeHtml(u.display_name)}</strong></td>
+                <td><strong>${escapeHtml(u.display_name)}</strong> ${u.offboard_date ? '<span style="color:#ef4444; font-size:0.75rem;">(Ex)</span>' : ''}</td>
                 <td>${formatMoney(baseObj.amount, baseObj.currency)}</td>
                 <td>
                     <span style="color:var(--status-present); font-weight:600;">${stats.present} P</span> / 
@@ -604,13 +653,20 @@ function renderPayrollMonthlyTab() {
 
 function renderSalaryRatesTab() {
     const tbody = document.getElementById('salaryRatesTableBody');
-    const sortedSalaries = [...appData.salary_history].sort((a, b) => new Date(b.effective_date) - new Date(a.effective_date));
+    let sortedSalaries = [...appData.salary_history].sort((a, b) => new Date(b.effective_date) - new Date(a.effective_date));
+    
+    sortedSalaries = sortedSalaries.filter(s => {
+        const user = appData.users.find(u => String(u.id) === String(s.user_id));
+        if (currentUser.username !== 'vaibhav.ajugiya' && user && user.username === 'vaibhav.ajugiya') return false;
+        if (!showExEmployeesGlobal && user && user.offboard_date) return false;
+        return true;
+    });
 
     tbody.innerHTML = sortedSalaries.map(s => {
         const user = appData.users.find(u => String(u.id) === String(s.user_id));
         return `
             <tr>
-                <td><strong>${escapeHtml(user ? user.display_name : `User ${s.user_id}`)}</strong></td>
+                <td><strong>${escapeHtml(user ? user.display_name : `User ${s.user_id}`)}</strong> ${user && user.offboard_date ? '<span style="color:#ef4444; font-size:0.75rem;">(Ex)</span>' : ''}</td>
                 <td>${formatMoney(s.amount, s.currency || 'INR')}</td>
                 <td><span class="user-role-tag">${s.currency || 'INR'}</span></td>
                 <td>${formatDate(s.effective_date)}</td>
@@ -625,7 +681,11 @@ function renderSalaryRatesTab() {
 function populateCalcUserDropdown() {
     const select = document.getElementById('calcEmployeeSelect');
     if (select) {
-        select.innerHTML = `<option value="">-- Choose Employee --</option>` + appData.users.filter(u => !u.offboard_date).map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
+        let list = appData.users.filter(u => !u.offboard_date);
+        if (currentUser.username !== 'vaibhav.ajugiya') {
+            list = list.filter(u => u.username !== 'vaibhav.ajugiya');
+        }
+        select.innerHTML = `<option value="">-- Choose Employee --</option>` + list.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
     }
 }
 
@@ -657,6 +717,12 @@ function calculateQuickPay() {
 // VIEW 6: EX-EMPLOYEES ARCHIVE (HR)
 function renderExEmployees() {
     if (currentUser.role !== 'HR') return;
+
+    const btn = document.getElementById('btnArchiveExToggle');
+    if (btn) {
+        btn.textContent = `Include Ex-Employees in Reports: ${showExEmployeesGlobal ? 'ON' : 'OFF'}`;
+        btn.className = showExEmployeesGlobal ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
+    }
 
     const offboardedUsers = appData.users.filter(u => !!u.offboard_date);
     const tbody = document.getElementById('exEmployeesTableBody');
@@ -750,7 +816,10 @@ function openAddAttendanceModal() {
     document.getElementById('attModalTitle').textContent = 'Add Attendance Record';
 
     const select = document.getElementById('attUserSelect');
-    const activeUsers = appData.users.filter(u => !u.offboard_date);
+    let activeUsers = appData.users.filter(u => !u.offboard_date);
+    if (currentUser.username !== 'vaibhav.ajugiya') {
+        activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    }
     select.innerHTML = activeUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
 
     document.getElementById('attDate').value = getTodayString();
@@ -833,7 +902,10 @@ function deleteAttendanceRecord(id) {
 
 function openAddSalaryModal() {
     const select = document.getElementById('salUserSelect');
-    const activeUsers = appData.users.filter(u => !u.offboard_date);
+    let activeUsers = appData.users.filter(u => !u.offboard_date);
+    if (currentUser.username !== 'vaibhav.ajugiya') {
+        activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    }
     select.innerHTML = activeUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
 
     document.getElementById('salAmount').value = '30000';

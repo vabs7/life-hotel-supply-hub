@@ -8,7 +8,8 @@
       "first_name": "Vaibhav",
       "last_name": "Ajugiya",
       "role": "HR",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "348",
@@ -18,7 +19,8 @@
       "first_name": "Yogita",
       "last_name": "Jetwani",
       "role": "Employee",
-      "offboard_date": "2026-02-28"
+      "offboard_date": "2026-02-28",
+      "password": "123456"
     },
     {
       "id": "349",
@@ -28,7 +30,8 @@
       "first_name": "Prateek",
       "last_name": "Mahendra",
       "role": "Employee",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "350",
@@ -38,7 +41,8 @@
       "first_name": "Shikha",
       "last_name": "Singh",
       "role": "Employee",
-      "offboard_date": "2026-02-28"
+      "offboard_date": "2026-02-28",
+      "password": "123456"
     },
     {
       "id": "351",
@@ -48,7 +52,8 @@
       "first_name": "Richa",
       "last_name": "Narang",
       "role": "Employee",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "352",
@@ -58,7 +63,8 @@
       "first_name": "Neha",
       "last_name": "Kushwaha",
       "role": "Employee",
-      "offboard_date": "2026-06-30"
+      "offboard_date": "2026-06-30",
+      "password": "123456"
     },
     {
       "id": "356",
@@ -68,7 +74,8 @@
       "first_name": "Roma",
       "last_name": "Parmar",
       "role": "HR",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "358",
@@ -78,7 +85,8 @@
       "first_name": "Cecilia",
       "last_name": "Romano",
       "role": "Employee",
-      "offboard_date": "2026-06-30"
+      "offboard_date": "2026-06-30",
+      "password": "123456"
     },
     {
       "id": "360",
@@ -88,7 +96,8 @@
       "first_name": "Kalpesh",
       "last_name": "Ajugia",
       "role": "Employee",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "361",
@@ -98,7 +107,8 @@
       "first_name": "Prathusha",
       "last_name": "Chinthapatla",
       "role": "Employee",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "365",
@@ -108,7 +118,8 @@
       "first_name": "Emukai",
       "last_name": "Chidimma",
       "role": "Employee",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "396",
@@ -118,7 +129,8 @@
       "first_name": "Gladys",
       "last_name": "Senogat-Espinosa",
       "role": "Employee",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     },
     {
       "id": "403",
@@ -128,7 +140,8 @@
       "first_name": "Abel",
       "last_name": "Shebela",
       "role": "Employee",
-      "offboard_date": null
+      "offboard_date": null,
+      "password": "123456"
     }
   ],
   "attendance": [
@@ -7738,73 +7751,73 @@
       "id": "1",
       "user_id": "352",
       "amount": 30000,
-      "effective_date": "2026-01-22 06:30:23",
-      "updated_at": "2026-01-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-01-01",
+      "updated_at": "2026-01-22 06:30:23"
     },
     {
       "id": "2",
       "user_id": "349",
       "amount": 30000,
-      "effective_date": "2026-01-22 06:30:46",
-      "updated_at": "2026-01-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-01-01",
+      "updated_at": "2026-01-22 06:30:46"
     },
     {
       "id": "3",
       "user_id": "351",
       "amount": 31000,
-      "effective_date": "2026-01-22 06:30:57",
-      "updated_at": "2026-01-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-01-01",
+      "updated_at": "2026-01-22 06:30:57"
     },
     {
       "id": "4",
       "user_id": "350",
       "amount": 12500,
-      "effective_date": "2026-01-22 06:31:06",
-      "updated_at": "2026-01-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-01-01",
+      "updated_at": "2026-01-22 06:31:06"
     },
     {
       "id": "5",
       "user_id": "348",
       "amount": 30000,
-      "effective_date": "2026-01-22 06:31:16",
-      "updated_at": "2026-01-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-01-01",
+      "updated_at": "2026-01-22 06:31:16"
     },
     {
       "id": "7",
       "user_id": "358",
       "amount": 19300,
-      "effective_date": "2026-03-23 11:59:00",
-      "updated_at": "2026-03-01",
-      "currency": "PHP"
+      "currency": "PHP",
+      "effective_date": "2026-03-01",
+      "updated_at": "2026-03-23 11:59:00"
     },
     {
       "id": "8",
       "user_id": "356",
       "amount": 12000,
-      "effective_date": "2026-04-01 10:03:40",
-      "updated_at": "2026-04-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-04-01",
+      "updated_at": "2026-04-01 10:03:40"
     },
     {
       "id": "9",
       "user_id": "361",
       "amount": 30000,
-      "effective_date": "2026-05-11 11:07:10",
-      "updated_at": "2026-05-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-05-01",
+      "updated_at": "2026-05-11 11:07:10"
     },
     {
       "id": "10",
       "user_id": "360",
       "amount": 10000,
-      "effective_date": "2026-05-11 11:07:29",
-      "updated_at": "2026-05-01",
-      "currency": "INR"
+      "currency": "INR",
+      "effective_date": "2026-05-01",
+      "updated_at": "2026-05-11 11:07:29"
     }
   ]
 }
