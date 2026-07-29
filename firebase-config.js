@@ -3,22 +3,24 @@
  * Life Hotel Supply Hub
  */
 
-// Default or LocalStorage Firebase Config Object
+// Default Firebase Configuration (Life Hotel Supply)
 const DEFAULT_FIREBASE_CONFIG = {
-    apiKey: "",
+    apiKey: "AIzaSyBwMdRQrnmAO19diCKf2zC4fYQFkhZuTFo",
     authDomain: "life-hotel-supply.firebaseapp.com",
     projectId: "life-hotel-supply",
-    storageBucket: "life-hotel-supply.appspot.com",
-    messagingSenderId: "",
-    appId: ""
+    storageBucket: "life-hotel-supply.firebasestorage.app",
+    messagingSenderId: "427632686787",
+    appId: "1:427632686787:web:b18911b8ab91c08f569476",
+    measurementId: "G-M1CEDFRVN3"
 };
 
-// Retrieve user's configured Firebase settings or fall back to stored
+// Retrieve configured Firebase settings or fall back to DEFAULT_FIREBASE_CONFIG
 function getSavedFirebaseConfig() {
     try {
         const stored = localStorage.getItem('lhs_firebase_config');
         if (stored) {
-            return JSON.parse(stored);
+            const parsed = JSON.parse(stored);
+            if (parsed && parsed.apiKey) return parsed;
         }
     } catch (e) {
         console.warn('LocalStorage unavailable:', e);

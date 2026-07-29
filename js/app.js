@@ -38,9 +38,37 @@ async function initDataStore() {
             appData.salary_history = initialData.salary_history || [];
             saveDataStore();
         }
+
+        // Sync Roma Parmar role to HR
+        const roma = appData.users.find(u => u.username === 'roma.parmar');
+        if (roma && roma.role !== 'HR') {
+            roma.role = 'HR';
+            saveDataStore();
+        }
+
+        populateLoginDropdown();
     } catch (err) {
         console.error('Data Store initialization error:', err);
     }
+}
+
+function populateLoginDropdown() {
+    const select = document.getElementById('loginSelect');
+    if (!select) return;
+
+    const activeUsers = appData.users.filter(u => !u.offboard_date);
+    const hrUsers = activeUsers.filter(u => u.role === 'HR');
+    const empUsers = activeUsers.filter(u => u.role !== 'HR');
+
+    let html = `<option value="">-- Choose User Account --</option>`;
+    if (hrUsers.length > 0) {
+        html += `<optgroup label="HR Managers">` + hrUsers.map(u => `<option value="${escapeHtml(u.username)}">${escapeHtml(u.display_name)} (HR)</option>`).join('') + `</optgroup>`;
+    }
+    if (empUsers.length > 0) {
+        html += `<optgroup label="Employees">` + empUsers.map(u => `<option value="${escapeHtml(u.username)}">${escapeHtml(u.display_name)} (Employee)</option>`).join('') + `</optgroup>`;
+    }
+
+    select.innerHTML = html;
 }
 
 function saveDataStore() {
@@ -283,11 +311,11 @@ function renderDashboard() {
     document.getElementById('statHalfDay').textContent = halfCount;
 
     // Calculate Estimated Net Pay
-    const baseSal = getLatestBaseSalary(currentUser.id, `${currentYear}-${String(currentMonth).padStart(2,'0')}-28`);
-    const perDay = baseSal / 30;
+    const baseSalObj = getLatestBaseSalary(currentUser.id, `${currentYear}-${String(currentMonth).padStart(2,'0')}-28`);
+    const perDay = baseSalObj.amount / 30;
     const deduction = (absentCount * perDay) + (halfCount * (perDay / 2));
-    const netPay = Math.max(0, baseSal - deduction);
-    document.getElementById('statNetPay').textContent = `₹${netPay.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+    const netPay = Math.max(0, baseSalObj.amount - deduction);
+    document.getElementById('statNetPay').textContent = formatMoney(netPay, baseSalObj.currency);
 
     // Render Today's Team Table for HR
     if (currentUser.role === 'HR') {
@@ -433,7 +461,6 @@ function renderTeamAttendance() {
     }).join('');
 }
 
-// VIEW 4: EMPLOYEES ROSTER (HR)
 function renderEmployeesRoster() {
     if (currentUser.role !== 'HR') return;
 
@@ -441,6 +468,7 @@ function renderEmployeesRoster() {
     const tbody = document.getElementById('employeesTableBody');
 
     tbody.innerHTML = activeUsers.map(u => {
+        const passDisplay = u.password || '123456';
         return `
             <tr>
                 <td><strong>${escapeHtml(u.display_name)}</strong></td>
@@ -448,11 +476,85 @@ function renderEmployeesRoster() {
                 <td>${escapeHtml(u.email)}</td>
                 <td><span class="user-role-tag">${u.role}</span></td>
                 <td>
-                    <button class="btn btn-danger btn-sm" onclick="offboardEmployee('${u.id}')">Mark Offboarded</button>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="resetEmployeePassword('${u.id}')" title="Current Password: ${escapeHtml(passDisplay)}">Reset Password</button>
+                        <button class="btn btn-danger btn-sm" onclick="offboardEmployee('${u.id}')">Offboard</button>
+                    </div>
                 </td>
             </tr>
         `;
     }).join('');
+}
+
+function openAddEmployeeModal() {
+    document.getElementById('employeeForm').reset();
+    document.getElementById('empPassword').value = '123456';
+    openModal('employeeModal');
+}
+
+function saveEmployee(e) {
+    e.preventDefault();
+    const name = document.getElementById('empName').value.trim();
+    const username = document.getElementById('empUsername').value.trim();
+    const email = document.getElementById('empEmail').value.trim();
+    const role = document.getElementById('empRole').value;
+    const password = document.getElementById('empPassword').value.trim() || '123456';
+
+    const existing = appData.users.find(u => u.username === username);
+    if (existing) {
+        alert('An account with this username already exists.');
+        return;
+    }
+
+    const newEmp = {
+        id: String(Date.now()),
+        display_name: name,
+        username: username,
+        email: email,
+        role: role,
+        password: password,
+        offboard_date: null
+    };
+
+    appData.users.push(newEmp);
+    saveDataStore();
+    populateLoginDropdown();
+    closeModal('employeeModal');
+    renderEmployeesRoster();
+    alert(`Employee ${name} added successfully! Default Password: ${password}`);
+}
+
+function resetEmployeePassword(id) {
+    const user = appData.users.find(u => String(u.id) === String(id));
+    if (!user) return;
+    const currentPass = user.password || '123456';
+    const newPass = prompt(`Reset password for ${user.display_name}:\n\nCurrent Password: ${currentPass}\n\nEnter new password:`, currentPass);
+    if (newPass && newPass.trim()) {
+        user.password = newPass.trim();
+        saveDataStore();
+        renderEmployeesRoster();
+        alert(`Password for ${user.display_name} updated successfully to: ${user.password}`);
+    }
+}
+
+function offboardEmployee(id) {
+    const user = appData.users.find(u => String(u.id) === String(id));
+    if (!user) return;
+    if (confirm(`Mark ${user.display_name} as offboarded/ex-employee?`)) {
+        user.offboard_date = getTodayString();
+        saveDataStore();
+        populateLoginDropdown();
+        renderEmployeesRoster();
+    }
+}
+
+function rehireEmployee(id) {
+    const user = appData.users.find(u => String(u.id) === String(id));
+    if (!user) return;
+    user.offboard_date = null;
+    saveDataStore();
+    populateLoginDropdown();
+    renderExEmployees();
 }
 
 // VIEW 5: SALARY & PAYROLL (HR)
@@ -483,24 +585,24 @@ function renderPayrollMonthlyTab() {
 
     const tbody = document.getElementById('payrollTableBody');
     tbody.innerHTML = activeUsers.map(u => {
-        const base = getLatestBaseSalary(u.id, eomDate);
+        const baseObj = getLatestBaseSalary(u.id, eomDate);
         const stats = getMonthlyCounts(u.id, month, year);
 
-        const perDay = base / 30; // 30-day standard divisor
+        const perDay = baseObj.amount / 30; // 30-day standard divisor
         const deduction = (stats.absent * perDay) + (stats.halfDay * (perDay / 2));
-        const netPayable = Math.max(0, base - deduction);
+        const netPayable = Math.max(0, baseObj.amount - deduction);
 
         return `
             <tr>
                 <td><strong>${escapeHtml(u.display_name)}</strong></td>
-                <td>₹${base.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                <td>${formatMoney(baseObj.amount, baseObj.currency)}</td>
                 <td>
                     <span style="color:var(--status-present); font-weight:600;">${stats.present} P</span> / 
                     <span style="color:var(--status-absent); font-weight:600;">${stats.absent} A</span> / 
                     <span style="color:var(--status-halfday); font-weight:600;">${stats.halfDay} H</span>
                 </td>
-                <td style="color:#ef4444;">-₹${deduction.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</td>
-                <td><strong>₹${netPayable.toLocaleString('en-IN', { maximumFractionDigits: 2 })}</strong></td>
+                <td style="color:#ef4444;">-${formatMoney(deduction, baseObj.currency)}</td>
+                <td><strong>${formatMoney(netPayable, baseObj.currency)}</strong></td>
                 <td>
                     <button class="btn btn-secondary btn-sm" onclick="showPayslipModal('${u.id}', ${month}, ${year})">View Slip</button>
                 </td>
@@ -518,8 +620,8 @@ function renderSalaryRatesTab() {
         return `
             <tr>
                 <td><strong>${escapeHtml(user ? user.display_name : `User ${s.user_id}`)}</strong></td>
-                <td>₹${parseFloat(s.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
-                <td>${s.currency || 'INR'}</td>
+                <td>${formatMoney(s.amount, s.currency || 'INR')}</td>
+                <td><span class="user-role-tag">${s.currency || 'INR'}</span></td>
                 <td>${formatDate(s.effective_date)}</td>
                 <td>
                     <button class="btn btn-danger btn-sm" onclick="deleteSalaryRate('${s.id}')">Delete</button>
@@ -532,21 +634,33 @@ function renderSalaryRatesTab() {
 function populateCalcUserDropdown() {
     const select = document.getElementById('calcEmployeeSelect');
     if (select) {
-        select.innerHTML = `<option value="">-- Choose Employee --</option>` + appData.users.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
+        select.innerHTML = `<option value="">-- Choose Employee --</option>` + appData.users.filter(u => !u.offboard_date).map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
     }
 }
 
 function calculateQuickPay() {
-    const base = parseFloat(document.getElementById('calcBaseSalary').value) || 0;
-    const absent = parseFloat(document.getElementById('calcAbsentDays').value) || 0;
+    const userId = document.getElementById('calcEmployeeSelect').value;
+    let base = parseFloat(document.getElementById('calcBaseSalary').value) || 0;
+    let currency = 'INR';
 
+    if (userId) {
+        const today = getTodayString();
+        const baseObj = getLatestBaseSalary(userId, today);
+        if (!document.getElementById('calcBaseSalary').dataset.userSet) {
+            base = baseObj.amount;
+            document.getElementById('calcBaseSalary').value = base;
+        }
+        currency = baseObj.currency;
+    }
+
+    const absent = parseFloat(document.getElementById('calcAbsentDays').value) || 0;
     const perDay = base / 30;
     const deduction = absent * perDay;
     const net = Math.max(0, base - deduction);
 
-    document.getElementById('calcPerDay').textContent = `₹${perDay.toFixed(2)}`;
-    document.getElementById('calcDeduction').textContent = `-₹${deduction.toFixed(2)}`;
-    document.getElementById('calcNetPay').textContent = `₹${net.toFixed(2)}`;
+    document.getElementById('calcPerDay').textContent = formatMoney(perDay, currency);
+    document.getElementById('calcDeduction').textContent = `-${formatMoney(deduction, currency)}`;
+    document.getElementById('calcNetPay').textContent = formatMoney(net, currency);
 }
 
 // VIEW 6: EX-EMPLOYEES ARCHIVE (HR)
@@ -729,51 +843,6 @@ function deleteAttendanceRecord(id) {
     renderTeamAttendance();
 }
 
-function openAddEmployeeModal() {
-    document.getElementById('employeeForm').reset();
-    openModal('employeeModal');
-}
-
-function saveEmployee(e) {
-    e.preventDefault();
-    const name = document.getElementById('empName').value.trim();
-    const username = document.getElementById('empUsername').value.trim();
-    const email = document.getElementById('empEmail').value.trim();
-    const role = document.getElementById('empRole').value;
-
-    const newEmp = {
-        id: String(Date.now()),
-        display_name: name,
-        username: username,
-        email: email,
-        role: role,
-        offboard_date: null
-    };
-
-    appData.users.push(newEmp);
-    saveDataStore();
-    closeModal('employeeModal');
-    renderEmployeesRoster();
-}
-
-function offboardEmployee(id) {
-    const user = appData.users.find(u => String(u.id) === String(id));
-    if (!user) return;
-    if (confirm(`Mark ${user.display_name} as offboarded/ex-employee?`)) {
-        user.offboard_date = getTodayString();
-        saveDataStore();
-        renderEmployeesRoster();
-    }
-}
-
-function rehireEmployee(id) {
-    const user = appData.users.find(u => String(u.id) === String(id));
-    if (!user) return;
-    user.offboard_date = null;
-    saveDataStore();
-    renderExEmployees();
-}
-
 function openAddSalaryModal() {
     const select = document.getElementById('salUserSelect');
     const activeUsers = appData.users.filter(u => !u.offboard_date);
@@ -815,18 +884,25 @@ function deleteSalaryRate(id) {
     renderSalaryPayroll();
 }
 
+function formatMoney(amount, currency = 'INR') {
+    const symbols = { INR: '₹', USD: '$', PHP: '₱' };
+    const sym = symbols[currency] || currency + ' ';
+    const val = parseFloat(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return `${sym}${val}`;
+}
+
 function showPayslipModal(userId, month, year) {
     const user = appData.users.find(u => String(u.id) === String(userId));
     if (!user) return;
 
     const totalDays = new Date(year, month, 0).getDate();
     const eomDate = `${year}-${String(month).padStart(2,'0')}-${totalDays}`;
-    const base = getLatestBaseSalary(userId, eomDate);
+    const baseObj = getLatestBaseSalary(userId, eomDate);
     const stats = getMonthlyCounts(userId, month, year);
 
-    const perDay = base / 30;
+    const perDay = baseObj.amount / 30;
     const deduction = (stats.absent * perDay) + (stats.halfDay * (perDay / 2));
-    const netPayable = Math.max(0, base - deduction);
+    const netPayable = Math.max(0, baseObj.amount - deduction);
 
     const monthName = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
 
@@ -846,6 +922,7 @@ function showPayslipModal(userId, month, year) {
             <div style="text-align: right;">
                 <strong>Statement Period:</strong> ${monthName} ${year}<br>
                 <strong>Generated Date:</strong> ${getTodayString()}<br>
+                <strong>Currency:</strong> ${baseObj.currency}<br>
                 <strong>Standard Divisor:</strong> 30 Days
             </div>
         </div>
@@ -860,7 +937,7 @@ function showPayslipModal(userId, month, year) {
             <tbody>
                 <tr>
                     <td>Base Monthly Salary Rate</td>
-                    <td style="text-align: right;">₹${base.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right;">${formatMoney(baseObj.amount, baseObj.currency)}</td>
                 </tr>
                 <tr>
                     <td>Days Present (${stats.present} Days)</td>
@@ -868,11 +945,11 @@ function showPayslipModal(userId, month, year) {
                 </tr>
                 <tr>
                     <td>Absent Deductions (${stats.absent} Full + ${stats.halfDay} Half Days)</td>
-                    <td style="text-align: right; color: #ef4444;">-₹${deduction.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; color: #ef4444;">-${formatMoney(deduction, baseObj.currency)}</td>
                 </tr>
                 <tr style="font-weight: 700; background: #f8fafc;">
                     <td>NET PAYABLE SALARY</td>
-                    <td style="text-align: right; color: var(--primary); font-size: 1.1rem;">₹${netPayable.toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                    <td style="text-align: right; color: var(--primary); font-size: 1.1rem;">${formatMoney(netPayable, baseObj.currency)}</td>
                 </tr>
             </tbody>
         </table>
@@ -888,9 +965,12 @@ function getLatestBaseSalary(userId, dateStr) {
         .sort((a, b) => new Date(b.effective_date) - new Date(a.effective_date));
     
     if (userSalaries.length > 0) {
-        return parseFloat(userSalaries[0].amount);
+        return {
+            amount: parseFloat(userSalaries[0].amount),
+            currency: userSalaries[0].currency || 'INR'
+        };
     }
-    return 30000; // Default base fallback
+    return { amount: 30000, currency: 'INR' };
 }
 
 function getMonthlyCounts(userId, month, year) {

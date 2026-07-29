@@ -7739,72 +7739,72 @@
       "user_id": "352",
       "amount": 30000,
       "effective_date": "2026-01-22 06:30:23",
-      "updated_at": "INR",
-      "currency": "2026-01-01"
+      "updated_at": "2026-01-01",
+      "currency": "INR"
     },
     {
       "id": "2",
       "user_id": "349",
       "amount": 30000,
       "effective_date": "2026-01-22 06:30:46",
-      "updated_at": "INR",
-      "currency": "2026-01-01"
+      "updated_at": "2026-01-01",
+      "currency": "INR"
     },
     {
       "id": "3",
       "user_id": "351",
       "amount": 31000,
       "effective_date": "2026-01-22 06:30:57",
-      "updated_at": "INR",
-      "currency": "2026-01-01"
+      "updated_at": "2026-01-01",
+      "currency": "INR"
     },
     {
       "id": "4",
       "user_id": "350",
       "amount": 12500,
       "effective_date": "2026-01-22 06:31:06",
-      "updated_at": "INR",
-      "currency": "2026-01-01"
+      "updated_at": "2026-01-01",
+      "currency": "INR"
     },
     {
       "id": "5",
       "user_id": "348",
       "amount": 30000,
       "effective_date": "2026-01-22 06:31:16",
-      "updated_at": "INR",
-      "currency": "2026-01-01"
+      "updated_at": "2026-01-01",
+      "currency": "INR"
     },
     {
       "id": "7",
       "user_id": "358",
       "amount": 19300,
       "effective_date": "2026-03-23 11:59:00",
-      "updated_at": "PHP",
-      "currency": "2026-03-01"
+      "updated_at": "2026-03-01",
+      "currency": "PHP"
     },
     {
       "id": "8",
       "user_id": "356",
       "amount": 12000,
       "effective_date": "2026-04-01 10:03:40",
-      "updated_at": "INR",
-      "currency": "2026-04-01"
+      "updated_at": "2026-04-01",
+      "currency": "INR"
     },
     {
       "id": "9",
       "user_id": "361",
       "amount": 30000,
       "effective_date": "2026-05-11 11:07:10",
-      "updated_at": "INR",
-      "currency": "2026-05-01"
+      "updated_at": "2026-05-01",
+      "currency": "INR"
     },
     {
       "id": "10",
       "user_id": "360",
       "amount": 10000,
       "effective_date": "2026-05-11 11:07:29",
-      "updated_at": "INR",
-      "currency": "2026-05-01"
+      "updated_at": "2026-05-01",
+      "currency": "INR"
     }
   ]
 }
