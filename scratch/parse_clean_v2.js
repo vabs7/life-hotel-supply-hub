@@ -6,7 +6,7 @@ const content = fs.readFileSync('i10989407_gnmu1.sql', 'utf8');
 // 1. Users Setup
 const originalData = JSON.parse(fs.readFileSync('migrated_data.json', 'utf8'));
 
-// Admin User override as requested:
+// Admin User override:
 // Email: lifehotelsupply@gmail.com, Name: Kedar Raval, Username: kedar_is, Password: KedarRaval_2025@#
 const cleanUsers = originalData.users.map(u => {
     if (u.id === '347' || u.username === 'vaibhav.ajugiya' || u.username === 'kedar_is') {
@@ -25,7 +25,6 @@ const cleanUsers = originalData.users.map(u => {
     return u;
 });
 
-// Ensure Admin account exists if not already replaced
 if (!cleanUsers.some(u => u.username === 'kedar_is')) {
     cleanUsers.unshift({
         id: '347',
@@ -40,14 +39,14 @@ if (!cleanUsers.some(u => u.username === 'kedar_is')) {
     });
 }
 
-// 2. Attendance Parsing from eqla_wc_ams_attendance
-console.log('Parsing attendance table...');
-const attStart = content.indexOf('INSERT INTO `eqla_wc_ams_attendance`');
+// 2. Parse ALL Attendance Blocks from eqla_wc_ams_attendance
+console.log('Parsing ALL attendance blocks...');
 let attendance = [];
+let attPos = 0;
 
-if (attStart !== -1) {
-    const attEnd = content.indexOf(';\n', attStart);
-    const sqlChunk = content.substring(attStart, attEnd);
+while ((attPos = content.indexOf('INSERT INTO `eqla_wc_ams_attendance`', attPos)) !== -1) {
+    const endPos = content.indexOf(';\n', attPos);
+    const sqlChunk = content.substring(attPos, endPos === -1 ? content.length : endPos);
     const valuesPart = sqlChunk.substring(sqlChunk.indexOf('VALUES') + 6).trim();
 
     const tuples = valuesPart.split(/\),\s*\(/);
@@ -110,16 +109,19 @@ if (attStart !== -1) {
             });
         }
     }
+
+    if (endPos === -1) break;
+    attPos = endPos + 2;
 }
 
-// 3. Salary History Parsing
-console.log('Parsing salary history table...');
-const salStart = content.indexOf('INSERT INTO `eqla_wc_ams_salary_history`');
+// 3. Parse Salary History Blocks
+console.log('Parsing ALL salary history blocks...');
 let salary_history = [];
+let salPos = 0;
 
-if (salStart !== -1) {
-    const salEnd = content.indexOf(';\n', salStart);
-    const sqlChunk = content.substring(salStart, salEnd);
+while ((salPos = content.indexOf('INSERT INTO `eqla_wc_ams_salary_history`', salPos)) !== -1) {
+    const endPos = content.indexOf(';\n', salPos);
+    const sqlChunk = content.substring(salPos, endPos === -1 ? content.length : endPos);
     const valuesPart = sqlChunk.substring(sqlChunk.indexOf('VALUES') + 6).trim();
 
     const tuples = valuesPart.split(/\),\s*\(/);
@@ -173,6 +175,9 @@ if (salStart !== -1) {
             });
         }
     }
+
+    if (endPos === -1) break;
+    salPos = endPos + 2;
 }
 
 // Write out newly parsed clean JSON
@@ -184,10 +189,12 @@ const finalData = {
 
 fs.writeFileSync('migrated_data.json', JSON.stringify(finalData, null, 2));
 
-console.log('Successfully re-parsed and exported clean data:');
+console.log('Successfully re-parsed and exported complete clean data:');
 console.log('- Users Count:', finalData.users.length);
 console.log('- Attendance Count:', finalData.attendance.length);
 console.log('- Salary Records Count:', finalData.salary_history.length);
-console.log('- Admin Profile:', finalData.users.find(u => u.username === 'kedar_is'));
-console.log('- Sample Attendance:', finalData.attendance.slice(0, 3));
-console.log('- Sample Salary History:', finalData.salary_history);
+
+const richa = finalData.attendance.filter(a => String(a.user_id) === '351');
+console.log('- Richa Narang Total Attendance Records:', richa.length);
+const richaDates = richa.map(a => a.date).sort();
+console.log('- Richa Date Range:', richaDates[0], 'to', richaDates[richaDates.length - 1]);

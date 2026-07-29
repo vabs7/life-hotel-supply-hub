@@ -4414,6 +4414,3336 @@
       "status": "Present",
       "remarks": "",
       "ip_address": "152.59.186.144"
+    },
+    {
+      "id": "439",
+      "user_id": "358",
+      "date": "2026-04-21",
+      "login_time": "2026-04-21 07:54:33",
+      "logout_time": "2026-04-21 17:06:11",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "440",
+      "user_id": "352",
+      "date": "2026-04-21",
+      "login_time": "2026-04-21 07:56:37",
+      "logout_time": "2026-04-21 17:25:53",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.205.191.54"
+    },
+    {
+      "id": "441",
+      "user_id": "351",
+      "date": "2026-04-21",
+      "login_time": "2026-04-21 07:57:53",
+      "logout_time": "2026-04-21 16:55:18",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.194"
+    },
+    {
+      "id": "442",
+      "user_id": "356",
+      "date": "2026-04-22",
+      "login_time": "2026-04-22 05:36:08",
+      "logout_time": "2026-04-22 07:43:47",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.182.148"
+    },
+    {
+      "id": "443",
+      "user_id": "349",
+      "date": "2026-04-22",
+      "login_time": "2026-04-22 07:47:55",
+      "logout_time": "2026-04-22 17:17:26",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.185.233"
+    },
+    {
+      "id": "444",
+      "user_id": "351",
+      "date": "2026-04-22",
+      "login_time": "2026-04-22 07:52:34",
+      "logout_time": "2026-04-22 17:02:37",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.194"
+    },
+    {
+      "id": "445",
+      "user_id": "358",
+      "date": "2026-04-22",
+      "login_time": "2026-04-22 07:53:40",
+      "logout_time": "2026-04-22 17:00:51",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "446",
+      "user_id": "352",
+      "date": "2026-04-22",
+      "login_time": "2026-04-22 07:57:55",
+      "logout_time": "2026-04-22 17:17:23",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "49.43.114.231"
+    },
+    {
+      "id": "447",
+      "user_id": "356",
+      "date": "2026-04-23",
+      "login_time": "2026-04-23 05:32:03",
+      "logout_time": "2026-04-23 07:43:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.176.185"
+    },
+    {
+      "id": "448",
+      "user_id": "349",
+      "date": "2026-04-23",
+      "login_time": "2026-04-23 07:43:28",
+      "logout_time": "2026-04-23 17:01:39",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.143"
+    },
+    {
+      "id": "449",
+      "user_id": "352",
+      "date": "2026-04-23",
+      "login_time": "2026-04-23 07:50:23",
+      "logout_time": "2026-04-23 17:02:33",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.186.151"
+    },
+    {
+      "id": "450",
+      "user_id": "358",
+      "date": "2026-04-23",
+      "login_time": "2026-04-23 07:55:30",
+      "logout_time": "2026-04-23 18:47:03",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "451",
+      "user_id": "351",
+      "date": "2026-04-23",
+      "login_time": "2026-04-23 08:01:18",
+      "logout_time": "2026-04-23 17:08:14",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.51.4"
+    },
+    {
+      "id": "452",
+      "user_id": "356",
+      "date": "2026-04-24",
+      "login_time": "2026-04-24 05:32:15",
+      "logout_time": "2026-04-24 07:55:12",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.176.85"
+    },
+    {
+      "id": "453",
+      "user_id": "358",
+      "date": "2026-04-24",
+      "login_time": "2026-04-24 07:45:31",
+      "logout_time": "2026-04-24 17:00:19",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "454",
+      "user_id": "349",
+      "date": "2026-04-24",
+      "login_time": "2026-04-24 07:49:17",
+      "logout_time": "2026-04-24 17:24:43",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.187.152"
+    },
+    {
+      "id": "455",
+      "user_id": "352",
+      "date": "2026-04-24",
+      "login_time": "2026-04-24 07:54:35",
+      "logout_time": "2026-04-24 17:22:05",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.207"
+    },
+    {
+      "id": "456",
+      "user_id": "351",
+      "date": "2026-04-24",
+      "login_time": "2026-04-24 07:55:53",
+      "logout_time": "2026-04-24 17:10:06",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.51.4"
+    },
+    {
+      "id": "457",
+      "user_id": "356",
+      "date": "2026-04-27",
+      "login_time": "2026-04-27 05:35:11",
+      "logout_time": "2026-04-27 07:47:41",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.177.0"
+    },
+    {
+      "id": "458",
+      "user_id": "356",
+      "date": "2026-04-25",
+      "login_time": "2026-04-25 05:12:00",
+      "logout_time": "2026-04-25 06:30:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "459",
+      "user_id": "349",
+      "date": "2026-04-27",
+      "login_time": "2026-04-27 07:45:12",
+      "logout_time": "2026-04-27 16:58:35",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.185.118"
+    },
+    {
+      "id": "460",
+      "user_id": "358",
+      "date": "2026-04-27",
+      "login_time": "2026-04-27 07:55:27",
+      "logout_time": "2026-04-27 17:00:40",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "461",
+      "user_id": "352",
+      "date": "2026-04-27",
+      "login_time": "2026-04-27 07:56:20",
+      "logout_time": "2026-04-27 17:08:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.236"
+    },
+    {
+      "id": "462",
+      "user_id": "351",
+      "date": "2026-04-27",
+      "login_time": "2026-04-27 08:00:22",
+      "logout_time": "2026-04-27 16:59:29",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.50.85"
+    },
+    {
+      "id": "463",
+      "user_id": "356",
+      "date": "2026-04-28",
+      "login_time": "2026-04-28 05:30:00",
+      "logout_time": "2026-04-28 08:11:48",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.183.179"
+    },
+    {
+      "id": "464",
+      "user_id": "358",
+      "date": "2026-04-28",
+      "login_time": "2026-04-28 07:46:41",
+      "logout_time": "2026-04-28 17:02:52",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "465",
+      "user_id": "351",
+      "date": "2026-04-28",
+      "login_time": "2026-04-28 07:56:20",
+      "logout_time": "2026-04-28 16:58:20",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.50.85"
+    },
+    {
+      "id": "466",
+      "user_id": "356",
+      "date": "2026-04-29",
+      "login_time": "2026-04-29 07:27:55",
+      "logout_time": "2026-04-29 10:04:37",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.183.179"
+    },
+    {
+      "id": "467",
+      "user_id": "349",
+      "date": "2026-04-29",
+      "login_time": "2026-04-29 07:42:03",
+      "logout_time": "2026-04-29 17:02:15",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.117"
+    },
+    {
+      "id": "468",
+      "user_id": "352",
+      "date": "2026-04-29",
+      "login_time": "2026-04-29 07:49:41",
+      "logout_time": "2026-04-29 17:04:59",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.181"
+    },
+    {
+      "id": "469",
+      "user_id": "358",
+      "date": "2026-04-29",
+      "login_time": "2026-04-29 07:50:33",
+      "logout_time": "2026-04-29 17:01:50",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "470",
+      "user_id": "351",
+      "date": "2026-04-29",
+      "login_time": "2026-04-29 08:01:57",
+      "logout_time": "2026-04-29 17:00:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.50.85"
+    },
+    {
+      "id": "471",
+      "user_id": "356",
+      "date": "2026-04-30",
+      "login_time": "2026-04-30 05:27:22",
+      "logout_time": "2026-04-30 08:03:48",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "27.97.180.225"
+    },
+    {
+      "id": "472",
+      "user_id": "349",
+      "date": "2026-04-30",
+      "login_time": "2026-04-30 00:00:00",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "1st Sick leave",
+      "ip_address": "106.219.168.184"
+    },
+    {
+      "id": "473",
+      "user_id": "352",
+      "date": "2026-04-30",
+      "login_time": "2026-04-30 07:52:53",
+      "logout_time": "2026-04-30 17:01:57",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.181"
+    },
+    {
+      "id": "474",
+      "user_id": "351",
+      "date": "2026-04-30",
+      "login_time": "2026-04-30 07:57:57",
+      "logout_time": "2026-04-30 17:01:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.95"
+    },
+    {
+      "id": "475",
+      "user_id": "358",
+      "date": "2026-04-30",
+      "login_time": "2026-04-30 00:00:00",
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "1st Sick leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "476",
+      "user_id": "352",
+      "date": "2026-04-20",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Family Celebrations leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "477",
+      "user_id": "352",
+      "date": "2026-04-28",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Family Celebrations leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "478",
+      "user_id": "349",
+      "date": "2026-04-28",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Family Celebrations leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "481",
+      "user_id": "351",
+      "date": "2026-04-14",
+      "login_time": "2026-04-14 00:00:00",
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Personal reason",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "482",
+      "user_id": "356",
+      "date": "2026-05-01",
+      "login_time": "2026-05-01 07:06:07",
+      "logout_time": "2026-05-01 09:07:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "27.97.174.162"
+    },
+    {
+      "id": "483",
+      "user_id": "358",
+      "date": "2026-05-01",
+      "login_time": "2026-05-01 07:42:55",
+      "logout_time": "2026-05-01 18:00:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "484",
+      "user_id": "349",
+      "date": "2026-05-01",
+      "login_time": "2026-05-01 07:52:12",
+      "logout_time": "2026-05-01 16:54:21",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.36"
+    },
+    {
+      "id": "485",
+      "user_id": "351",
+      "date": "2026-05-01",
+      "login_time": "2026-05-01 07:59:47",
+      "logout_time": "2026-05-01 16:59:49",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.95"
+    },
+    {
+      "id": "486",
+      "user_id": "352",
+      "date": "2026-05-01",
+      "login_time": "2026-05-01 08:08:42",
+      "logout_time": "2026-05-01 17:03:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.181"
+    },
+    {
+      "id": "487",
+      "user_id": "356",
+      "date": "2026-05-02",
+      "login_time": "2026-05-02 05:33:00",
+      "logout_time": "2026-05-02 06:40:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.179.108"
+    },
+    {
+      "id": "488",
+      "user_id": "356",
+      "date": "2026-05-04",
+      "login_time": "2026-05-04 06:25:24",
+      "logout_time": "2026-05-04 08:22:42",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "110.226.176.127"
+    },
+    {
+      "id": "489",
+      "user_id": "358",
+      "date": "2026-05-04",
+      "login_time": "2026-05-04 07:47:49",
+      "logout_time": "2026-05-04 17:00:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "490",
+      "user_id": "352",
+      "date": "2026-05-04",
+      "login_time": "2026-05-04 07:56:40",
+      "logout_time": "2026-05-04 17:00:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.201.106"
+    },
+    {
+      "id": "491",
+      "user_id": "349",
+      "date": "2026-05-04",
+      "login_time": "2026-05-04 07:58:42",
+      "logout_time": "2026-05-04 16:53:03",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.162"
+    },
+    {
+      "id": "492",
+      "user_id": "351",
+      "date": "2026-05-04",
+      "login_time": "2026-05-04 08:00:10",
+      "logout_time": "2026-05-04 17:02:14",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.84"
+    },
+    {
+      "id": "493",
+      "user_id": "358",
+      "date": "2026-05-05",
+      "login_time": "2026-05-05 07:31:17",
+      "logout_time": "2026-05-05 17:00:44",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "494",
+      "user_id": "352",
+      "date": "2026-05-05",
+      "login_time": "2026-05-05 07:51:40",
+      "logout_time": "2026-05-05 17:00:25",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.245"
+    },
+    {
+      "id": "495",
+      "user_id": "349",
+      "date": "2026-05-05",
+      "login_time": "2026-05-05 07:55:04",
+      "logout_time": "2026-05-05 16:56:58",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.190"
+    },
+    {
+      "id": "496",
+      "user_id": "351",
+      "date": "2026-05-05",
+      "login_time": "2026-05-05 07:56:14",
+      "logout_time": "2026-05-05 17:01:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.5"
+    },
+    {
+      "id": "497",
+      "user_id": "349",
+      "date": "2026-05-06",
+      "login_time": "2026-05-06 07:46:27",
+      "logout_time": "2026-05-06 17:10:37",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.138"
+    },
+    {
+      "id": "498",
+      "user_id": "358",
+      "date": "2026-05-06",
+      "login_time": "2026-05-06 07:52:23",
+      "logout_time": "2026-05-06 17:08:38",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "499",
+      "user_id": "352",
+      "date": "2026-05-06",
+      "login_time": "2026-05-06 07:57:39",
+      "logout_time": "2026-05-06 17:08:38",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.245"
+    },
+    {
+      "id": "500",
+      "user_id": "351",
+      "date": "2026-05-06",
+      "login_time": "2026-05-06 08:01:17",
+      "logout_time": "2026-05-06 17:08:54",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.5"
+    },
+    {
+      "id": "501",
+      "user_id": "356",
+      "date": "2026-05-07",
+      "login_time": "2026-05-07 05:32:00",
+      "logout_time": "2026-05-07 07:44:14",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "502",
+      "user_id": "349",
+      "date": "2026-05-07",
+      "login_time": "2026-05-07 07:45:00",
+      "logout_time": "2026-05-07 17:00:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.216"
+    },
+    {
+      "id": "503",
+      "user_id": "352",
+      "date": "2026-05-07",
+      "login_time": "2026-05-07 07:53:00",
+      "logout_time": "2026-05-07 13:33:00",
+      "status": "Half Day",
+      "remarks": "Half day Sick leave",
+      "ip_address": "103.226.203.245"
+    },
+    {
+      "id": "504",
+      "user_id": "358",
+      "date": "2026-05-07",
+      "login_time": "2026-05-07 07:56:44",
+      "logout_time": "2026-05-07 17:21:02",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "505",
+      "user_id": "351",
+      "date": "2026-05-07",
+      "login_time": "2026-05-07 08:00:03",
+      "logout_time": "2026-05-07 17:02:41",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.5"
+    },
+    {
+      "id": "506",
+      "user_id": "356",
+      "date": "2026-05-08",
+      "login_time": "2026-05-08 05:21:30",
+      "logout_time": "2026-05-08 08:55:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "42.104.216.56"
+    },
+    {
+      "id": "507",
+      "user_id": "349",
+      "date": "2026-05-08",
+      "login_time": "2026-05-08 07:44:11",
+      "logout_time": "2026-05-08 16:53:32",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.140"
+    },
+    {
+      "id": "508",
+      "user_id": "358",
+      "date": "2026-05-08",
+      "login_time": "2026-05-08 07:47:30",
+      "logout_time": "2026-05-08 17:09:23",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "509",
+      "user_id": "352",
+      "date": "2026-05-08",
+      "login_time": "2026-05-08 07:56:02",
+      "logout_time": "2026-05-08 16:47:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.201.136"
+    },
+    {
+      "id": "510",
+      "user_id": "351",
+      "date": "2026-05-08",
+      "login_time": "2026-05-08 08:01:58",
+      "logout_time": "2026-05-08 17:01:32",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.155"
+    },
+    {
+      "id": "511",
+      "user_id": "356",
+      "date": "2026-05-09",
+      "login_time": "2026-05-09 05:06:00",
+      "logout_time": "2026-05-09 06:23:31",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "42.104.218.62"
+    },
+    {
+      "id": "512",
+      "user_id": "356",
+      "date": "2026-05-11",
+      "login_time": "2026-05-11 05:35:10",
+      "logout_time": "2026-05-11 07:46:43",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "42.104.228.4"
+    },
+    {
+      "id": "513",
+      "user_id": "361",
+      "date": "2026-05-01",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "514",
+      "user_id": "361",
+      "date": "2026-05-02",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "515",
+      "user_id": "361",
+      "date": "2026-05-03",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "516",
+      "user_id": "361",
+      "date": "2026-05-04",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "517",
+      "user_id": "361",
+      "date": "2026-05-05",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "518",
+      "user_id": "361",
+      "date": "2026-05-06",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "519",
+      "user_id": "361",
+      "date": "2026-05-07",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "520",
+      "user_id": "361",
+      "date": "2026-05-08",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "521",
+      "user_id": "361",
+      "date": "2026-05-09",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "522",
+      "user_id": "361",
+      "date": "2026-05-10",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "523",
+      "user_id": "349",
+      "date": "2026-05-11",
+      "login_time": "2026-05-11 07:44:49",
+      "logout_time": "2026-05-11 17:00:53",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.185.68"
+    },
+    {
+      "id": "524",
+      "user_id": "358",
+      "date": "2026-05-11",
+      "login_time": "2026-05-11 07:51:41",
+      "logout_time": "2026-05-11 17:05:37",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "525",
+      "user_id": "352",
+      "date": "2026-05-11",
+      "login_time": "2026-05-11 07:56:13",
+      "logout_time": "2026-05-11 17:47:11",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.202.189"
+    },
+    {
+      "id": "526",
+      "user_id": "351",
+      "date": "2026-05-11",
+      "login_time": "2026-05-11 07:59:46",
+      "logout_time": "2026-05-11 17:01:54",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.48.198"
+    },
+    {
+      "id": "527",
+      "user_id": "361",
+      "date": "2026-05-11",
+      "login_time": "2026-05-11 08:00:29",
+      "logout_time": "2026-05-11 17:00:40",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.221.180.119"
+    },
+    {
+      "id": "528",
+      "user_id": "356",
+      "date": "2026-05-12",
+      "login_time": "2026-05-12 05:41:12",
+      "logout_time": "2026-05-12 07:54:41",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "1.38.141.14"
+    },
+    {
+      "id": "529",
+      "user_id": "352",
+      "date": "2026-05-12",
+      "login_time": "2026-05-12 07:53:06",
+      "logout_time": "2026-05-12 17:02:57",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.202.189"
+    },
+    {
+      "id": "530",
+      "user_id": "358",
+      "date": "2026-05-12",
+      "login_time": "2026-05-12 07:54:28",
+      "logout_time": "2026-05-12 17:18:58",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "531",
+      "user_id": "349",
+      "date": "2026-05-12",
+      "login_time": "2026-05-12 07:57:12",
+      "logout_time": "2026-05-12 16:59:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.32"
+    },
+    {
+      "id": "532",
+      "user_id": "361",
+      "date": "2026-05-12",
+      "login_time": "2026-05-12 08:00:10",
+      "logout_time": "2026-05-12 17:00:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "117.99.202.247"
+    },
+    {
+      "id": "533",
+      "user_id": "351",
+      "date": "2026-05-12",
+      "login_time": "2026-05-12 08:02:35",
+      "logout_time": "2026-05-12 17:24:06",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.48.198"
+    },
+    {
+      "id": "534",
+      "user_id": "356",
+      "date": "2026-05-13",
+      "login_time": "2026-05-13 06:26:34",
+      "logout_time": "2026-05-13 08:44:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.161"
+    },
+    {
+      "id": "535",
+      "user_id": "358",
+      "date": "2026-05-13",
+      "login_time": "2026-05-13 07:49:04",
+      "logout_time": "2026-05-13 17:13:25",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "536",
+      "user_id": "349",
+      "date": "2026-05-13",
+      "login_time": "2026-05-13 07:50:57",
+      "logout_time": "2026-05-13 15:15:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.31"
+    },
+    {
+      "id": "537",
+      "user_id": "351",
+      "date": "2026-05-13",
+      "login_time": "2026-05-13 07:56:33",
+      "logout_time": "2026-05-13 17:06:28",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.51.29"
+    },
+    {
+      "id": "538",
+      "user_id": "361",
+      "date": "2026-05-13",
+      "login_time": "2026-05-13 08:00:25",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.221.191.167"
+    },
+    {
+      "id": "539",
+      "user_id": "352",
+      "date": "2026-05-13",
+      "login_time": "2026-05-13 08:00:35",
+      "logout_time": "2026-05-13 17:42:31",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.202.189"
+    },
+    {
+      "id": "540",
+      "user_id": "356",
+      "date": "2026-05-14",
+      "login_time": "2026-05-14 05:48:25",
+      "logout_time": "2026-05-14 08:15:12",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.125"
+    },
+    {
+      "id": "541",
+      "user_id": "358",
+      "date": "2026-05-14",
+      "login_time": "2026-05-14 07:45:43",
+      "logout_time": "2026-05-14 17:00:40",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "542",
+      "user_id": "349",
+      "date": "2026-05-14",
+      "login_time": "2026-05-14 07:52:06",
+      "logout_time": "2026-05-14 16:52:36",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.173.110"
+    },
+    {
+      "id": "543",
+      "user_id": "352",
+      "date": "2026-05-14",
+      "login_time": "2026-05-14 07:56:09",
+      "logout_time": "2026-05-14 17:02:10",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.100"
+    },
+    {
+      "id": "544",
+      "user_id": "351",
+      "date": "2026-05-14",
+      "login_time": "2026-05-14 08:00:02",
+      "logout_time": "2026-05-14 17:21:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.186"
+    },
+    {
+      "id": "545",
+      "user_id": "356",
+      "date": "2026-05-15",
+      "login_time": "2026-05-15 05:41:38",
+      "logout_time": "2026-05-15 08:02:32",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.28"
+    },
+    {
+      "id": "546",
+      "user_id": "349",
+      "date": "2026-05-15",
+      "login_time": "2026-05-15 07:42:26",
+      "logout_time": "2026-05-15 17:00:45",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.185.107"
+    },
+    {
+      "id": "547",
+      "user_id": "352",
+      "date": "2026-05-15",
+      "login_time": "2026-05-15 07:54:47",
+      "logout_time": "2026-05-15 17:02:50",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.100"
+    },
+    {
+      "id": "548",
+      "user_id": "358",
+      "date": "2026-05-15",
+      "login_time": "2026-05-15 07:57:42",
+      "logout_time": "2026-05-15 17:00:47",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "549",
+      "user_id": "351",
+      "date": "2026-05-15",
+      "login_time": "2026-05-15 08:02:52",
+      "logout_time": "2026-05-15 17:03:18",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.186"
+    },
+    {
+      "id": "550",
+      "user_id": "356",
+      "date": "2026-05-16",
+      "login_time": "2026-05-16 05:46:29",
+      "logout_time": "2026-05-16 07:12:58",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.28"
+    },
+    {
+      "id": "551",
+      "user_id": "356",
+      "date": "2026-05-18",
+      "login_time": "2026-05-18 05:39:08",
+      "logout_time": "2026-05-18 07:52:12",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.107"
+    },
+    {
+      "id": "552",
+      "user_id": "349",
+      "date": "2026-05-18",
+      "login_time": "2026-05-18 07:46:06",
+      "logout_time": "2026-05-18 16:57:35",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.170.49"
+    },
+    {
+      "id": "553",
+      "user_id": "358",
+      "date": "2026-05-18",
+      "login_time": "2026-05-18 07:49:39",
+      "logout_time": "2026-05-18 17:02:29",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "554",
+      "user_id": "351",
+      "date": "2026-05-18",
+      "login_time": "2026-05-18 07:58:25",
+      "logout_time": "2026-05-18 17:00:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.179"
+    },
+    {
+      "id": "555",
+      "user_id": "352",
+      "date": "2026-05-18",
+      "login_time": "2026-05-18 07:58:51",
+      "logout_time": "2026-05-18 17:00:21",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.201.94"
+    },
+    {
+      "id": "556",
+      "user_id": "356",
+      "date": "2026-05-19",
+      "login_time": "2026-05-19 05:41:33",
+      "logout_time": "2026-05-19 07:51:11",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.72"
+    },
+    {
+      "id": "557",
+      "user_id": "349",
+      "date": "2026-05-19",
+      "login_time": "2026-05-19 07:42:36",
+      "logout_time": "2026-05-19 17:03:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.158"
+    },
+    {
+      "id": "558",
+      "user_id": "352",
+      "date": "2026-05-19",
+      "login_time": "2026-05-19 07:48:45",
+      "logout_time": "2026-05-19 17:42:55",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.201.94"
+    },
+    {
+      "id": "559",
+      "user_id": "358",
+      "date": "2026-05-19",
+      "login_time": "2026-05-19 07:59:22",
+      "logout_time": "2026-05-19 17:00:53",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "560",
+      "user_id": "351",
+      "date": "2026-05-19",
+      "login_time": "2026-05-19 08:01:21",
+      "logout_time": "2026-05-19 17:01:19",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.179"
+    },
+    {
+      "id": "561",
+      "user_id": "356",
+      "date": "2026-05-20",
+      "login_time": "2026-05-20 05:23:35",
+      "logout_time": "2026-05-20 07:45:44",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.139"
+    },
+    {
+      "id": "562",
+      "user_id": "358",
+      "date": "2026-05-20",
+      "login_time": "2026-05-20 07:50:39",
+      "logout_time": "2026-05-20 17:00:07",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "563",
+      "user_id": "351",
+      "date": "2026-05-20",
+      "login_time": "2026-05-20 08:02:37",
+      "logout_time": "2026-05-20 17:02:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.179"
+    },
+    {
+      "id": "564",
+      "user_id": "356",
+      "date": "2026-05-21",
+      "login_time": "2026-05-21 05:53:47",
+      "logout_time": "2026-05-21 08:13:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.80.230"
+    },
+    {
+      "id": "565",
+      "user_id": "349",
+      "date": "2026-05-20",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Sick leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "566",
+      "user_id": "352",
+      "date": "2026-05-21",
+      "login_time": "2026-05-21 07:57:20",
+      "logout_time": "2026-05-21 17:18:47",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.202.1"
+    },
+    {
+      "id": "567",
+      "user_id": "349",
+      "date": "2026-05-21",
+      "login_time": "2026-05-21 07:57:55",
+      "logout_time": "2026-05-21 16:36:15",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.207"
+    },
+    {
+      "id": "568",
+      "user_id": "351",
+      "date": "2026-05-21",
+      "login_time": "2026-05-21 08:10:05",
+      "logout_time": "2026-05-21 17:02:12",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.48.7"
+    },
+    {
+      "id": "569",
+      "user_id": "356",
+      "date": "2026-05-22",
+      "login_time": "2026-05-22 05:26:00",
+      "logout_time": "2026-05-22 08:06:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.85.183"
+    },
+    {
+      "id": "570",
+      "user_id": "352",
+      "date": "2026-05-20",
+      "login_time": "2026-05-20 00:00:00",
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "1st Sick leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "571",
+      "user_id": "358",
+      "date": "2026-05-21",
+      "login_time": "2026-05-21 00:00:00",
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "2nd Sick leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "572",
+      "user_id": "349",
+      "date": "2026-05-22",
+      "login_time": "2026-05-22 07:42:41",
+      "logout_time": "2026-05-22 17:05:22",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.251"
+    },
+    {
+      "id": "573",
+      "user_id": "358",
+      "date": "2026-05-22",
+      "login_time": "2026-05-22 07:44:39",
+      "logout_time": "2026-05-22 17:01:50",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "574",
+      "user_id": "351",
+      "date": "2026-05-22",
+      "login_time": "2026-05-22 07:56:05",
+      "logout_time": "2026-05-22 17:00:59",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.51.224"
+    },
+    {
+      "id": "575",
+      "user_id": "352",
+      "date": "2026-05-22",
+      "login_time": "2026-05-22 07:58:00",
+      "logout_time": "2026-05-22 13:20:00",
+      "status": "Half Day",
+      "remarks": "Half day Sick leave- 2nd",
+      "ip_address": "103.226.202.1"
+    },
+    {
+      "id": "576",
+      "user_id": "356",
+      "date": "2026-05-23",
+      "login_time": "2026-05-23 05:27:04",
+      "logout_time": "2026-05-23 06:55:18",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.86.183"
+    },
+    {
+      "id": "577",
+      "user_id": "356",
+      "date": "2026-05-25",
+      "login_time": "2026-05-25 05:34:00",
+      "logout_time": "2026-05-25 07:53:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.87.67"
+    },
+    {
+      "id": "578",
+      "user_id": "358",
+      "date": "2026-05-25",
+      "login_time": "2026-05-25 07:47:00",
+      "logout_time": "2026-05-25 17:01:27",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "579",
+      "user_id": "352",
+      "date": "2026-05-25",
+      "login_time": "2026-05-25 07:47:57",
+      "logout_time": "2026-05-25 17:10:34",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.201.137"
+    },
+    {
+      "id": "580",
+      "user_id": "349",
+      "date": "2026-05-25",
+      "login_time": "2026-05-25 07:48:55",
+      "logout_time": "2026-05-25 16:49:53",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.171.7"
+    },
+    {
+      "id": "581",
+      "user_id": "351",
+      "date": "2026-05-25",
+      "login_time": "2026-05-25 07:57:14",
+      "logout_time": "2026-05-25 17:01:44",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.51.224"
+    },
+    {
+      "id": "582",
+      "user_id": "356",
+      "date": "2026-05-26",
+      "login_time": "2026-05-26 05:28:55",
+      "logout_time": "2026-05-26 07:53:39",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.86.211"
+    },
+    {
+      "id": "583",
+      "user_id": "349",
+      "date": "2026-05-26",
+      "login_time": "2026-05-26 07:50:36",
+      "logout_time": "2026-05-26 17:00:21",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.5"
+    },
+    {
+      "id": "584",
+      "user_id": "358",
+      "date": "2026-05-26",
+      "login_time": "2026-05-26 07:54:13",
+      "logout_time": "2026-05-26 17:04:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "585",
+      "user_id": "352",
+      "date": "2026-05-26",
+      "login_time": "2026-05-26 07:57:01",
+      "logout_time": "2026-05-26 17:15:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.82"
+    },
+    {
+      "id": "586",
+      "user_id": "351",
+      "date": "2026-05-26",
+      "login_time": "2026-05-26 07:59:53",
+      "logout_time": "2026-05-26 17:01:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.103"
+    },
+    {
+      "id": "587",
+      "user_id": "356",
+      "date": "2026-05-27",
+      "login_time": "2026-05-27 05:43:42",
+      "logout_time": "2026-05-27 07:57:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.86.211"
+    },
+    {
+      "id": "588",
+      "user_id": "349",
+      "date": "2026-05-27",
+      "login_time": "2026-05-27 07:46:58",
+      "logout_time": "2026-05-27 16:59:25",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.71"
+    },
+    {
+      "id": "589",
+      "user_id": "352",
+      "date": "2026-05-27",
+      "login_time": "2026-05-27 07:51:09",
+      "logout_time": "2026-05-27 17:06:21",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.82"
+    },
+    {
+      "id": "590",
+      "user_id": "358",
+      "date": "2026-05-27",
+      "login_time": "2026-05-27 07:52:33",
+      "logout_time": "2026-05-27 17:01:26",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "591",
+      "user_id": "351",
+      "date": "2026-05-27",
+      "login_time": "2026-05-27 07:56:22",
+      "logout_time": "2026-05-27 17:05:26",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.103"
+    },
+    {
+      "id": "592",
+      "user_id": "349",
+      "date": "2026-05-28",
+      "login_time": "2026-05-28 07:47:35",
+      "logout_time": "2026-05-28 16:57:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.185.94"
+    },
+    {
+      "id": "593",
+      "user_id": "358",
+      "date": "2026-05-28",
+      "login_time": "2026-05-28 07:53:43",
+      "logout_time": "2026-05-28 17:00:58",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "594",
+      "user_id": "352",
+      "date": "2026-05-28",
+      "login_time": "2026-05-28 07:56:07",
+      "logout_time": "2026-05-28 17:24:03",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.82"
+    },
+    {
+      "id": "595",
+      "user_id": "356",
+      "date": "2026-05-28",
+      "login_time": "2026-05-28 05:30:00",
+      "logout_time": "2026-05-28 07:58:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.121"
+    },
+    {
+      "id": "596",
+      "user_id": "351",
+      "date": "2026-05-28",
+      "login_time": "2026-05-28 08:03:24",
+      "logout_time": "2026-05-28 17:01:23",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.103"
+    },
+    {
+      "id": "597",
+      "user_id": "356",
+      "date": "2026-05-29",
+      "login_time": "2026-05-29 05:29:17",
+      "logout_time": "2026-05-29 09:04:47",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.113"
+    },
+    {
+      "id": "598",
+      "user_id": "349",
+      "date": "2026-05-29",
+      "login_time": "2026-05-29 07:48:07",
+      "logout_time": "2026-05-29 16:59:26",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.185.113"
+    },
+    {
+      "id": "599",
+      "user_id": "352",
+      "date": "2026-05-29",
+      "login_time": "2026-05-29 07:50:12",
+      "logout_time": "2026-05-29 17:04:36",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.241"
+    },
+    {
+      "id": "600",
+      "user_id": "351",
+      "date": "2026-05-29",
+      "login_time": "2026-05-29 07:56:08",
+      "logout_time": "2026-05-29 17:02:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.103"
+    },
+    {
+      "id": "601",
+      "user_id": "358",
+      "date": "2026-05-29",
+      "login_time": "2026-05-29 07:57:39",
+      "logout_time": "2026-05-29 19:42:19",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "602",
+      "user_id": "356",
+      "date": "2026-05-30",
+      "login_time": "2026-05-30 05:33:19",
+      "logout_time": "2026-05-30 07:08:02",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.198"
+    },
+    {
+      "id": "603",
+      "user_id": "356",
+      "date": "2026-06-01",
+      "login_time": "2026-06-01 05:43:39",
+      "logout_time": "2026-06-01 08:02:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.190"
+    },
+    {
+      "id": "604",
+      "user_id": "352",
+      "date": "2026-06-01",
+      "login_time": "2026-06-01 07:45:40",
+      "logout_time": "2026-06-01 17:01:58",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.201.191"
+    },
+    {
+      "id": "605",
+      "user_id": "349",
+      "date": "2026-06-01",
+      "login_time": "2026-06-01 07:49:24",
+      "logout_time": "2026-06-01 16:51:59",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.174.107"
+    },
+    {
+      "id": "606",
+      "user_id": "358",
+      "date": "2026-06-01",
+      "login_time": "2026-06-01 07:52:00",
+      "logout_time": "2026-06-01 16:57:00",
+      "status": "Present",
+      "remarks": "Half Day sick leave",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "607",
+      "user_id": "351",
+      "date": "2026-06-01",
+      "login_time": "2026-06-01 08:05:40",
+      "logout_time": "2026-06-01 17:02:37",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.229"
+    },
+    {
+      "id": "608",
+      "user_id": "356",
+      "date": "2026-06-02",
+      "login_time": "2026-06-02 05:35:17",
+      "logout_time": "2026-06-02 08:08:29",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "182.64.12.131"
+    },
+    {
+      "id": "609",
+      "user_id": "349",
+      "date": "2026-06-02",
+      "login_time": "2026-06-02 07:52:32",
+      "logout_time": "2026-06-02 17:09:39",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.122"
+    },
+    {
+      "id": "610",
+      "user_id": "358",
+      "date": "2026-06-02",
+      "login_time": "2026-06-02 07:54:49",
+      "logout_time": "2026-06-02 19:50:41",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "611",
+      "user_id": "352",
+      "date": "2026-06-02",
+      "login_time": "2026-06-02 07:56:30",
+      "logout_time": "2026-06-02 17:51:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.201.191"
+    },
+    {
+      "id": "612",
+      "user_id": "351",
+      "date": "2026-06-02",
+      "login_time": "2026-06-02 07:59:38",
+      "logout_time": "2026-06-02 17:01:51",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.48.53"
+    },
+    {
+      "id": "613",
+      "user_id": "356",
+      "date": "2026-06-03",
+      "login_time": "2026-06-03 05:43:00",
+      "logout_time": "2026-06-03 08:03:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "614",
+      "user_id": "349",
+      "date": "2026-06-03",
+      "login_time": "2026-06-03 07:44:04",
+      "logout_time": "2026-06-03 17:04:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.95"
+    },
+    {
+      "id": "615",
+      "user_id": "358",
+      "date": "2026-06-03",
+      "login_time": "2026-06-03 07:56:30",
+      "logout_time": "2026-06-03 20:25:59",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "616",
+      "user_id": "352",
+      "date": "2026-06-03",
+      "login_time": "2026-06-03 08:01:00",
+      "logout_time": "2026-06-03 09:33:00",
+      "status": "Absent",
+      "remarks": "3rd Sick Leave",
+      "ip_address": "106.221.230.165"
+    },
+    {
+      "id": "617",
+      "user_id": "351",
+      "date": "2026-06-03",
+      "login_time": "2026-06-03 08:03:35",
+      "logout_time": "2026-06-03 17:00:56",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.192.198.17"
+    },
+    {
+      "id": "618",
+      "user_id": "356",
+      "date": "2026-06-04",
+      "login_time": "2026-06-04 05:37:00",
+      "logout_time": "2026-06-04 09:01:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.86.237"
+    },
+    {
+      "id": "619",
+      "user_id": "349",
+      "date": "2026-06-04",
+      "login_time": "2026-06-04 07:51:35",
+      "logout_time": "2026-06-04 17:08:22",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.240"
+    },
+    {
+      "id": "620",
+      "user_id": "351",
+      "date": "2026-06-04",
+      "login_time": "2026-06-04 08:01:40",
+      "logout_time": "2026-06-04 17:02:35",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.192.202.44"
+    },
+    {
+      "id": "621",
+      "user_id": "358",
+      "date": "2026-06-04",
+      "login_time": "2026-06-04 08:14:00",
+      "logout_time": "2026-06-04 09:44:00",
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "622",
+      "user_id": "356",
+      "date": "2026-06-05",
+      "login_time": "2026-06-05 05:44:31",
+      "logout_time": "2026-06-05 23:29:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.86.237"
+    },
+    {
+      "id": "623",
+      "user_id": "352",
+      "date": "2026-06-04",
+      "login_time": "2026-06-04 00:00:00",
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Sick leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "624",
+      "user_id": "349",
+      "date": "2026-06-05",
+      "login_time": "2026-06-05 07:49:39",
+      "logout_time": "2026-06-05 15:58:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.184.151"
+    },
+    {
+      "id": "625",
+      "user_id": "352",
+      "date": "2026-06-05",
+      "login_time": "2026-06-05 07:52:05",
+      "logout_time": "2026-06-05 17:08:28",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.246"
+    },
+    {
+      "id": "626",
+      "user_id": "351",
+      "date": "2026-06-05",
+      "login_time": "2026-06-05 08:04:28",
+      "logout_time": "2026-06-05 16:59:18",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.238.205"
+    },
+    {
+      "id": "627",
+      "user_id": "356",
+      "date": "2026-06-06",
+      "login_time": "2026-06-06 05:00:00",
+      "logout_time": "2026-06-06 06:18:01",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "628",
+      "user_id": "356",
+      "date": "2026-06-08",
+      "login_time": "2026-06-08 05:51:18",
+      "logout_time": "2026-06-08 08:24:34",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.87.169"
+    },
+    {
+      "id": "629",
+      "user_id": "349",
+      "date": "2026-06-08",
+      "login_time": "2026-06-08 07:52:44",
+      "logout_time": "2026-06-08 16:59:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.170.216"
+    },
+    {
+      "id": "630",
+      "user_id": "351",
+      "date": "2026-06-08",
+      "login_time": "2026-06-08 07:53:50",
+      "logout_time": "2026-06-08 16:59:51",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.51"
+    },
+    {
+      "id": "631",
+      "user_id": "358",
+      "date": "2026-06-08",
+      "login_time": "2026-06-08 07:59:56",
+      "logout_time": "2026-06-08 17:00:14",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "632",
+      "user_id": "356",
+      "date": "2026-06-09",
+      "login_time": "2026-06-09 06:08:00",
+      "logout_time": "2026-06-09 09:01:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.86.183"
+    },
+    {
+      "id": "633",
+      "user_id": "349",
+      "date": "2026-06-09",
+      "login_time": "2026-06-09 07:41:44",
+      "logout_time": "2026-06-09 16:57:45",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.168.73"
+    },
+    {
+      "id": "634",
+      "user_id": "351",
+      "date": "2026-06-09",
+      "login_time": "2026-06-09 07:55:08",
+      "logout_time": "2026-06-09 17:09:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.53.51"
+    },
+    {
+      "id": "635",
+      "user_id": "358",
+      "date": "2026-06-09",
+      "login_time": "2026-06-09 07:55:09",
+      "logout_time": "2026-06-09 17:22:19",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "636",
+      "user_id": "352",
+      "date": "2026-06-09",
+      "login_time": "2026-06-09 08:01:03",
+      "logout_time": "2026-06-09 17:15:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.202.197"
+    },
+    {
+      "id": "637",
+      "user_id": "356",
+      "date": "2026-06-10",
+      "login_time": "2026-06-10 05:52:53",
+      "logout_time": "2026-06-10 08:13:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.87.128"
+    },
+    {
+      "id": "638",
+      "user_id": "352",
+      "date": "2026-06-08",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "639",
+      "user_id": "349",
+      "date": "2026-06-10",
+      "login_time": "2026-06-10 07:52:52",
+      "logout_time": "2026-06-10 16:54:25",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.187.25"
+    },
+    {
+      "id": "640",
+      "user_id": "352",
+      "date": "2026-06-10",
+      "login_time": "2026-06-10 08:00:12",
+      "logout_time": "2026-06-10 17:02:06",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.202.197"
+    },
+    {
+      "id": "641",
+      "user_id": "358",
+      "date": "2026-06-10",
+      "login_time": "2026-06-10 08:16:57",
+      "logout_time": "2026-06-10 10:59:03",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "642",
+      "user_id": "351",
+      "date": "2026-06-10",
+      "login_time": "2026-06-10 08:23:24",
+      "logout_time": "2026-06-10 17:07:29",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "49.47.71.157"
+    },
+    {
+      "id": "643",
+      "user_id": "356",
+      "date": "2026-06-11",
+      "login_time": "2026-06-11 05:43:50",
+      "logout_time": "2026-06-11 09:14:41",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.228.39.73"
+    },
+    {
+      "id": "644",
+      "user_id": "349",
+      "date": "2026-06-11",
+      "login_time": "2026-06-11 07:46:36",
+      "logout_time": "2026-06-11 16:45:58",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.187.151"
+    },
+    {
+      "id": "645",
+      "user_id": "352",
+      "date": "2026-06-11",
+      "login_time": "2026-06-11 07:58:13",
+      "logout_time": "2026-06-11 17:03:38",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.19"
+    },
+    {
+      "id": "646",
+      "user_id": "358",
+      "date": "2026-06-11",
+      "login_time": "2026-06-11 08:03:54",
+      "logout_time": "2026-06-11 09:05:40",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "112.203.137.57"
+    },
+    {
+      "id": "647",
+      "user_id": "351",
+      "date": "2026-06-11",
+      "login_time": "2026-06-11 08:08:03",
+      "logout_time": "2026-06-11 17:05:41",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "49.47.71.157"
+    },
+    {
+      "id": "648",
+      "user_id": "356",
+      "date": "2026-06-12",
+      "login_time": "2026-06-12 05:57:38",
+      "logout_time": "2026-06-12 07:58:59",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.192.115.205"
+    },
+    {
+      "id": "649",
+      "user_id": "349",
+      "date": "2026-06-12",
+      "login_time": "2026-06-12 07:47:14",
+      "logout_time": "2026-06-12 16:57:54",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.187.46"
+    },
+    {
+      "id": "650",
+      "user_id": "352",
+      "date": "2026-06-12",
+      "login_time": "2026-06-12 07:56:11",
+      "logout_time": "2026-06-12 17:22:56",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.203.19"
+    },
+    {
+      "id": "651",
+      "user_id": "351",
+      "date": "2026-06-12",
+      "login_time": "2026-06-12 08:06:54",
+      "logout_time": "2026-06-12 17:00:45",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.48.119"
+    },
+    {
+      "id": "652",
+      "user_id": "356",
+      "date": "2026-06-13",
+      "login_time": "2026-06-13 05:22:15",
+      "logout_time": "2026-06-13 06:37:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.94"
+    },
+    {
+      "id": "654",
+      "user_id": "356",
+      "date": "2026-06-15",
+      "login_time": "2026-06-15 06:02:51",
+      "logout_time": "2026-06-15 09:43:12",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.97"
+    },
+    {
+      "id": "655",
+      "user_id": "365",
+      "date": "2026-06-15",
+      "login_time": "2026-06-15 08:07:32",
+      "logout_time": "2026-06-15 16:43:14",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.117.24.87"
+    },
+    {
+      "id": "656",
+      "user_id": "352",
+      "date": "2026-06-15",
+      "login_time": "2026-06-15 08:10:42",
+      "logout_time": "2026-06-15 17:20:40",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.159"
+    },
+    {
+      "id": "657",
+      "user_id": "351",
+      "date": "2026-06-15",
+      "login_time": "2026-06-15 08:23:18",
+      "logout_time": "2026-06-15 17:02:07",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.233.82"
+    },
+    {
+      "id": "658",
+      "user_id": "356",
+      "date": "2026-06-16",
+      "login_time": "2026-06-16 05:41:54",
+      "logout_time": "2026-06-16 07:52:47",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.97"
+    },
+    {
+      "id": "659",
+      "user_id": "349",
+      "date": "2026-06-15",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Sick leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "661",
+      "user_id": "349",
+      "date": "2026-06-16",
+      "login_time": "2026-06-16 07:51:45",
+      "logout_time": "2026-06-16 16:58:12",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.185.89"
+    },
+    {
+      "id": "662",
+      "user_id": "352",
+      "date": "2026-06-16",
+      "login_time": "2026-06-16 07:54:56",
+      "logout_time": "2026-06-16 16:51:07",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.159"
+    },
+    {
+      "id": "663",
+      "user_id": "365",
+      "date": "2026-06-16",
+      "login_time": "2026-06-16 07:56:41",
+      "logout_time": "2026-06-16 17:00:50",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.117.23.170"
+    },
+    {
+      "id": "664",
+      "user_id": "351",
+      "date": "2026-06-16",
+      "login_time": "2026-06-16 08:00:39",
+      "logout_time": "2026-06-16 17:02:41",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.50.194"
+    },
+    {
+      "id": "665",
+      "user_id": "356",
+      "date": "2026-06-17",
+      "login_time": "2026-06-17 05:36:55",
+      "logout_time": "2026-06-17 08:38:38",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.222"
+    },
+    {
+      "id": "666",
+      "user_id": "349",
+      "date": "2026-06-17",
+      "login_time": "2026-06-17 07:52:52",
+      "logout_time": "2026-06-17 16:52:39",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.187.81"
+    },
+    {
+      "id": "667",
+      "user_id": "352",
+      "date": "2026-06-17",
+      "login_time": "2026-06-17 07:59:49",
+      "logout_time": "2026-06-17 17:08:49",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.202.104"
+    },
+    {
+      "id": "668",
+      "user_id": "365",
+      "date": "2026-06-17",
+      "login_time": "2026-06-17 08:00:48",
+      "logout_time": "2026-06-17 17:00:55",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.113.69.12"
+    },
+    {
+      "id": "669",
+      "user_id": "351",
+      "date": "2026-06-17",
+      "login_time": "2026-06-17 08:12:05",
+      "logout_time": "2026-06-17 17:02:20",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.75.34"
+    },
+    {
+      "id": "670",
+      "user_id": "356",
+      "date": "2026-06-18",
+      "login_time": "2026-06-18 05:45:00",
+      "logout_time": "2026-06-18 08:10:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "671",
+      "user_id": "352",
+      "date": "2026-06-18",
+      "login_time": "2026-06-18 08:14:47",
+      "logout_time": "2026-06-18 17:06:25",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "103.226.200.247"
+    },
+    {
+      "id": "672",
+      "user_id": "351",
+      "date": "2026-06-18",
+      "login_time": "2026-06-18 08:15:38",
+      "logout_time": "2026-06-18 17:08:13",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.74.73"
+    },
+    {
+      "id": "673",
+      "user_id": "349",
+      "date": "2026-06-18",
+      "login_time": "2026-06-18 08:54:46",
+      "logout_time": "2026-06-18 16:45:29",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.170.224"
+    },
+    {
+      "id": "674",
+      "user_id": "365",
+      "date": "2026-06-18",
+      "login_time": "2026-06-18 10:46:11",
+      "logout_time": "2026-06-18 17:27:53",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.227.166"
+    },
+    {
+      "id": "675",
+      "user_id": "356",
+      "date": "2026-06-19",
+      "login_time": "2026-06-19 06:05:01",
+      "logout_time": "2026-06-19 08:09:51",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.77"
+    },
+    {
+      "id": "677",
+      "user_id": "349",
+      "date": "2026-06-19",
+      "login_time": "2026-06-19 07:46:14",
+      "logout_time": "2026-06-19 16:55:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.187.39"
+    },
+    {
+      "id": "678",
+      "user_id": "352",
+      "date": "2026-06-19",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Absent",
+      "remarks": "Sick leave",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "679",
+      "user_id": "351",
+      "date": "2026-06-19",
+      "login_time": "2026-06-19 08:03:09",
+      "logout_time": "2026-06-19 17:00:40",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "49.43.161.49"
+    },
+    {
+      "id": "680",
+      "user_id": "365",
+      "date": "2026-06-19",
+      "login_time": "2026-06-19 08:16:02",
+      "logout_time": "2026-06-19 17:01:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.117.20.194"
+    },
+    {
+      "id": "681",
+      "user_id": "356",
+      "date": "2026-06-20",
+      "login_time": "2026-06-20 07:28:38",
+      "logout_time": "2026-06-20 08:47:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.81.255"
+    },
+    {
+      "id": "682",
+      "user_id": "356",
+      "date": "2026-06-22",
+      "login_time": "2026-06-22 05:33:10",
+      "logout_time": "2026-06-22 08:11:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.48"
+    },
+    {
+      "id": "683",
+      "user_id": "349",
+      "date": "2026-06-22",
+      "login_time": "2026-06-22 07:44:34",
+      "logout_time": "2026-06-22 16:49:39",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.65"
+    },
+    {
+      "id": "684",
+      "user_id": "351",
+      "date": "2026-06-22",
+      "login_time": "2026-06-22 08:00:55",
+      "logout_time": "2026-06-22 17:05:26",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.5"
+    },
+    {
+      "id": "685",
+      "user_id": "365",
+      "date": "2026-06-22",
+      "login_time": "2026-06-22 08:11:44",
+      "logout_time": "2026-06-22 17:15:45",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.224.123"
+    },
+    {
+      "id": "686",
+      "user_id": "356",
+      "date": "2026-06-23",
+      "login_time": "2026-06-23 05:52:41",
+      "logout_time": "2026-06-23 08:13:03",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.23"
+    },
+    {
+      "id": "695",
+      "user_id": "349",
+      "date": "2026-06-23",
+      "login_time": "2026-06-23 07:47:06",
+      "logout_time": "2026-06-23 16:56:49",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.172.7"
+    },
+    {
+      "id": "696",
+      "user_id": "351",
+      "date": "2026-06-23",
+      "login_time": "2026-06-23 08:09:07",
+      "logout_time": "2026-06-23 17:02:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.145"
+    },
+    {
+      "id": "697",
+      "user_id": "365",
+      "date": "2026-06-23",
+      "login_time": "2026-06-23 08:33:20",
+      "logout_time": "2026-06-23 17:01:15",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.117.20.125"
+    },
+    {
+      "id": "698",
+      "user_id": "396",
+      "date": "2026-06-23",
+      "login_time": "2026-06-23 08:40:37",
+      "logout_time": "2026-06-23 17:00:26",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "699",
+      "user_id": "356",
+      "date": "2026-06-24",
+      "login_time": "2026-06-24 06:02:46",
+      "logout_time": "2026-06-24 08:16:09",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.23"
+    },
+    {
+      "id": "700",
+      "user_id": "396",
+      "date": "2025-12-24",
+      "login_time": null,
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "703",
+      "user_id": "396",
+      "date": "2026-06-24",
+      "login_time": "2026-06-24 07:25:27",
+      "logout_time": "2026-06-24 17:01:53",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "704",
+      "user_id": "365",
+      "date": "2026-06-24",
+      "login_time": "2026-06-24 07:49:31",
+      "logout_time": "2026-06-24 16:43:44",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.117.21.8"
+    },
+    {
+      "id": "705",
+      "user_id": "349",
+      "date": "2026-06-24",
+      "login_time": "2026-06-24 07:51:53",
+      "logout_time": "2026-06-24 16:54:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.172.7"
+    },
+    {
+      "id": "706",
+      "user_id": "351",
+      "date": "2026-06-24",
+      "login_time": "2026-06-24 08:21:42",
+      "logout_time": "2026-06-24 17:00:21",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.192.192.154"
+    },
+    {
+      "id": "707",
+      "user_id": "403",
+      "date": "2026-06-24",
+      "login_time": "2026-06-24 08:25:12",
+      "logout_time": "2026-06-24 17:52:13",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.188.178.122"
+    },
+    {
+      "id": "708",
+      "user_id": "356",
+      "date": "2026-06-25",
+      "login_time": "2026-06-25 06:02:00",
+      "logout_time": "2026-06-25 09:02:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.64"
+    },
+    {
+      "id": "709",
+      "user_id": "396",
+      "date": "2026-06-25",
+      "login_time": "2026-06-25 07:40:00",
+      "logout_time": "2026-06-25 18:16:27",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "710",
+      "user_id": "349",
+      "date": "2026-06-25",
+      "login_time": "2026-06-25 07:47:03",
+      "logout_time": "2026-06-25 16:53:32",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.210"
+    },
+    {
+      "id": "711",
+      "user_id": "365",
+      "date": "2026-06-25",
+      "login_time": "2026-06-25 07:52:29",
+      "logout_time": "2026-06-25 16:48:07",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.121.22"
+    },
+    {
+      "id": "712",
+      "user_id": "351",
+      "date": "2026-06-25",
+      "login_time": "2026-06-25 07:59:51",
+      "logout_time": "2026-06-25 17:09:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.48.66"
+    },
+    {
+      "id": "713",
+      "user_id": "403",
+      "date": "2026-06-25",
+      "login_time": "2026-06-25 12:46:22",
+      "logout_time": "2026-06-25 21:13:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.188.252.69"
+    },
+    {
+      "id": "714",
+      "user_id": "396",
+      "date": "2026-06-26",
+      "login_time": "2026-06-26 07:43:39",
+      "logout_time": "2026-06-26 17:01:11",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "715",
+      "user_id": "349",
+      "date": "2026-06-26",
+      "login_time": "2026-06-26 07:50:17",
+      "logout_time": "2026-06-26 16:58:24",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.186.132"
+    },
+    {
+      "id": "716",
+      "user_id": "351",
+      "date": "2026-06-26",
+      "login_time": "2026-06-26 08:00:28",
+      "logout_time": "2026-06-26 17:20:31",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.48.66"
+    },
+    {
+      "id": "717",
+      "user_id": "365",
+      "date": "2026-06-26",
+      "login_time": "2026-06-26 08:09:00",
+      "logout_time": "2026-06-26 17:01:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.117.10.13"
+    },
+    {
+      "id": "718",
+      "user_id": "403",
+      "date": "2026-06-26",
+      "login_time": "2026-06-26 10:44:37",
+      "logout_time": "2026-06-26 21:43:49",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.188.178.122"
+    },
+    {
+      "id": "719",
+      "user_id": "356",
+      "date": "2026-06-27",
+      "login_time": "2026-06-27 05:17:20",
+      "logout_time": "2026-06-27 06:30:25",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.84.241"
+    },
+    {
+      "id": "720",
+      "user_id": "356",
+      "date": "2026-06-29",
+      "login_time": "2026-06-29 05:31:00",
+      "logout_time": "2026-06-29 08:01:36",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "721",
+      "user_id": "396",
+      "date": "2026-06-29",
+      "login_time": "2026-06-29 07:35:47",
+      "logout_time": "2026-06-29 17:39:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "722",
+      "user_id": "349",
+      "date": "2026-06-29",
+      "login_time": "2026-06-29 07:46:53",
+      "logout_time": "2026-06-29 16:53:02",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "106.219.172.226"
+    },
+    {
+      "id": "723",
+      "user_id": "365",
+      "date": "2026-06-29",
+      "login_time": "2026-06-29 07:52:21",
+      "logout_time": "2026-06-29 16:59:23",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.117.22.58"
+    },
+    {
+      "id": "724",
+      "user_id": "351",
+      "date": "2026-06-29",
+      "login_time": "2026-06-29 07:56:21",
+      "logout_time": "2026-06-29 17:02:20",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.52.87"
+    },
+    {
+      "id": "725",
+      "user_id": "403",
+      "date": "2026-06-29",
+      "login_time": "2026-06-29 08:40:01",
+      "logout_time": "2026-06-29 17:07:14",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.188.178.122"
+    },
+    {
+      "id": "726",
+      "user_id": "396",
+      "date": "2026-06-30",
+      "login_time": "2026-06-30 07:46:05",
+      "logout_time": "2026-06-30 17:09:27",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "727",
+      "user_id": "349",
+      "date": "2026-06-30",
+      "login_time": "2026-06-30 07:48:41",
+      "logout_time": "2026-06-30 16:47:01",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "152.59.187.224"
+    },
+    {
+      "id": "728",
+      "user_id": "365",
+      "date": "2026-06-30",
+      "login_time": "2026-06-30 08:02:04",
+      "logout_time": "2026-06-30 16:57:42",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.126.33"
+    },
+    {
+      "id": "729",
+      "user_id": "351",
+      "date": "2026-06-30",
+      "login_time": "2026-06-30 08:06:50",
+      "logout_time": "2026-06-30 17:03:44",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.52.87"
+    },
+    {
+      "id": "730",
+      "user_id": "403",
+      "date": "2026-06-30",
+      "login_time": "2026-06-30 09:11:58",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.191.61.10"
+    },
+    {
+      "id": "731",
+      "user_id": "396",
+      "date": "2026-07-01",
+      "login_time": "2026-07-01 07:29:20",
+      "logout_time": "2026-07-01 17:04:40",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "732",
+      "user_id": "351",
+      "date": "2026-07-01",
+      "login_time": "2026-07-01 07:56:34",
+      "logout_time": "2026-07-01 17:00:53",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.52.87"
+    },
+    {
+      "id": "733",
+      "user_id": "403",
+      "date": "2026-07-01",
+      "login_time": "2026-07-01 08:01:00",
+      "logout_time": "2026-07-01 17:01:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.188.252.25"
+    },
+    {
+      "id": "734",
+      "user_id": "365",
+      "date": "2026-07-01",
+      "login_time": "2026-07-01 08:05:00",
+      "logout_time": "2026-07-01 16:57:22",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.73.100"
+    },
+    {
+      "id": "735",
+      "user_id": "356",
+      "date": "2026-07-02",
+      "login_time": "2026-07-02 05:58:07",
+      "logout_time": "2026-07-02 08:29:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.85.95"
+    },
+    {
+      "id": "736",
+      "user_id": "396",
+      "date": "2026-07-02",
+      "login_time": "2026-07-02 07:36:58",
+      "logout_time": "2026-07-02 17:04:56",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "737",
+      "user_id": "365",
+      "date": "2026-07-02",
+      "login_time": "2026-07-02 07:52:18",
+      "logout_time": "2026-07-02 17:23:28",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.121.215"
+    },
+    {
+      "id": "738",
+      "user_id": "351",
+      "date": "2026-07-02",
+      "login_time": "2026-07-02 08:03:06",
+      "logout_time": "2026-07-02 17:02:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.50.220"
+    },
+    {
+      "id": "739",
+      "user_id": "403",
+      "date": "2026-07-02",
+      "login_time": "2026-07-02 08:31:00",
+      "logout_time": "2026-07-02 17:00:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.189.144.88"
+    },
+    {
+      "id": "740",
+      "user_id": "356",
+      "date": "2026-07-03",
+      "login_time": "2026-07-03 05:34:04",
+      "logout_time": "2026-07-03 08:11:16",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.85.254"
+    },
+    {
+      "id": "741",
+      "user_id": "396",
+      "date": "2026-07-03",
+      "login_time": "2026-07-03 07:41:42",
+      "logout_time": "2026-07-03 17:26:07",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "742",
+      "user_id": "351",
+      "date": "2026-07-03",
+      "login_time": "2026-07-03 07:52:51",
+      "logout_time": "2026-07-03 17:04:45",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.50.220"
+    },
+    {
+      "id": "743",
+      "user_id": "365",
+      "date": "2026-07-03",
+      "login_time": "2026-07-03 07:53:11",
+      "logout_time": "2026-07-03 17:05:01",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "197.210.70.73"
+    },
+    {
+      "id": "744",
+      "user_id": "403",
+      "date": "2026-07-03",
+      "login_time": "2026-07-03 08:00:12",
+      "logout_time": "2026-07-03 17:05:17",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.189.183.231"
+    },
+    {
+      "id": "745",
+      "user_id": "356",
+      "date": "2026-07-04",
+      "login_time": "2026-07-04 05:38:50",
+      "logout_time": "2026-07-04 08:58:08",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.85.100"
+    },
+    {
+      "id": "746",
+      "user_id": "356",
+      "date": "2026-07-05",
+      "login_time": "2026-07-05 21:59:00",
+      "logout_time": "2026-07-05 00:30:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.86.136"
+    },
+    {
+      "id": "748",
+      "user_id": "396",
+      "date": "2026-07-06",
+      "login_time": "2026-07-06 07:42:20",
+      "logout_time": "2026-07-06 17:04:07",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "749",
+      "user_id": "365",
+      "date": "2026-07-06",
+      "login_time": "2026-07-06 07:52:27",
+      "logout_time": "2026-07-06 17:21:36",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.226.9"
+    },
+    {
+      "id": "750",
+      "user_id": "351",
+      "date": "2026-07-06",
+      "login_time": "2026-07-06 07:57:08",
+      "logout_time": "2026-07-06 17:03:29",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.52.161"
+    },
+    {
+      "id": "751",
+      "user_id": "403",
+      "date": "2026-07-06",
+      "login_time": "2026-07-06 08:00:07",
+      "logout_time": "2026-07-06 17:01:29",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.188.252.3"
+    },
+    {
+      "id": "752",
+      "user_id": "356",
+      "date": "2026-07-06",
+      "login_time": "2026-07-06 22:20:00",
+      "logout_time": "2026-07-06 00:31:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "42.104.220.43"
+    },
+    {
+      "id": "753",
+      "user_id": "396",
+      "date": "2026-07-07",
+      "login_time": "2026-07-07 07:42:51",
+      "logout_time": "2026-07-07 21:11:59",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "111.90.238.53"
+    },
+    {
+      "id": "754",
+      "user_id": "403",
+      "date": "2026-07-07",
+      "login_time": "2026-07-07 08:01:19",
+      "logout_time": "2026-07-07 17:02:38",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.189.183.231"
+    },
+    {
+      "id": "755",
+      "user_id": "365",
+      "date": "2026-07-07",
+      "login_time": "2026-07-07 08:02:47",
+      "logout_time": "2026-07-07 16:54:49",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.116.115"
+    },
+    {
+      "id": "756",
+      "user_id": "351",
+      "date": "2026-07-07",
+      "login_time": "2026-07-07 08:11:37",
+      "logout_time": "2026-07-07 17:04:19",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.52.161"
+    },
+    {
+      "id": "757",
+      "user_id": "356",
+      "date": "2026-07-07",
+      "login_time": "2026-07-07 22:20:00",
+      "logout_time": "2026-07-07 01:00:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.82.233"
+    },
+    {
+      "id": "758",
+      "user_id": "396",
+      "date": "2026-07-08",
+      "login_time": "2026-07-08 07:42:04",
+      "logout_time": "2026-07-08 17:10:46",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "759",
+      "user_id": "365",
+      "date": "2026-07-08",
+      "login_time": "2026-07-08 08:00:01",
+      "logout_time": "2026-07-08 16:58:13",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "197.210.53.11"
+    },
+    {
+      "id": "760",
+      "user_id": "403",
+      "date": "2026-07-08",
+      "login_time": "2026-07-08 08:01:41",
+      "logout_time": "2026-07-08 20:42:28",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.189.183.231"
+    },
+    {
+      "id": "761",
+      "user_id": "351",
+      "date": "2026-07-08",
+      "login_time": "2026-07-08 08:01:57",
+      "logout_time": "2026-07-08 17:08:44",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.52.161"
+    },
+    {
+      "id": "762",
+      "user_id": "356",
+      "date": "2026-07-08",
+      "login_time": "2026-07-08 22:15:00",
+      "logout_time": "2026-07-08 00:49:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.127"
+    },
+    {
+      "id": "764",
+      "user_id": "396",
+      "date": "2026-07-09",
+      "login_time": "2026-07-09 07:35:37",
+      "logout_time": "2026-07-09 17:04:11",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "765",
+      "user_id": "365",
+      "date": "2026-07-09",
+      "login_time": "2026-07-09 07:52:28",
+      "logout_time": "2026-07-09 17:04:27",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.117.181"
+    },
+    {
+      "id": "766",
+      "user_id": "351",
+      "date": "2026-07-09",
+      "login_time": "2026-07-09 07:58:06",
+      "logout_time": "2026-07-09 17:03:39",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.110"
+    },
+    {
+      "id": "767",
+      "user_id": "403",
+      "date": "2026-07-09",
+      "login_time": "2026-07-09 08:02:05",
+      "logout_time": "2026-07-09 09:57:28",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.189.144.5"
+    },
+    {
+      "id": "768",
+      "user_id": "356",
+      "date": "2026-07-09",
+      "login_time": "2026-07-09 22:12:00",
+      "logout_time": "2026-07-09 00:05:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.127"
+    },
+    {
+      "id": "770",
+      "user_id": "396",
+      "date": "2026-07-10",
+      "login_time": "2026-07-10 07:49:08",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "771",
+      "user_id": "365",
+      "date": "2026-07-10",
+      "login_time": "2026-07-10 07:57:34",
+      "logout_time": "2026-07-10 17:00:04",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.237.31"
+    },
+    {
+      "id": "772",
+      "user_id": "351",
+      "date": "2026-07-10",
+      "login_time": "2026-07-10 08:05:21",
+      "logout_time": "2026-07-10 17:04:45",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.49.110"
+    },
+    {
+      "id": "773",
+      "user_id": "403",
+      "date": "2026-07-10",
+      "login_time": "2026-07-10 08:05:44",
+      "logout_time": "2026-07-10 17:01:37",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.190.62.151"
+    },
+    {
+      "id": "774",
+      "user_id": "356",
+      "date": "2026-07-11",
+      "login_time": "2026-07-11 05:02:37",
+      "logout_time": "2026-07-11 06:37:47",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.251"
+    },
+    {
+      "id": "775",
+      "user_id": "356",
+      "date": "2026-07-20",
+      "login_time": "2026-07-20 22:27:00",
+      "logout_time": "2026-07-20 00:32:23",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "223.233.83.128"
+    },
+    {
+      "id": "776",
+      "user_id": "365",
+      "date": "2026-07-13",
+      "login_time": "2026-07-13 07:54:46",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "105.112.119.61"
+    },
+    {
+      "id": "777",
+      "user_id": "403",
+      "date": "2026-07-13",
+      "login_time": "2026-07-13 07:58:00",
+      "logout_time": "2026-07-13 17:00:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "196.190.62.184"
+    },
+    {
+      "id": "778",
+      "user_id": "396",
+      "date": "2026-07-13",
+      "login_time": "2026-07-13 08:00:43",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "136.158.24.51"
+    },
+    {
+      "id": "779",
+      "user_id": "351",
+      "date": "2026-07-13",
+      "login_time": "2026-07-13 08:03:35",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "122.161.51.148"
+    },
+    {
+      "id": "780",
+      "user_id": "351",
+      "date": "2026-07-15",
+      "login_time": "2026-07-15 13:29:51",
+      "logout_time": "2026-07-15 17:20:01",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "172.71.124.185"
+    },
+    {
+      "id": "781",
+      "user_id": "351",
+      "date": "2026-07-16",
+      "login_time": "2026-07-16 08:01:22",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "172.71.124.171"
+    },
+    {
+      "id": "782",
+      "user_id": "351",
+      "date": "2026-07-17",
+      "login_time": "2026-07-17 08:01:16",
+      "logout_time": "2026-07-17 17:05:38",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "172.69.166.19"
+    },
+    {
+      "id": "783",
+      "user_id": "356",
+      "date": "2026-07-13",
+      "login_time": "2026-07-13 22:01:00",
+      "logout_time": "2026-07-13 00:32:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "784",
+      "user_id": "356",
+      "date": "2026-07-15",
+      "login_time": "2026-07-15 22:30:00",
+      "logout_time": "2026-07-15 00:36:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "785",
+      "user_id": "356",
+      "date": "2026-07-16",
+      "login_time": "2026-07-16 22:36:00",
+      "logout_time": "2026-07-16 00:45:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "786",
+      "user_id": "356",
+      "date": "2026-07-18",
+      "login_time": "2026-07-18 05:01:00",
+      "logout_time": "2026-07-18 06:06:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "787",
+      "user_id": "403",
+      "date": "2026-07-14",
+      "login_time": "2026-07-14 08:00:00",
+      "logout_time": "2026-07-14 17:00:00",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "Admin"
+    },
+    {
+      "id": "788",
+      "user_id": "351",
+      "date": "2026-07-20",
+      "login_time": "2026-07-20 08:06:57",
+      "logout_time": "2026-07-20 16:59:59",
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "162.158.88.32"
+    },
+    {
+      "id": "789",
+      "user_id": "351",
+      "date": "2026-07-21",
+      "login_time": "2026-07-21 08:15:20",
+      "logout_time": null,
+      "status": "Present",
+      "remarks": "",
+      "ip_address": "172.69.176.136"
     }
   ],
   "salary_history": [
