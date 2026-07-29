@@ -156,6 +156,11 @@ function formatTime(dateTimeStr) {
 }
 
 // Authentication Logic
+function showLoginOverlay() {
+    document.getElementById('authOverlay').style.display = 'flex';
+    document.getElementById('app').style.display = 'none';
+}
+
 function checkAuthSession() {
     const savedUser = localStorage.getItem('lhs_current_user');
     if (savedUser) {
@@ -387,6 +392,7 @@ function renderDashboard() {
 
 // Global Ex-Employee Archive Toggle
 let showExEmployeesGlobal = false;
+let currentDetailEmployee = null; // tracks which employee is in drill-down
 
 function toggleArchiveExEmployees() {
     showExEmployeesGlobal = !showExEmployeesGlobal;
@@ -543,6 +549,8 @@ function drillDownEmployee(userId, displayName) {
     const year = parseInt(document.getElementById('teamYearFilter').value);
     const monthName = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
 
+    currentDetailEmployee = { id: userId, name: displayName };
+
     document.getElementById('teamSummaryPanel').style.display = 'none';
     document.getElementById('teamDetailPanel').style.display = 'block';
     document.getElementById('teamDetailTitle').textContent = `${displayName} — ${monthName} ${year}`;
@@ -578,8 +586,10 @@ function drillDownEmployee(userId, displayName) {
 }
 
 function backToTeamSummary() {
+    currentDetailEmployee = null;
     document.getElementById('teamSummaryPanel').style.display = 'block';
     document.getElementById('teamDetailPanel').style.display = 'none';
+    renderTeamAttendance();
 }
 
 function renderEmployeesRoster() {
@@ -904,6 +914,10 @@ function openAddAttendanceModal() {
     document.getElementById('attEditId').value = '';
     document.getElementById('attModalTitle').textContent = 'Add Attendance Record';
 
+    // Show employee + date fields for new records
+    document.getElementById('attUserGroup').style.display = 'block';
+    document.getElementById('attDateGroup').style.display = 'block';
+
     const select = document.getElementById('attUserSelect');
     let activeUsers = appData.users.filter(u => !u.offboard_date);
     if (currentUser.username !== 'kedar_is') {
@@ -927,11 +941,16 @@ function editAttendanceModal(id) {
     document.getElementById('attEditId').value = record.id;
     document.getElementById('attModalTitle').textContent = 'Edit Attendance Record';
 
+    // Hide employee + date — obvious from context
+    document.getElementById('attUserGroup').style.display = 'none';
+    document.getElementById('attDateGroup').style.display = 'none';
+
+    // Still set the values so they submit correctly
     const select = document.getElementById('attUserSelect');
     select.innerHTML = appData.users.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
     select.value = record.user_id;
-
     document.getElementById('attDate').value = record.date;
+
     document.getElementById('attStatus').value = record.status;
     document.getElementById('attInTime').value = record.login_time ? record.login_time.split(' ')[1]?.substring(0,5) || '' : '';
     document.getElementById('attOutTime').value = record.logout_time ? record.logout_time.split(' ')[1]?.substring(0,5) || '' : '';
@@ -953,18 +972,22 @@ function saveAttendanceRecord(e) {
     const loginTime = inTimeVal ? `${date} ${inTimeVal}:00` : null;
     const logoutTime = outTimeVal ? `${date} ${outTimeVal}:00` : null;
 
+    let recordToSave;
+
     if (editId) {
-        const record = appData.attendance.find(a => String(a.id) === String(editId));
-        if (record) {
-            record.user_id = userId;
-            record.date = date;
-            record.status = status;
-            record.login_time = loginTime;
-            record.logout_time = logoutTime;
-            record.remarks = remarks;
+        // --- EDIT existing record ---
+        recordToSave = appData.attendance.find(a => String(a.id) === String(editId));
+        if (recordToSave) {
+            recordToSave.user_id = userId;
+            recordToSave.date = date;
+            recordToSave.status = status;
+            recordToSave.login_time = loginTime;
+            recordToSave.logout_time = logoutTime;
+            recordToSave.remarks = remarks;
         }
     } else {
-        const newRecord = {
+        // --- ADD new record ---
+        recordToSave = {
             id: String(Date.now()),
             user_id: userId,
             date: date,
@@ -974,19 +997,36 @@ function saveAttendanceRecord(e) {
             remarks: remarks,
             ip_address: 'Admin Manual'
         };
-        appData.attendance.unshift(newRecord);
+        appData.attendance.unshift(recordToSave);
     }
 
+    // Save locally + push to Firebase
     saveDataStore();
+    if (recordToSave) {
+        saveFirebaseDoc('attendance', String(recordToSave.id), recordToSave);
+    }
+
     closeModal('attendanceModal');
-    renderTeamAttendance();
+
+    // Refresh the right panel — stay in drill-down if active
+    if (currentDetailEmployee) {
+        drillDownEmployee(currentDetailEmployee.id, currentDetailEmployee.name);
+    } else {
+        renderTeamAttendance();
+    }
 }
 
 function deleteAttendanceRecord(id) {
     if (!confirm('Are you sure you want to delete this attendance record?')) return;
     appData.attendance = appData.attendance.filter(a => String(a.id) !== String(id));
     saveDataStore();
-    renderTeamAttendance();
+    deleteFirebaseDoc('attendance', id);
+    // If we're in a drill-down detail view, stay there
+    if (currentDetailEmployee) {
+        drillDownEmployee(currentDetailEmployee.id, currentDetailEmployee.name);
+    } else {
+        renderTeamAttendance();
+    }
 }
 
 function openAddSalaryModal() {

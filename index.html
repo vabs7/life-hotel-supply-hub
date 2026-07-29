@@ -530,13 +530,13 @@
       </div>
       <form id="attendanceForm" onsubmit="saveAttendanceRecord(event)">
         <input type="hidden" id="attEditId">
-        <div class="form-group">
+        <div class="form-group" id="attUserGroup">
           <label class="form-label">Employee</label>
-          <select id="attUserSelect" class="form-control" required></select>
+          <select id="attUserSelect" class="form-control"></select>
         </div>
-        <div class="form-group">
+        <div class="form-group" id="attDateGroup">
           <label class="form-label">Date</label>
-          <input type="date" id="attDate" class="form-control" required>
+          <input type="date" id="attDate" class="form-control">
         </div>
         <div class="form-group">
           <label class="form-label">Status</label>
