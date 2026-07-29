@@ -105,19 +105,54 @@ function fillPassword(val) {
 function handleLogin(e) {
     e.preventDefault();
     const selectVal = document.getElementById('loginSelect').value;
+    const passwordInput = document.getElementById('loginPassword').value.trim();
+    const errEl = document.getElementById('loginError');
+
+    if (errEl) {
+        errEl.style.display = 'none';
+        errEl.textContent = '';
+    }
+
     if (!selectVal) {
-        alert('Please select a user account');
+        if (errEl) {
+            errEl.textContent = 'Please select or enter a user account.';
+            errEl.style.display = 'block';
+        }
         return;
     }
 
     const user = appData.users.find(u => u.username === selectVal || u.email === selectVal);
-    if (user) {
-        currentUser = user;
-        localStorage.setItem('lhs_current_user', JSON.stringify(currentUser));
-        onUserAuthenticated();
-    } else {
-        alert('User account not found');
+    if (!user) {
+        if (errEl) {
+            errEl.textContent = 'User account not found.';
+            errEl.style.display = 'block';
+        }
+        return;
     }
+
+    // Block ex-employees
+    if (user.offboard_date) {
+        if (errEl) {
+            errEl.textContent = 'Access Denied: Offboarded ex-employees cannot log into the system.';
+            errEl.style.display = 'block';
+        }
+        return;
+    }
+
+    // Password Validation
+    const expectedPassword = user.password || '123456';
+    if (passwordInput !== expectedPassword) {
+        if (errEl) {
+            errEl.textContent = 'Incorrect password. Please check your password and try again.';
+            errEl.style.display = 'block';
+        }
+        return;
+    }
+
+    // Authenticated
+    currentUser = user;
+    localStorage.setItem('lhs_current_user', JSON.stringify(currentUser));
+    onUserAuthenticated();
 }
 
 function handleLogout() {
@@ -560,6 +595,11 @@ function saveFirebaseConfigHandler(e) {
 }
 
 async function seedFirebaseDatabase() {
+    const allowedSeeders = ['vaibhav.ajugiya', 'kcalpesh'];
+    if (!currentUser || !allowedSeeders.includes(currentUser.username)) {
+        alert('Access Denied: Only Admin (Vaibhav & Kalpesh) have permission to seed the database.');
+        return;
+    }
     if (!FirebaseManager.isConnected()) {
         alert('Please enter a valid Firebase API Key above and save config first.');
         return;
