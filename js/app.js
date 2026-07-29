@@ -18,62 +18,55 @@ document.addEventListener('DOMContentLoaded', async () => {
     await FirebaseManager.init();
 });
 
-// Initialize Data Store (LocalStorage / migrated_data.json)
+// Initialize Data Store directly from live Firebase Cloud Firestore
 async function initDataStore() {
     try {
-        const storedUsers = localStorage.getItem('lhs_users');
-        const storedAtt = localStorage.getItem('lhs_attendance');
-        const storedSal = localStorage.getItem('lhs_salary_history');
+        if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+            const [usersSnap, attSnap, salSnap] = await Promise.all([
+                firebaseDb.collection('users').get(),
+                firebaseDb.collection('attendance').get(),
+                firebaseDb.collection('salary_history').get()
+            ]);
 
-        if (storedUsers && storedAtt && storedSal) {
-            appData.users = JSON.parse(storedUsers);
-            appData.attendance = JSON.parse(storedAtt);
-            appData.salary_history = JSON.parse(storedSal);
-
-            // Sanitize & format salary_history schema
-            appData.salary_history = appData.salary_history.map(s => {
-                const realEffectiveDate = (s.updated_at && s.updated_at.length === 10) ? s.updated_at : (s.effective_date ? s.effective_date.split(' ')[0] : '2026-01-01');
-                const realTimestamp = (s.effective_date && s.effective_date.length > 10) ? s.effective_date : (s.updated_at || '2026-01-01 00:00:00');
-                return {
-                    id: String(s.id),
-                    user_id: String(s.user_id),
-                    amount: parseSalaryAmount(s.amount),
-                    currency: (['INR', 'USD', 'PHP'].includes(s.currency) ? s.currency : 'INR'),
-                    effective_date: realEffectiveDate,
-                    updated_at: realTimestamp
-                };
-            });
-            saveDataStore();
-        } else {
-            // Load restored database dump JSON file
-            const res = await fetch('migrated_data.json');
-            const initialData = await res.json();
-            appData.users = initialData.users || [];
-            appData.attendance = initialData.attendance || [];
-            appData.salary_history = initialData.salary_history || [];
-            saveDataStore();
-        }
-
-        // Sync roles
-        const roma = appData.users.find(u => u.username === 'roma.parmar');
-        if (roma && roma.role !== 'HR') {
-            roma.role = 'HR';
-            saveDataStore();
-        }
-        const kcalpesh = appData.users.find(u => u.username === 'kcalpesh');
-        if (kcalpesh && kcalpesh.role !== 'Employee') {
-            kcalpesh.role = 'Employee';
-            saveDataStore();
+            if (!usersSnap.empty) {
+                appData.users = usersSnap.docs.map(doc => doc.data());
+            }
+            if (!attSnap.empty) {
+                appData.attendance = attSnap.docs.map(doc => doc.data());
+            }
+            if (!salSnap.empty) {
+                appData.salary_history = salSnap.docs.map(doc => doc.data());
+            }
         }
     } catch (err) {
-        console.error('Data Store initialization error:', err);
+        console.error('Data Store initialization error from Firebase:', err);
+    }
+}
+
+// Save document directly to Firebase Cloud Firestore
+async function saveFirebaseDoc(collectionName, docId, dataObj) {
+    if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+        try {
+            await firebaseDb.collection(collectionName).doc(String(docId)).set(dataObj, { merge: true });
+        } catch (err) {
+            console.error(`Firebase save error (${collectionName}/${docId}):`, err);
+        }
+    }
+}
+
+// Delete document directly from Firebase Cloud Firestore
+async function deleteFirebaseDoc(collectionName, docId) {
+    if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+        try {
+            await firebaseDb.collection(collectionName).doc(String(docId)).delete();
+        } catch (err) {
+            console.error(`Firebase delete error (${collectionName}/${docId}):`, err);
+        }
     }
 }
 
 function saveDataStore() {
-    localStorage.setItem('lhs_users', JSON.stringify(appData.users));
-    localStorage.setItem('lhs_attendance', JSON.stringify(appData.attendance));
-    localStorage.setItem('lhs_salary_history', JSON.stringify(appData.salary_history));
+    // Live Firebase handles data sync
 }
 
 // Clock & Time Helper
