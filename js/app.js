@@ -157,7 +157,7 @@ function formatTime(dateTimeStr) {
 
 // Authentication Logic
 function checkAuthSession() {
-    const savedUser = sessionStorage.getItem('lhs_current_user');
+    const savedUser = localStorage.getItem('lhs_current_user');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         onUserAuthenticated();
