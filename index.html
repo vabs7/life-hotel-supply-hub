@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Hotel Supply - Attendance & Salary Hub</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <!-- Firebase SDK Compat libraries for seamless browser execution without node build tools -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <!-- AUTHENTICATION OVERLAY / LOGIN MODAL -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="auth-card">
+      <img src="logo.jpg" alt="Life Hotel Supply Logo" class="auth-logo">
+      <h2 class="auth-title">Attendance Hub</h2>
+      <p class="auth-subtitle">Sign in to manage daily attendance & payroll</p>
+      
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="loginSelect">Select Account / Email</label>
+          <select id="loginSelect" class="form-control" onchange="fillPassword(this.value)">
+            <option value="">-- Choose User Account --</option>
+            <optgroup label="HR Managers">
+              <option value="vaibhav.ajugiya">Vaibhav Ajugiya (HR)</option>
+              <option value="kcalpesh">Kalpesh Ajugia (HR)</option>
+            </optgroup>
+            <optgroup label="Employees">
+              <option value="prateek.mahendra">Prateek Mahendra (Employee)</option>
+              <option value="richa.narang">Richa Narang (Employee)</option>
+              <option value="roma.parmar">Roma Parmar (Employee)</option>
+              <option value="chinthapatlaprathusha">Prathusha Chinthapatla (Employee)</option>
+              <option value="emukaichidimma@gmail.com">Emukai Chidimma (Employee)</option>
+              <option value="gladysya0922@gmail.com">Gladys Espinosa (Employee)</option>
+              <option value="abelshebela">Abel Shebela (Employee)</option>
+            </optgroup>
+            <optgroup label="Ex-Employees (Historical Log)">
+              <option value="yogita.jetwani">Yogita Jetwani (Left Feb 2026)</option>
+              <option value="shikha.singh">Shikha Singh (Left Feb 2026)</option>
+              <option value="neha.kushwaha">Neha Kushwaha (Left Jun 2026)</option>
+              <option value="cecilia.romano">Cecilia Romano (Left Jun 2026)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" class="form-control" value="123456" placeholder="Enter password" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.85rem;">Sign In</button>
+      </form>
+      
+      <p style="font-size: 0.775rem; color: #64748b; margin-top: 1.25rem;">
+        Default Password for all restored profiles: <code>123456</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- MAIN APP APPLICATION CONTAINER -->
+  <div id="app">
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="logo.jpg" alt="Logo" class="brand-logo">
+        <div>
+          <div class="brand-title">Life Hotel Supply</div>
+          <div class="brand-subtitle">Attendance Hub</div>
+        </div>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item active" onclick="switchView('dashboard')">
+          <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Dashboard
+        </li>
+        <li class="nav-item" onclick="switchView('myAttendance')">
+          <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+          My Attendance Log
+        </li>
+        
+        <!-- HR ONLY NAVIGATION ITEMS -->
+        <li class="nav-item hr-only" onclick="switchView('teamAttendance')">
+          <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          Team Logs (HR)
+        </li>
+        <li class="nav-item hr-only" onclick="switchView('employees')">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          Employee Roster
+        </li>
+        <li class="nav-item hr-only" onclick="switchView('salaryPayroll')">
+          <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          Salary & Payroll
+        </li>
+        <li class="nav-item hr-only" onclick="switchView('exEmployees')">
+          <svg viewBox="0 0 24 24"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          Ex-Employees
+        </li>
+        <li class="nav-item hr-only" onclick="switchView('firebaseSetup')">
+          <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+          Firebase Setup
+        </li>
+      </ul>
+
+      <div class="user-profile-badge">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <div class="user-details">
+          <div class="user-name" id="userName">User</div>
+          <span class="user-role-tag" id="userRole">Employee</span>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()" title="Sign Out">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <h1 class="page-header-title" id="pageTitle">Dashboard</h1>
+        <div style="font-size: 0.85rem; color: var(--text-muted);" id="currentDateDisplay">
+          Wed, Jul 29, 2026
+        </div>
+      </header>
+
+      <main class="content-body">
+        
+        <!-- VIEW 1: DASHBOARD / CLOCK IN -->
+        <section id="view-dashboard" class="view-section active">
+          <!-- Clock In/Out Banner -->
+          <div class="clock-banner">
+            <div class="clock-info">
+              <div class="clock-date" id="clockDate">Loading date...</div>
+              <div class="clock-time" id="clockTime">00:00:00 AM</div>
+              <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem;">
+                <span id="clockStatusBadge" class="clock-status-pill">Status: Not Clocked In</span>
+                <span style="font-size: 0.8rem; color: #cbd5e1;" id="todayTimes"></span>
+              </div>
+            </div>
+
+            <div class="clock-actions">
+              <input type="text" id="clockRemarks" class="form-input" placeholder="Optional remark / note..." style="width: 220px; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
+              <button id="btnClockAction" class="btn btn-primary" onclick="toggleClockAction()">
+                Clock In
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats Cards Grid -->
+          <div class="grid-cards">
+            <div class="card">
+              <div class="stat-header">
+                <span class="stat-title">This Month Present</span>
+                <div class="stat-icon" style="background: var(--status-present-bg); color: var(--status-present);">✓</div>
+              </div>
+              <div class="stat-value" id="statPresent">0</div>
+              <div class="stat-desc">Days clocked in</div>
+            </div>
+
+            <div class="card">
+              <div class="stat-header">
+                <span class="stat-title">This Month Absent</span>
+                <div class="stat-icon" style="background: var(--status-absent-bg); color: var(--status-absent);">✕</div>
+              </div>
+              <div class="stat-value" id="statAbsent">0</div>
+              <div class="stat-desc">Full day absences</div>
+            </div>
+
+            <div class="card">
+              <div class="stat-header">
+                <span class="stat-title">Half Days</span>
+                <div class="stat-icon" style="background: var(--status-halfday-bg); color: var(--status-halfday);">½</div>
+              </div>
+              <div class="stat-value" id="statHalfDay">0</div>
+              <div class="stat-desc">Half day shifts</div>
+            </div>
+
+            <div class="card">
+              <div class="stat-header">
+                <span class="stat-title">Est. Net Pay</span>
+                <div class="stat-icon" style="background: var(--primary-light); color: var(--primary);">₹</div>
+              </div>
+              <div class="stat-value" id="statNetPay">₹0</div>
+              <div class="stat-desc">Based on current base salary</div>
+            </div>
+          </div>
+
+          <!-- HR ONLY: Today's Team Status Table -->
+          <div class="table-container hr-only">
+            <div class="table-header-bar">
+              <h3 class="table-title">Today's Team Attendance Status</h3>
+              <button class="btn btn-secondary btn-sm" onclick="renderDashboard()">Refresh</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Role</th>
+                  <th>Clock In</th>
+                  <th>Clock Out</th>
+                  <th>Today's Status</th>
+                </tr>
+              </thead>
+              <tbody id="todayTeamTableBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW 2: MY ATTENDANCE HISTORY -->
+        <section id="view-myAttendance" class="view-section">
+          <div class="table-container">
+            <div class="table-header-bar">
+              <h3 class="table-title">My Attendance Records</h3>
+              <div class="filter-bar">
+                <select id="myMonthFilter" class="form-select" onchange="renderMyAttendance()">
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7" selected>July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+                <select id="myYearFilter" class="form-select" onchange="renderMyAttendance()">
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026" selected>2026</option>
+                </select>
+              </div>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Clock In</th>
+                  <th>Clock Out</th>
+                  <th>Status</th>
+                  <th>IP Address</th>
+                  <th>Notes / Remarks</th>
+                </tr>
+              </thead>
+              <tbody id="myAttendanceTableBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW 3: TEAM LOGS (HR) -->
+        <section id="view-teamAttendance" class="view-section">
+          <div class="table-container">
+            <div class="table-header-bar">
+              <h3 class="table-title">All Employee Attendance Logs</h3>
+              <div class="filter-bar">
+                <select id="teamUserFilter" class="form-select" onchange="renderTeamAttendance()">
+                  <option value="all">All Active Employees</option>
+                </select>
+                <select id="teamMonthFilter" class="form-select" onchange="renderTeamAttendance()">
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7" selected>July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+                <select id="teamYearFilter" class="form-select" onchange="renderTeamAttendance()">
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026" selected>2026</option>
+                </select>
+                <button class="btn btn-primary btn-sm" onclick="openAddAttendanceModal()">+ Add Record</button>
+              </div>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Employee</th>
+                  <th>Clock In</th>
+                  <th>Clock Out</th>
+                  <th>Status</th>
+                  <th>Notes</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="teamAttendanceTableBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW 4: EMPLOYEES ROSTER (HR) -->
+        <section id="view-employees" class="view-section">
+          <div class="table-container">
+            <div class="table-header-bar">
+              <h3 class="table-title">Active Employees</h3>
+              <button class="btn btn-primary btn-sm" onclick="openAddEmployeeModal()">+ Add New Employee</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="employeesTableBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW 5: SALARY & PAYROLL (HR) -->
+        <section id="view-salaryPayroll" class="view-section">
+          <!-- Sub tab bar -->
+          <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+            <button class="btn btn-primary btn-sm" id="tabSalaryMonthlyBtn" onclick="switchSalarySubTab('monthly')">Monthly Payroll</button>
+            <button class="btn btn-secondary btn-sm" id="tabSalaryRatesBtn" onclick="switchSalarySubTab('rates')">Base Salary Rates</button>
+            <button class="btn btn-secondary btn-sm" id="tabSalaryCalcBtn" onclick="switchSalarySubTab('calc')">Quick Calculator</button>
+          </div>
+
+          <!-- SUB TAB 1: MONTHLY PAYROLL -->
+          <div id="salarySubTabMonthly" class="table-container">
+            <div class="table-header-bar">
+              <h3 class="table-title">Monthly Payroll Dashboard</h3>
+              <div class="filter-bar">
+                <select id="payrollMonthFilter" class="form-select" onchange="renderSalaryPayroll()">
+                  <option value="1">January</option>
+                  <option value="2">February</option>
+                  <option value="3">March</option>
+                  <option value="4">April</option>
+                  <option value="5">May</option>
+                  <option value="6">June</option>
+                  <option value="7" selected>July</option>
+                  <option value="8">August</option>
+                  <option value="9">September</option>
+                  <option value="10">October</option>
+                  <option value="11">November</option>
+                  <option value="12">December</option>
+                </select>
+                <select id="payrollYearFilter" class="form-select" onchange="renderSalaryPayroll()">
+                  <option value="2024">2024</option>
+                  <option value="2025">2025</option>
+                  <option value="2026" selected>2026</option>
+                </select>
+              </div>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Base Monthly Salary</th>
+                  <th>Attendance (P / A / H)</th>
+                  <th>Deductions</th>
+                  <th>Net Payable Salary</th>
+                  <th>Payslip</th>
+                </tr>
+              </thead>
+              <tbody id="payrollTableBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- SUB TAB 2: BASE SALARY RATES -->
+          <div id="salarySubTabRates" class="table-container" style="display: none;">
+            <div class="table-header-bar">
+              <h3 class="table-title">Base Salary Records</h3>
+              <button class="btn btn-primary btn-sm" onclick="openAddSalaryModal()">+ Set Base Salary</button>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Base Salary Amount</th>
+                  <th>Currency</th>
+                  <th>Effective Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="salaryRatesTableBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- SUB TAB 3: QUICK CALCULATOR -->
+          <div id="salarySubTabCalc" class="card" style="max-width: 600px; display: none;">
+            <h3 style="margin-bottom: 1rem;">Estimate Net Pay</h3>
+            <div class="form-group">
+              <label class="form-label">Select Employee</label>
+              <select id="calcEmployeeSelect" class="form-control" onchange="calculateQuickPay()">
+                <option value="">-- Choose Employee --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Base Monthly Salary (₹)</label>
+              <input type="number" id="calcBaseSalary" class="form-control" value="30000" oninput="calculateQuickPay()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Absent Days Count</label>
+              <input type="number" id="calcAbsentDays" class="form-control" value="1" step="0.5" oninput="calculateQuickPay()">
+            </div>
+            
+            <div style="background: #f8fafc; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-top: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span>Per Day Rate (Base / 30):</span>
+                <strong id="calcPerDay">₹1,000.00</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #ef4444;">
+                <span>Total Deduction:</span>
+                <strong id="calcDeduction">-₹1,000.00</strong>
+              </div>
+              <hr style="margin: 0.75rem 0; border: none; border-top: 1px solid var(--border-color);">
+              <div style="display: flex; justify-content: space-between; font-size: 1.15rem; color: var(--primary);">
+                <span>Final Payable Salary:</span>
+                <strong id="calcNetPay">₹29,000.00</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 6: EX-EMPLOYEES ARCHIVE (HR) -->
+        <section id="view-exEmployees" class="view-section">
+          <div class="table-container">
+            <div class="table-header-bar">
+              <h3 class="table-title">Old / Offboarded Employees Archive</h3>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Username / Email</th>
+                  <th>Offboard Exit Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="exEmployeesTableBody">
+                <!-- Dynamically Rendered -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- VIEW 7: FIREBASE SETUP (HR) -->
+        <section id="view-firebaseSetup" class="view-section">
+          <div class="card" style="max-width: 750px;">
+            <h2 style="margin-bottom: 0.5rem;">Firebase Connection & Data Restoration</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">
+              Enter your Firebase project keys below to sync live attendance across devices. You can also seed all restored historical records (760 attendance entries + 9 salary logs) into Firestore with 1 click.
+            </p>
+
+            <form id="firebaseConfigForm" onsubmit="saveFirebaseConfigHandler(event)">
+              <div class="form-group">
+                <label class="form-label">API Key</label>
+                <input type="text" id="fbApiKey" class="form-control" placeholder="AIzaSy...">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Auth Domain</label>
+                <input type="text" id="fbAuthDomain" class="form-control" placeholder="life-hotel-supply.firebaseapp.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Project ID</label>
+                <input type="text" id="fbProjectId" class="form-control" placeholder="life-hotel-supply">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Storage Bucket</label>
+                <input type="text" id="fbStorageBucket" class="form-control" placeholder="life-hotel-supply.appspot.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">App ID</label>
+                <input type="text" id="fbAppId" class="form-control" placeholder="1:123456789:web:abcdef...">
+              </div>
+
+              <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary">Save Firebase Config</button>
+                <button type="button" class="btn btn-secondary" onclick="seedFirebaseDatabase()">
+                  Seed Restored SQL Data to Firebase
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- SIMPLE FOOTER -->
+      <footer class="site-footer">
+        Copyright © 2009-2026 Life Hotel Supply. All Rights Reserved.
+      </footer>
+    </div>
+  </div>
+
+  <!-- MODALS -->
+  <!-- 1. Add/Edit Attendance Modal -->
+  <div id="attendanceModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="attModalTitle">Add Attendance Record</h3>
+        <button class="modal-close" onclick="closeModal('attendanceModal')">&times;</button>
+      </div>
+      <form id="attendanceForm" onsubmit="saveAttendanceRecord(event)">
+        <input type="hidden" id="attEditId">
+        <div class="form-group">
+          <label class="form-label">Employee</label>
+          <select id="attUserSelect" class="form-control" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" id="attDate" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="attStatus" class="form-control" required>
+            <option value="Present">Present</option>
+            <option value="Absent">Absent</option>
+            <option value="Half Day">Half Day</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Clock In Time</label>
+          <input type="time" id="attInTime" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Clock Out Time</label>
+          <input type="time" id="attOutTime" class="form-control">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes / Remarks</label>
+          <input type="text" id="attRemarksInput" class="form-control" placeholder="Optional remark">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Attendance</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Add Employee Modal -->
+  <div id="employeeModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Employee</h3>
+        <button class="modal-close" onclick="closeModal('employeeModal')">&times;</button>
+      </div>
+      <form id="employeeForm" onsubmit="saveEmployee(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="empName" class="form-control" placeholder="e.g. John Doe" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="empUsername" class="form-control" placeholder="john.doe" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="empEmail" class="form-control" placeholder="john@lifehotelsupply.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select id="empRole" class="form-control" required>
+            <option value="Employee">Employee</option>
+            <option value="HR">HR</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Employee</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 3. Add Base Salary Modal -->
+  <div id="salaryModal" class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Set Base Salary Rate</h3>
+        <button class="modal-close" onclick="closeModal('salaryModal')">&times;</button>
+      </div>
+      <form id="salaryForm" onsubmit="saveSalaryRate(event)">
+        <div class="form-group">
+          <label class="form-label">Employee</label>
+          <select id="salUserSelect" class="form-control" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Monthly Salary Amount (₹)</label>
+          <input type="number" id="salAmount" class="form-control" placeholder="30000" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Currency</label>
+          <select id="salCurrency" class="form-control">
+            <option value="INR">INR (₹)</option>
+            <option value="USD">USD ($)</option>
+            <option value="PHP">PHP (₱)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Effective Date</label>
+          <input type="date" id="salDate" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Salary</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Payslip View Modal -->
+  <div id="payslipModal" class="modal-backdrop">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Monthly Payslip Statement</h3>
+        <button class="modal-close" onclick="closeModal('payslipModal')">&times;</button>
+      </div>
+      <div id="payslipContent" style="padding: 1rem 0;">
+        <!-- Dynamically Rendered -->
+      </div>
+      <button class="btn btn-secondary" onclick="window.print()" style="width: 100%;">Print Payslip</button>
+    </div>
+  </div>
+
+  <!-- Application Logic Scripts -->
+  <script src="firebase-config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
