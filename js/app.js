@@ -12,10 +12,12 @@ let appData = {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
+    if (typeof initFirebaseServices === 'function') {
+        await initFirebaseServices();
+    }
     await initDataStore();
     initClockTimer();
     checkAuthSession();
-    await FirebaseManager.init();
 });
 
 // Initialize Data Store directly from live Firebase Cloud Firestore
@@ -40,6 +42,19 @@ async function initDataStore() {
         }
     } catch (err) {
         console.error('Data Store initialization error from Firebase:', err);
+    }
+
+    // Fallback load if Firebase network is slow or offline
+    if (!appData.users || appData.users.length === 0) {
+        try {
+            const res = await fetch('migrated_data.json');
+            const initialData = await res.json();
+            appData.users = initialData.users || [];
+            appData.attendance = initialData.attendance || [];
+            appData.salary_history = initialData.salary_history || [];
+        } catch (e) {
+            console.error('Fallback JSON fetch error:', e);
+        }
     }
 }
 
@@ -961,7 +976,7 @@ function showPayslipModal(userId, month, year) {
     const content = `
         <div style="text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 1rem;">
             <img src="logo.jpg" style="height: 50px; margin-bottom: 0.5rem;" alt="Logo">
-            <h2>Life Hotel Supply</h2>
+            <h2>HUB</h2>
             <p style="color: var(--text-muted); font-size: 0.85rem;">Payslip Statement - ${monthName} ${year}</p>
         </div>
 
