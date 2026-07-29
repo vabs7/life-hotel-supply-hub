@@ -62,9 +62,9 @@ function updateClock() {
     const currentDateDisplay = document.getElementById('currentDateDisplay');
 
     if (clockTimeEl) {
-        clockTimeEl.textContent = now.toLocaleTimeString('en-US', { hour12: true });
+        clockTimeEl.textContent = now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago', hour12: true }) + ' (CT)';
     }
-    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+    const options = { timeZone: 'America/Chicago', weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
     const dateStr = now.toLocaleDateString('en-US', options);
     if (clockDateEl) clockDateEl.textContent = dateStr;
     if (currentDateDisplay) currentDateDisplay.textContent = dateStr;
@@ -72,16 +72,21 @@ function updateClock() {
 
 function getTodayString() {
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'America/Chicago',
+        year: 'numeric', month: '2-digit', day: '2-digit'
+    });
+    const parts = formatter.formatToParts(now);
+    const m = parts.find(p => p.type === 'month').value;
+    const d = parts.find(p => p.type === 'day').value;
+    const y = parts.find(p => p.type === 'year').value;
+    return `${y}-${m}-${d}`;
 }
 
 function getDateTimeString() {
     const now = new Date();
     const today = getTodayString();
-    const time = now.toTimeString().split(' ')[0];
+    const time = now.toLocaleTimeString('en-GB', { timeZone: 'America/Chicago' });
     return `${today} ${time}`;
 }
 
