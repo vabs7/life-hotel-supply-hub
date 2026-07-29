@@ -37,7 +37,7 @@ async function initDataStore() {
                 return {
                     id: String(s.id),
                     user_id: String(s.user_id),
-                    amount: parseFloat(s.amount),
+                    amount: parseSalaryAmount(s.amount),
                     currency: (['INR', 'USD', 'PHP'].includes(s.currency) ? s.currency : 'INR'),
                     effective_date: realEffectiveDate,
                     updated_at: realTimestamp
@@ -326,8 +326,8 @@ function renderDashboard() {
     // Render Today's Team Table for HR
     if (currentUser.role === 'HR') {
         let activeUsers = appData.users.filter(u => !u.offboard_date && String(u.id) !== String(currentUser.id));
-        if (currentUser.username !== 'vaibhav.ajugiya') {
-            activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+        if (currentUser.username !== 'kedar_is') {
+            activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
         }
         const tbody = document.getElementById('todayTeamTableBody');
         tbody.innerHTML = activeUsers.map(u => {
@@ -414,7 +414,7 @@ function renderMyAttendance() {
 
     const tbody = document.getElementById('myAttendanceTableBody');
     if (records.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No attendance records found for this month.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">No attendance records found for this month.</td></tr>`;
         return;
     }
 
@@ -426,7 +426,6 @@ function renderMyAttendance() {
                 <td>${formatTime(r.login_time)}</td>
                 <td>${formatTime(r.logout_time)}</td>
                 <td><span class="badge ${badgeClass}">${r.status}</span></td>
-                <td><code>${escapeHtml(r.ip_address || '-')}</code></td>
                 <td>${escapeHtml(r.remarks || '-')}</td>
             </tr>
         `;
@@ -446,8 +445,8 @@ function renderTeamAttendance() {
     if (!showExEmployeesGlobal) {
         allowedUsers = allowedUsers.filter(u => !u.offboard_date);
     }
-    if (currentUser.username !== 'vaibhav.ajugiya') {
-        allowedUsers = allowedUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    if (currentUser.username !== 'kedar_is') {
+        allowedUsers = allowedUsers.filter(u => u.username !== 'kedar_is');
     }
 
     const select = document.getElementById('teamUserFilter');
@@ -497,8 +496,8 @@ function renderEmployeesRoster() {
     if (currentUser.role !== 'HR') return;
 
     let activeUsers = appData.users.filter(u => !u.offboard_date);
-    if (currentUser.username !== 'vaibhav.ajugiya') {
-        activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    if (currentUser.username !== 'kedar_is') {
+        activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
     }
 
     const tbody = document.getElementById('employeesTableBody');
@@ -619,8 +618,8 @@ function renderPayrollMonthlyTab() {
     const eomDate = `${year}-${String(month).padStart(2,'0')}-${totalDays}`;
 
     let users = appData.users.filter(u => showExEmployeesGlobal || !u.offboard_date);
-    if (currentUser.username !== 'vaibhav.ajugiya') {
-        users = users.filter(u => u.username !== 'vaibhav.ajugiya');
+    if (currentUser.username !== 'kedar_is') {
+        users = users.filter(u => u.username !== 'kedar_is');
     }
 
     const tbody = document.getElementById('payrollTableBody');
@@ -657,7 +656,7 @@ function renderSalaryRatesTab() {
     
     sortedSalaries = sortedSalaries.filter(s => {
         const user = appData.users.find(u => String(u.id) === String(s.user_id));
-        if (currentUser.username !== 'vaibhav.ajugiya' && user && user.username === 'vaibhav.ajugiya') return false;
+        if (currentUser.username !== 'kedar_is' && user && user.username === 'kedar_is') return false;
         if (!showExEmployeesGlobal && user && user.offboard_date) return false;
         return true;
     });
@@ -682,8 +681,8 @@ function populateCalcUserDropdown() {
     const select = document.getElementById('calcEmployeeSelect');
     if (select) {
         let list = appData.users.filter(u => !u.offboard_date);
-        if (currentUser.username !== 'vaibhav.ajugiya') {
-            list = list.filter(u => u.username !== 'vaibhav.ajugiya');
+        if (currentUser.username !== 'kedar_is') {
+            list = list.filter(u => u.username !== 'kedar_is');
         }
         select.innerHTML = `<option value="">-- Choose Employee --</option>` + list.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
     }
@@ -768,7 +767,7 @@ function saveFirebaseConfigHandler(e) {
 }
 
 async function seedFirebaseDatabase() {
-    const allowedSeeders = ['vaibhav.ajugiya', 'kcalpesh'];
+    const allowedSeeders = ['kedar_is', 'kcalpesh'];
     if (!currentUser || !allowedSeeders.includes(currentUser.username)) {
         alert('Access Denied: Only Admin (Vaibhav & Kalpesh) have permission to seed the database.');
         return;
@@ -817,8 +816,8 @@ function openAddAttendanceModal() {
 
     const select = document.getElementById('attUserSelect');
     let activeUsers = appData.users.filter(u => !u.offboard_date);
-    if (currentUser.username !== 'vaibhav.ajugiya') {
-        activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    if (currentUser.username !== 'kedar_is') {
+        activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
     }
     select.innerHTML = activeUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
 
@@ -903,8 +902,8 @@ function deleteAttendanceRecord(id) {
 function openAddSalaryModal() {
     const select = document.getElementById('salUserSelect');
     let activeUsers = appData.users.filter(u => !u.offboard_date);
-    if (currentUser.username !== 'vaibhav.ajugiya') {
-        activeUsers = activeUsers.filter(u => u.username !== 'vaibhav.ajugiya');
+    if (currentUser.username !== 'kedar_is') {
+        activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
     }
     select.innerHTML = activeUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
 
@@ -1020,13 +1019,26 @@ function showPayslipModal(userId, month, year) {
 }
 
 // Helpers
+function parseSalaryAmount(val) {
+    if (typeof val === 'number') return val;
+    if (!val) return 0;
+    const str = String(val);
+    const matches = str.match(/[\d,]+(?:\.\d+)?/g);
+    if (matches && matches.length > 0) {
+        const lastMatch = matches[matches.length - 1].replace(/,/g, '');
+        const num = parseFloat(lastMatch);
+        if (!isNaN(num)) return num;
+    }
+    return parseFloat(str) || 0;
+}
+
 function getLatestBaseSalary(userId, dateStr) {
     const userSalaries = appData.salary_history.filter(s => String(s.user_id) === String(userId) && s.effective_date <= dateStr)
         .sort((a, b) => new Date(b.effective_date) - new Date(a.effective_date));
     
     if (userSalaries.length > 0) {
         return {
-            amount: parseFloat(userSalaries[0].amount),
+            amount: parseSalaryAmount(userSalaries[0].amount),
             currency: userSalaries[0].currency || 'INR'
         };
     }
