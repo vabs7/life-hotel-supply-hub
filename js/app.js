@@ -284,6 +284,15 @@ function isSameDate(date1, date2) {
     return String(date1).trim() === String(date2).trim();
 }
 
+function isRecordInMonthYear(dateStr, month, year) {
+    if (!dateStr) return false;
+    const parts = String(dateStr).trim().split('-');
+    if (parts.length < 3) return false;
+    const recYear = parseInt(parts[0], 10);
+    const recMonth = parseInt(parts[1], 10);
+    return recMonth === month && recYear === year;
+}
+
 function formatRemarks(remarks) {
     if (!remarks) return '-';
     const str = String(remarks).trim();
@@ -560,8 +569,7 @@ function renderDashboard() {
 
     const monthlyRecords = appData.attendance.filter(a => {
         if (!isSameUser(a.user_id, currentUser.id)) return false;
-        const d = new Date(String(a.date).trim());
-        return (d.getMonth() + 1) === currentMonth && d.getFullYear() === currentYear;
+        return isRecordInMonthYear(a.date, currentMonth, currentYear);
     });
 
     const presentCount = monthlyRecords.filter(a => a.status === 'Present').length;
@@ -572,9 +580,10 @@ function renderDashboard() {
     document.getElementById('statAbsent').textContent = absentCount;
     document.getElementById('statHalfDay').textContent = halfCount;
 
-    // Calculate Estimated Net Pay
-    const baseSalObj = getLatestBaseSalary(currentUser.id, `${currentYear}-${String(currentMonth).padStart(2,'0')}-28`);
-    const perDay = baseSalObj.amount / 30;
+    // Calculate Estimated Net Pay using exact days in current month
+    const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const baseSalObj = getLatestBaseSalary(currentUser.id, `${currentYear}-${String(currentMonth).padStart(2,'0')}-${totalDaysInMonth}`);
+    const perDay = baseSalObj.amount / totalDaysInMonth;
     const deduction = (absentCount * perDay) + (halfCount * (perDay / 2));
     const netPay = Math.max(0, baseSalObj.amount - deduction);
     document.getElementById('statNetPay').textContent = formatMoney(netPay, baseSalObj.currency);
@@ -685,9 +694,8 @@ async function renderMyAttendance(autoSelectLatest = false) {
 
     // On-Demand fetch from Firestore if records for this selected month are not in local memory yet
     let existingRecords = appData.attendance.filter(a => {
-        if (String(a.user_id) !== String(currentUser.id)) return false;
-        const d = new Date(a.date);
-        return (d.getMonth() + 1) === month && d.getFullYear() === year;
+        if (!isSameUser(a.user_id, currentUser.id)) return false;
+        return isRecordInMonthYear(a.date, month, year);
     });
 
     if (existingRecords.length === 0 && typeof firebaseDb !== 'undefined' && firebaseDb) {
@@ -770,9 +778,8 @@ function renderTeamAttendance() {
 
     summaryTbody.innerHTML = allowedUsers.map(u => {
         const userRecords = appData.attendance.filter(a => {
-            if (String(a.user_id) !== String(u.id)) return false;
-            const d = new Date(a.date);
-            return (d.getMonth() + 1) === month && d.getFullYear() === year;
+            if (!isSameUser(a.user_id, u.id)) return false;
+            return isRecordInMonthYear(a.date, month, year);
         });
         const present = userRecords.filter(a => a.status === 'Present').length;
         const absent = userRecords.filter(a => a.status === 'Absent').length;
@@ -804,9 +811,8 @@ function drillDownEmployee(userId, displayName) {
     document.getElementById('teamDetailTitle').textContent = `${displayName} — ${monthName} ${year}`;
 
     const records = appData.attendance.filter(a => {
-        if (String(a.user_id) !== String(userId)) return false;
-        const d = new Date(a.date);
-        return (d.getMonth() + 1) === month && d.getFullYear() === year;
+        if (!isSameUser(a.user_id, userId)) return false;
+        return isRecordInMonthYear(a.date, month, year);
     }).sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const tbody = document.getElementById('teamAttendanceTableBody');
@@ -985,7 +991,7 @@ function renderPayrollMonthlyTab() {
         const baseObj = getLatestBaseSalary(u.id, eomDate);
         const stats = getMonthlyCounts(u.id, month, year);
 
-        const perDay = baseObj.amount / 30; // 30-day standard divisor
+        const perDay = baseObj.amount / totalDays; // Dynamic divisor: exact number of days in this month
         const deduction = (stats.absent * perDay) + (stats.halfDay * (perDay / 2));
         const netPayable = Math.max(0, baseObj.amount - deduction);
 
@@ -1062,7 +1068,11 @@ function calculateQuickPay() {
     }
 
     const absent = parseFloat(document.getElementById('calcAbsentDays').value) || 0;
-    const perDay = base / 30;
+    const now = new Date();
+    const currentMonth = now.getMonth() + 1;
+    const currentYear = now.getFullYear();
+    const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const perDay = base / totalDaysInMonth;
     const deduction = absent * perDay;
     const net = Math.max(0, base - deduction);
 
@@ -1374,7 +1384,7 @@ function showPayslipModal(userId, month, year) {
     const baseObj = getLatestBaseSalary(userId, eomDate);
     const stats = getMonthlyCounts(userId, month, year);
 
-    const perDay = baseObj.amount / 30;
+    const perDay = baseObj.amount / totalDays;
     const deduction = (stats.absent * perDay) + (stats.halfDay * (perDay / 2));
     const netPayable = Math.max(0, baseObj.amount - deduction);
 
@@ -1397,7 +1407,7 @@ function showPayslipModal(userId, month, year) {
                 <strong>Statement Period:</strong> ${monthName} ${year}<br>
                 <strong>Generated Date:</strong> ${getTodayString()}<br>
                 <strong>Currency:</strong> ${baseObj.currency}<br>
-                <strong>Standard Divisor:</strong> 30 Days
+                <strong>Standard Divisor:</strong> ${totalDays} Days (${monthName})
             </div>
         </div>
 
@@ -1463,8 +1473,7 @@ function getLatestBaseSalary(userId, dateStr) {
 function getMonthlyCounts(userId, month, year) {
     const records = appData.attendance.filter(a => {
         if (!isSameUser(a.user_id, userId)) return false;
-        const d = new Date(String(a.date).trim());
-        return (d.getMonth() + 1) === month && d.getFullYear() === year;
+        return isRecordInMonthYear(a.date, month, year);
     });
 
     return {
