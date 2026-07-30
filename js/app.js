@@ -115,7 +115,7 @@ async function initDataStore() {
             if (usersSnap && !usersSnap.empty) appData.users = usersSnap.docs.map(doc => doc.data());
             if (attSnap && !attSnap.empty) appData.attendance = attSnap.docs.map(doc => doc.data());
             else if (!attSnap) appData.attendance = [];
-            
+
             if (salSnap && !salSnap.empty) appData.salary_history = salSnap.docs.map(doc => doc.data());
             else if (!salSnap) appData.salary_history = [];
 
@@ -133,7 +133,7 @@ async function initDataStore() {
                 appData.attendance = JSON.parse(cachedAtt) || [];
                 appData.salary_history = JSON.parse(cachedSal) || [];
                 return;
-            } catch (e) {}
+            } catch (e) { }
         }
     }
 
@@ -421,7 +421,7 @@ async function handleLogin(e) {
     // Authenticated
     currentUser = user;
     localStorage.setItem('lhs_current_user', JSON.stringify(currentUser));
-    
+
     // Invalidate cache and fetch the correct data scope for the newly logged-in user
     if (btn) {
         btn.textContent = 'Loading Data...';
@@ -447,7 +447,7 @@ function handleLogout() {
 function onUserAuthenticated() {
     const appEl = document.getElementById('app');
     if (appEl) appEl.style.display = 'flex';
-    
+
     // Update User Badge in Sidebar
     const avatarEl = document.getElementById('userAvatar');
     const nameEl = document.getElementById('userName');
@@ -582,7 +582,7 @@ function renderDashboard() {
 
     // Calculate Estimated Net Pay using exact days in current month
     const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
-    const baseSalObj = getLatestBaseSalary(currentUser.id, `${currentYear}-${String(currentMonth).padStart(2,'0')}-${totalDaysInMonth}`);
+    const baseSalObj = getLatestBaseSalary(currentUser.id, `${currentYear}-${String(currentMonth).padStart(2, '0')}-${totalDaysInMonth}`);
     const perDay = baseSalObj.amount / totalDaysInMonth;
     const deduction = (absentCount * perDay) + (halfCount * (perDay / 2));
     const netPay = Math.max(0, baseSalObj.amount - deduction);
@@ -590,7 +590,7 @@ function renderDashboard() {
 
     // Render Today's Team Table for HR & Admin
     if (isHrOrAdminUser()) {
-        let activeUsers = appData.users.filter(u => !u.offboard_date && String(u.id) !== String(currentUser.id));
+        let activeUsers = appData.users.filter(u => !u.offboard_date);
         if (currentUser.username !== 'kedar_is') {
             activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
         }
@@ -708,7 +708,7 @@ async function renderMyAttendance(autoSelectLatest = false) {
                 .where('date', '>=', startStr)
                 .where('date', '<=', endStr)
                 .get();
-            
+
             if (!snap.empty) {
                 const fetched = snap.docs.map(doc => doc.data());
                 fetched.forEach(f => {
@@ -758,8 +758,7 @@ function renderTeamAttendance() {
     const year = parseInt(document.getElementById('teamYearFilter').value);
 
     // Build allowed users list (Active OR explicitly included Ex-Employees)
-    let allowedUsers = appData.users.filter(u => String(u.id) !== String(currentUser.id));
-    allowedUsers = allowedUsers.filter(u => !u.offboard_date || u.include_in_reports);
+    let allowedUsers = appData.users.filter(u => !u.offboard_date || u.include_in_reports);
     if (currentUser.username !== 'kedar_is') {
         allowedUsers = allowedUsers.filter(u => u.username !== 'kedar_is');
     }
@@ -889,8 +888,8 @@ function saveEmployee(e) {
     const role = document.getElementById('empRole').value;
     const password = document.getElementById('empPassword').value.trim() || '123456';
 
-    const existingUser = appData.users.find(u => 
-        (u.username && u.username.toLowerCase() === username) || 
+    const existingUser = appData.users.find(u =>
+        (u.username && u.username.toLowerCase() === username) ||
         (u.email && u.email.toLowerCase() === email)
     );
     if (existingUser) {
@@ -979,7 +978,7 @@ function renderPayrollMonthlyTab() {
     const month = parseInt(document.getElementById('payrollMonthFilter').value);
     const year = parseInt(document.getElementById('payrollYearFilter').value);
     const totalDays = new Date(year, month, 0).getDate();
-    const eomDate = `${year}-${String(month).padStart(2,'0')}-${totalDays}`;
+    const eomDate = `${year}-${String(month).padStart(2, '0')}-${totalDays}`;
 
     let users = appData.users.filter(u => !u.offboard_date || u.include_in_reports);
     if (currentUser.username !== 'kedar_is') {
@@ -1017,7 +1016,7 @@ function renderPayrollMonthlyTab() {
 function renderSalaryRatesTab() {
     const tbody = document.getElementById('salaryRatesTableBody');
     let sortedSalaries = [...appData.salary_history].sort((a, b) => new Date(b.effective_date) - new Date(a.effective_date));
-    
+
     sortedSalaries = sortedSalaries.filter(s => {
         const user = appData.users.find(u => String(u.id) === String(s.user_id));
         if (currentUser.username !== 'kedar_is' && user && user.username === 'kedar_is') return false;
@@ -1203,7 +1202,8 @@ function openAddAttendanceModal() {
     if (currentUser.username !== 'kedar_is') {
         activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
     }
-    select.innerHTML = activeUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
+    select.innerHTML = `<option value="">-- Choose Employee --</option>` + activeUsers.map(u => `<option value="${u.id}">${escapeHtml(u.display_name)}</option>`).join('');
+    select.value = '';
 
     document.getElementById('attDate').value = getTodayString();
     document.getElementById('attStatus').value = 'Present';
@@ -1232,8 +1232,8 @@ function editAttendanceModal(id) {
     document.getElementById('attDate').value = record.date;
 
     document.getElementById('attStatus').value = record.status;
-    document.getElementById('attInTime').value = record.login_time ? record.login_time.split(' ')[1]?.substring(0,5) || '' : '';
-    document.getElementById('attOutTime').value = record.logout_time ? record.logout_time.split(' ')[1]?.substring(0,5) || '' : '';
+    document.getElementById('attInTime').value = record.login_time ? record.login_time.split(' ')[1]?.substring(0, 5) || '' : '';
+    document.getElementById('attOutTime').value = record.logout_time ? record.logout_time.split(' ')[1]?.substring(0, 5) || '' : '';
     document.getElementById('attRemarksInput').value = record.remarks || '';
 
     openModal('attendanceModal');
@@ -1248,6 +1248,35 @@ function saveAttendanceRecord(e) {
     const inTimeVal = document.getElementById('attInTime').value;
     const outTimeVal = document.getElementById('attOutTime').value;
     const remarks = document.getElementById('attRemarksInput').value;
+
+    if (!userId) {
+        alert('Please choose an employee from the dropdown list.');
+        return;
+    }
+    if (!date) {
+        alert('Please select a valid date.');
+        return;
+    }
+
+    // Check for duplicate attendance record when adding a new entry
+    if (!editId) {
+        const existingRecord = appData.attendance.find(a => isSameUser(a.user_id, userId) && isSameDate(a.date, date));
+        if (existingRecord) {
+            const userObj = appData.users.find(u => isSameUser(u.id, userId));
+            const empName = userObj ? userObj.display_name : 'this employee';
+
+            const shouldEdit = confirm(
+                `An attendance record already exists for ${empName} on ${formatDate(date)}.\n\n` +
+                `Would you like to EDIT the existing record instead of creating a duplicate?`
+            );
+
+            if (shouldEdit) {
+                closeModal('attendanceModal');
+                editAttendanceModal(existingRecord.id);
+            }
+            return;
+        }
+    }
 
     const loginTime = inTimeVal ? `${date} ${inTimeVal}:00` : null;
     const logoutTime = outTimeVal ? `${date} ${outTimeVal}:00` : null;
@@ -1380,7 +1409,7 @@ function showPayslipModal(userId, month, year) {
     if (!user) return;
 
     const totalDays = new Date(year, month, 0).getDate();
-    const eomDate = `${year}-${String(month).padStart(2,'0')}-${totalDays}`;
+    const eomDate = `${year}-${String(month).padStart(2, '0')}-${totalDays}`;
     const baseObj = getLatestBaseSalary(userId, eomDate);
     const stats = getMonthlyCounts(userId, month, year);
 
@@ -1393,7 +1422,7 @@ function showPayslipModal(userId, month, year) {
     const content = `
         <div style="text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 1rem;">
             <img src="logo.jpg" style="height: 50px; margin-bottom: 0.5rem;" alt="Logo">
-            <h2>HUB</h2>
+            <h2></h2>
             <p style="color: var(--text-muted); font-size: 0.85rem;">Payslip Statement - ${monthName} ${year}</p>
         </div>
 
@@ -1460,7 +1489,7 @@ function parseSalaryAmount(val) {
 function getLatestBaseSalary(userId, dateStr) {
     const userSalaries = appData.salary_history.filter(s => isSameUser(s.user_id, userId) && s.effective_date <= dateStr)
         .sort((a, b) => new Date(b.effective_date) - new Date(a.effective_date));
-    
+
     if (userSalaries.length > 0) {
         return {
             amount: parseSalaryAmount(userSalaries[0].amount),
