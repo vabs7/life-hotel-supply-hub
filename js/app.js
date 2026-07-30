@@ -269,6 +269,16 @@ function isSameUser(userId1, userId2) {
     return String(userId1).trim() === String(userId2).trim();
 }
 
+function isHrOrAdminUser(user = currentUser) {
+    if (!user) return false;
+    return user.role === 'HR' || user.role === 'Admin' || user.username === 'kedar_is' || user.email === 'lifehotelsupply@gmail.com';
+}
+
+function isAdminUser(user = currentUser) {
+    if (!user) return false;
+    return user.username === 'kedar_is' || user.email === 'lifehotelsupply@gmail.com' || user.role === 'Admin';
+}
+
 function isSameDate(date1, date2) {
     if (!date1 || !date2) return false;
     return String(date1).trim() === String(date2).trim();
@@ -434,22 +444,22 @@ function onUserAuthenticated() {
     const nameEl = document.getElementById('userName');
     const roleEl = document.getElementById('userRole');
 
-    const isAdmin = currentUser && (currentUser.username === 'kedar_is' || currentUser.email === 'lifehotelsupply@gmail.com');
+    const isAdmin = isAdminUser(currentUser);
+    const isHrOrAdmin = isHrOrAdminUser(currentUser);
 
     if (avatarEl && currentUser) avatarEl.textContent = currentUser.display_name.charAt(0).toUpperCase();
     if (nameEl && currentUser) nameEl.textContent = currentUser.display_name;
     if (roleEl && currentUser) roleEl.textContent = isAdmin ? 'Admin' : currentUser.role;
 
-    // Toggle HR Visibility (Team Logs, Employee Roster, Ex-Employees)
+    // Toggle HR & Admin Visibility (Team Logs, Employee Roster, Salary & Payroll, Ex-Employees)
     const hrElements = document.querySelectorAll('.hr-only');
     hrElements.forEach(el => {
-        el.style.display = (currentUser && currentUser.role === 'HR') ? 'flex' : 'none';
+        el.style.display = isHrOrAdmin ? '' : 'none';
     });
 
-    // Toggle Admin-Only Visibility (Salary & Payroll)
     const adminElements = document.querySelectorAll('.admin-only');
     adminElements.forEach(el => {
-        el.style.display = isAdmin ? 'flex' : 'none';
+        el.style.display = isAdmin ? '' : 'none';
     });
 
     // Render Initial View
@@ -475,10 +485,10 @@ function switchView(viewName) {
     const titleMap = {
         dashboard: 'Dashboard',
         myAttendance: 'My Attendance Log',
-        teamAttendance: 'Team Attendance Logs (HR)',
-        employees: 'Employee Roster (HR)',
-        salaryPayroll: 'Salary & Payroll (HR)',
-        exEmployees: 'Ex-Employees Archive (HR)',
+        teamAttendance: 'Team Attendance Logs',
+        employees: 'Employee Roster',
+        salaryPayroll: 'Salary & Payroll',
+        exEmployees: 'Ex-Employees Archive',
         firebaseSetup: 'Firebase Connection Settings'
     };
     document.getElementById('pageTitle').textContent = titleMap[viewName] || 'Dashboard';
@@ -569,8 +579,8 @@ function renderDashboard() {
     const netPay = Math.max(0, baseSalObj.amount - deduction);
     document.getElementById('statNetPay').textContent = formatMoney(netPay, baseSalObj.currency);
 
-    // Render Today's Team Table for HR
-    if (currentUser.role === 'HR') {
+    // Render Today's Team Table for HR & Admin
+    if (isHrOrAdminUser()) {
         let activeUsers = appData.users.filter(u => !u.offboard_date && String(u.id) !== String(currentUser.id));
         if (currentUser.username !== 'kedar_is') {
             activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
@@ -734,7 +744,7 @@ async function renderMyAttendance(autoSelectLatest = false) {
 
 // VIEW 3: TEAM ATTENDANCE (HR)
 function renderTeamAttendance() {
-    if (currentUser.role !== 'HR') return;
+    if (!isHrOrAdminUser()) return;
 
     const month = parseInt(document.getElementById('teamMonthFilter').value);
     const year = parseInt(document.getElementById('teamYearFilter').value);
@@ -831,7 +841,7 @@ function backToTeamSummary() {
 }
 
 function renderEmployeesRoster() {
-    if (currentUser.role !== 'HR') return;
+    if (!isHrOrAdminUser()) return;
 
     let activeUsers = appData.users.filter(u => !u.offboard_date);
     if (currentUser.username !== 'kedar_is') {
@@ -938,10 +948,9 @@ function rehireEmployee(id) {
     renderExEmployees();
 }
 
-// VIEW 5: SALARY & PAYROLL (ADMIN ONLY)
+// VIEW 5: SALARY & PAYROLL (HR & ADMIN)
 function renderSalaryPayroll() {
-    const isAdmin = currentUser && (currentUser.username === 'kedar_is' || currentUser.email === 'lifehotelsupply@gmail.com');
-    if (!isAdmin) {
+    if (!isHrOrAdminUser()) {
         switchView('dashboard');
         return;
     }
@@ -1062,9 +1071,9 @@ function calculateQuickPay() {
     document.getElementById('calcNetPay').textContent = formatMoney(net, currency);
 }
 
-// VIEW 6: EX-EMPLOYEES ARCHIVE (HR)
+// VIEW 6: EX-EMPLOYEES ARCHIVE (HR & ADMIN)
 function renderExEmployees() {
-    if (currentUser.role !== 'HR') return;
+    if (!isHrOrAdminUser()) return;
 
     // Reverse chronological order (latest exit date first)
     const offboardedUsers = appData.users
@@ -1099,8 +1108,12 @@ function renderExEmployees() {
     }).join('');
 }
 
-// VIEW 7: FIREBASE SETUP (HR)
+// VIEW 7: FIREBASE SETUP (ADMIN ONLY)
 function renderFirebaseSetup() {
+    if (!isAdminUser(currentUser)) {
+        switchView('dashboard');
+        return;
+    }
     const config = FirebaseManager.getConfig();
     document.getElementById('fbApiKey').value = config.apiKey || '';
     document.getElementById('fbAuthDomain').value = config.authDomain || '';
@@ -1308,9 +1321,22 @@ function saveSalaryRate(e) {
     const currency = document.getElementById('salCurrency').value;
     const effectiveDate = document.getElementById('salDate').value;
 
+    if (!userId) {
+        alert('Please select an employee.');
+        return;
+    }
+    if (isNaN(amount) || amount <= 0) {
+        alert('Please enter a valid salary amount.');
+        return;
+    }
+    if (!effectiveDate) {
+        alert('Please select an effective date.');
+        return;
+    }
+
     const newSal = {
         id: String(Date.now()),
-        user_id: userId,
+        user_id: String(userId).trim(),
         amount: amount,
         currency: currency,
         effective_date: effectiveDate,
@@ -1319,6 +1345,7 @@ function saveSalaryRate(e) {
 
     appData.salary_history.unshift(newSal);
     saveDataStore();
+    saveFirebaseDoc('salary_history', newSal.id, newSal);
     closeModal('salaryModal');
     renderSalaryPayroll();
 }
@@ -1327,12 +1354,13 @@ function deleteSalaryRate(id) {
     if (!confirm('Delete this salary rate record?')) return;
     appData.salary_history = appData.salary_history.filter(s => String(s.id) !== String(id));
     saveDataStore();
+    deleteFirebaseDoc('salary_history', id);
     renderSalaryPayroll();
 }
 
 function formatMoney(amount, currency = 'INR') {
-    const symbols = { INR: '₹', USD: '$', PHP: '₱' };
-    const sym = symbols[currency] || currency + ' ';
+    const symbols = { INR: '₹', USD: '$', PHP: '₱', ETB: 'Br ', NGN: '₦' };
+    const sym = symbols[currency] || (currency ? currency + ' ' : '');
     const val = parseFloat(amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     return `${sym}${val}`;
 }
@@ -1420,7 +1448,7 @@ function parseSalaryAmount(val) {
 }
 
 function getLatestBaseSalary(userId, dateStr) {
-    const userSalaries = appData.salary_history.filter(s => String(s.user_id) === String(userId) && s.effective_date <= dateStr)
+    const userSalaries = appData.salary_history.filter(s => isSameUser(s.user_id, userId) && s.effective_date <= dateStr)
         .sort((a, b) => new Date(b.effective_date) - new Date(a.effective_date));
     
     if (userSalaries.length > 0) {
@@ -1434,8 +1462,8 @@ function getLatestBaseSalary(userId, dateStr) {
 
 function getMonthlyCounts(userId, month, year) {
     const records = appData.attendance.filter(a => {
-        if (String(a.user_id) !== String(userId)) return false;
-        const d = new Date(a.date);
+        if (!isSameUser(a.user_id, userId)) return false;
+        const d = new Date(String(a.date).trim());
         return (d.getMonth() + 1) === month && d.getFullYear() === year;
     });
 
