@@ -264,6 +264,16 @@ function formatTime(dateTimeStr) {
     return `${hours}:${minutes} ${ampm}`;
 }
 
+function isSameUser(userId1, userId2) {
+    if (!userId1 || !userId2) return false;
+    return String(userId1).trim() === String(userId2).trim();
+}
+
+function isSameDate(date1, date2) {
+    if (!date1 || !date2) return false;
+    return String(date1).trim() === String(date2).trim();
+}
+
 function formatRemarks(remarks) {
     if (!remarks) return '-';
     const str = String(remarks).trim();
@@ -488,36 +498,48 @@ function renderDashboard() {
     if (!currentUser) return;
     const today = getTodayString();
 
-    // Check today's punch for current user
-    const todayRecord = appData.attendance.find(a => String(a.user_id) === String(currentUser.id) && a.date === today);
+    // Check today's punch for current user with robust matching
+    const todayRecord = appData.attendance.find(a => isSameUser(a.user_id, currentUser.id) && isSameDate(a.date, today));
 
     const btnClock = document.getElementById('btnClockAction');
     const statusBadge = document.getElementById('clockStatusBadge');
     const todayTimes = document.getElementById('todayTimes');
 
     if (!todayRecord) {
-        statusBadge.textContent = 'Status: Not Clocked In Today';
-        statusBadge.className = 'clock-status-pill';
-        statusBadge.style.color = '#e2e8f0';
-        btnClock.textContent = 'Clock In';
-        btnClock.className = 'btn btn-primary';
-        btnClock.disabled = false;
+        if (statusBadge) {
+            statusBadge.textContent = 'Status: Not Clocked In Today';
+            statusBadge.className = 'clock-status-pill';
+            statusBadge.style.color = '#e2e8f0';
+        }
+        if (btnClock) {
+            btnClock.textContent = 'Clock In';
+            btnClock.className = 'btn btn-primary';
+            btnClock.disabled = false;
+        }
         if (todayTimes) todayTimes.textContent = '';
     } else if (todayRecord && !todayRecord.logout_time) {
-        statusBadge.textContent = 'Status: Clocked In (Present)';
-        statusBadge.className = 'clock-status-pill';
-        statusBadge.style.color = 'var(--status-present)';
-        btnClock.textContent = 'Clock Out';
-        btnClock.className = 'btn btn-danger';
-        btnClock.disabled = false;
+        if (statusBadge) {
+            statusBadge.textContent = 'Status: Clocked In (Present)';
+            statusBadge.className = 'clock-status-pill';
+            statusBadge.style.color = 'var(--status-present)';
+        }
+        if (btnClock) {
+            btnClock.textContent = 'Clock Out';
+            btnClock.className = 'btn btn-danger';
+            btnClock.disabled = false;
+        }
         if (todayTimes) todayTimes.textContent = `In: ${formatTime(todayRecord.login_time)}`;
     } else {
-        statusBadge.textContent = 'Status: Clocked Out (Completed)';
-        statusBadge.className = 'clock-status-pill';
-        statusBadge.style.color = '#cbd5e1';
-        btnClock.textContent = 'Shift Completed';
-        btnClock.className = 'btn btn-secondary';
-        btnClock.disabled = true;
+        if (statusBadge) {
+            statusBadge.textContent = 'Status: Clocked Out (Completed)';
+            statusBadge.className = 'clock-status-pill';
+            statusBadge.style.color = '#cbd5e1';
+        }
+        if (btnClock) {
+            btnClock.textContent = 'Shift Completed';
+            btnClock.className = 'btn btn-secondary';
+            btnClock.disabled = true;
+        }
         if (todayTimes) todayTimes.textContent = `In: ${formatTime(todayRecord.login_time)} | Out: ${formatTime(todayRecord.logout_time)}`;
     }
 
@@ -527,8 +549,8 @@ function renderDashboard() {
     const currentYear = now.getFullYear();
 
     const monthlyRecords = appData.attendance.filter(a => {
-        if (String(a.user_id) !== String(currentUser.id)) return false;
-        const d = new Date(a.date);
+        if (!isSameUser(a.user_id, currentUser.id)) return false;
+        const d = new Date(String(a.date).trim());
         return (d.getMonth() + 1) === currentMonth && d.getFullYear() === currentYear;
     });
 
@@ -554,23 +576,25 @@ function renderDashboard() {
             activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
         }
         const tbody = document.getElementById('todayTeamTableBody');
-        tbody.innerHTML = activeUsers.map(u => {
-            const rec = appData.attendance.find(a => String(a.user_id) === String(u.id) && a.date === today);
-            const status = rec ? rec.status : 'Absent';
-            const inTime = rec && rec.login_time ? formatTime(rec.login_time) : '-';
-            const outTime = rec && rec.logout_time ? formatTime(rec.logout_time) : '-';
-            const badgeClass = status === 'Present' ? 'badge-present' : (status === 'Absent' ? 'badge-absent' : 'badge-halfday');
+        if (tbody) {
+            tbody.innerHTML = activeUsers.map(u => {
+                const rec = appData.attendance.find(a => isSameUser(a.user_id, u.id) && isSameDate(a.date, today));
+                const status = rec ? rec.status : 'Absent';
+                const inTime = rec && rec.login_time ? formatTime(rec.login_time) : '-';
+                const outTime = rec && rec.logout_time ? formatTime(rec.logout_time) : '-';
+                const badgeClass = status === 'Present' ? 'badge-present' : (status === 'Absent' ? 'badge-absent' : 'badge-halfday');
 
-            return `
-                <tr>
-                    <td><strong>${escapeHtml(u.display_name)}</strong></td>
-                    <td><span class="user-role-tag">${u.role}</span></td>
-                    <td>${inTime}</td>
-                    <td>${outTime}</td>
-                    <td><span class="badge ${badgeClass}">${status}</span></td>
-                </tr>
-            `;
-        }).join('');
+                return `
+                    <tr>
+                        <td><strong>${escapeHtml(u.display_name)}</strong></td>
+                        <td><span class="user-role-tag">${u.role}</span></td>
+                        <td>${inTime}</td>
+                        <td>${outTime}</td>
+                        <td><span class="badge ${badgeClass}">${status}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
     }
 }
 
@@ -587,19 +611,20 @@ function toggleEmployeeReportInclusion(userId) {
 }
 
 // Clock Action Handler
-function toggleClockAction() {
+async function toggleClockAction() {
     if (!currentUser) return;
     const today = getTodayString();
     const nowStr = getDateTimeString();
-    const remarks = document.getElementById('clockRemarks').value.trim();
+    const remarksInput = document.getElementById('clockRemarks');
+    const remarks = remarksInput ? remarksInput.value.trim() : '';
 
-    let todayRecord = appData.attendance.find(a => String(a.user_id) === String(currentUser.id) && a.date === today);
+    let todayRecord = appData.attendance.find(a => isSameUser(a.user_id, currentUser.id) && isSameDate(a.date, today));
 
     if (!todayRecord) {
         // Clock In
         const newRecord = {
             id: String(Date.now()),
-            user_id: String(currentUser.id),
+            user_id: String(currentUser.id).trim(),
             date: today,
             login_time: nowStr,
             logout_time: null,
@@ -609,20 +634,19 @@ function toggleClockAction() {
         };
         appData.attendance.unshift(newRecord);
         saveDataStore();
-        saveFirebaseDoc('attendance', newRecord.id, newRecord);
-        alert('Clocked In Successfully!');
+        await saveFirebaseDoc('attendance', newRecord.id, newRecord);
     } else if (todayRecord && !todayRecord.logout_time) {
         // Clock Out
         todayRecord.logout_time = nowStr;
         if (remarks) todayRecord.remarks = (todayRecord.remarks ? todayRecord.remarks + ' | ' : '') + remarks;
         saveDataStore();
-        saveFirebaseDoc('attendance', todayRecord.id, todayRecord);
-        alert('Clocked Out Successfully!');
+        await saveFirebaseDoc('attendance', todayRecord.id, todayRecord);
     } else {
         alert('You have already clocked in and out for today.');
+        return;
     }
 
-    document.getElementById('clockRemarks').value = '';
+    if (remarksInput) remarksInput.value = '';
     renderDashboard();
 }
 
