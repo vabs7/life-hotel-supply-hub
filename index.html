@@ -222,36 +222,47 @@
         btn.disabled = true;
       }
 
-      let user = null;
+      let usersList = [];
 
-      // Query Firestore directly for the single matching user (1 read max)
+      // Fetch small users list (~13 docs) from Firestore
       if (typeof firebaseDb !== 'undefined' && firebaseDb) {
         try {
-          let snap = await firebaseDb.collection('users').where('username', '==', usernameInput).get();
-          if (snap.empty) {
-            snap = await firebaseDb.collection('users').where('email', '==', usernameInput).get();
-          }
+          const snap = await firebaseDb.collection('users').get();
           if (!snap.empty) {
-            user = snap.docs[0].data();
+            usersList = snap.docs.map(d => d.data());
+            try {
+              localStorage.setItem('lhs_users', JSON.stringify(usersList));
+            } catch (sErr) {}
           }
         } catch (err) {
-          console.warn('Firestore direct auth check error:', err);
+          console.warn('Firestore users fetch note:', err);
         }
       }
 
-      // Fallback check against local storage cache if network is offline
-      if (!user) {
+      // Fallback check against local cache
+      if (usersList.length === 0) {
         try {
           const cachedUsersStr = localStorage.getItem('lhs_users');
           if (cachedUsersStr) {
-            const cachedUsers = JSON.parse(cachedUsersStr);
-            user = cachedUsers.find(u =>
-              (u.username && u.username.toLowerCase() === usernameInput) ||
-              (u.email && u.email.toLowerCase() === usernameInput)
-            );
+            usersList = JSON.parse(cachedUsersStr);
           }
-        } catch (err) { }
+        } catch (err) {}
       }
+
+      // Fallback check against migrated JSON bundle
+      if (usersList.length === 0) {
+        try {
+          const res = await fetch('migrated_data.json');
+          const json = await res.json();
+          usersList = json.users || [];
+        } catch (err) {}
+      }
+
+      // Robust case-insensitive search across username and email
+      const user = usersList.find(u =>
+        (u.username && String(u.username).trim().toLowerCase() === usernameInput) ||
+        (u.email && String(u.email).trim().toLowerCase() === usernameInput)
+      );
 
       if (!user) {
         if (errEl) {
