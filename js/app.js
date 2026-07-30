@@ -916,7 +916,7 @@ function saveEmployee(e) {
 }
 
 function resetEmployeePassword(id) {
-    const user = appData.users.find(u => String(u.id) === String(id));
+    const user = appData.users.find(u => isSameUser(u.id, id));
     if (!user) return;
     const currentPass = user.password || '123456';
     const newPass = prompt(`Reset password for ${user.display_name}:\n\nCurrent Password: ${currentPass}\n\nEnter new password:`, currentPass);
@@ -930,7 +930,7 @@ function resetEmployeePassword(id) {
 }
 
 function offboardEmployee(id) {
-    const user = appData.users.find(u => String(u.id) === String(id));
+    const user = appData.users.find(u => isSameUser(u.id, id));
     if (!user) return;
     const defaultDate = getTodayString();
     const exitDate = prompt(`Offboard ${user.display_name}:\nPlease enter offboarding exit date (YYYY-MM-DD):`, defaultDate);
