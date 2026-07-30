@@ -73,8 +73,17 @@ async function initDataStore() {
             if (currentUser) {
                 const isAdmin = currentUser.username === 'kedar_is' || currentUser.email === 'lifehotelsupply@gmail.com';
                 if (currentUser.role === 'Employee' && !isAdmin) {
-                    // Regular employees only fetch their own records
-                    attQuery = firebaseDb.collection('attendance').where('user_id', '==', String(currentUser.id)).get();
+                    // Regular employees only fetch current month's records on initial load
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const startStr = `${year}-${month}-01`;
+                    const endStr = `${year}-${month}-31`;
+                    attQuery = firebaseDb.collection('attendance')
+                        .where('user_id', '==', String(currentUser.id))
+                        .where('date', '>=', startStr)
+                        .where('date', '<=', endStr)
+                        .get();
                     salQuery = firebaseDb.collection('salary_history').where('user_id', '==', String(currentUser.id)).get();
                 } else {
                     // HR and Admin fetch all records
@@ -257,7 +266,7 @@ function formatTime(dateTimeStr) {
 
 // Authentication Logic
 function showLoginOverlay() {
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 function checkAuthSession() {
@@ -268,10 +277,10 @@ function checkAuthSession() {
             onUserAuthenticated();
         } catch (e) {
             console.error('Error parsing saved session:', e);
-            window.location.href = 'login.html';
+            window.location.href = 'index.html';
         }
     } else {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     }
 }
 
@@ -392,7 +401,7 @@ function handleLogout() {
     localStorage.removeItem('lhs_cache_ts'); // Invalidate cache on logout
     appData.attendance = []; // Clear sensitive data from memory
     appData.salary_history = [];
-    window.location.href = 'login.html';
+    window.location.href = 'index.html';
 }
 
 function onUserAuthenticated() {
@@ -607,7 +616,7 @@ function toggleClockAction() {
 }
 
 // VIEW 2: MY ATTENDANCE HISTORY
-function renderMyAttendance(autoSelectLatest = false) {
+async function renderMyAttendance(autoSelectLatest = false) {
     if (!currentUser) return;
 
     const monthEl = document.getElementById('myMonthFilter');
@@ -629,11 +638,44 @@ function renderMyAttendance(autoSelectLatest = false) {
     const month = parseInt(monthEl.value);
     const year = parseInt(yearEl.value);
 
-    const records = appData.attendance.filter(a => {
+    // On-Demand fetch from Firestore if records for this selected month are not in local memory yet
+    let existingRecords = appData.attendance.filter(a => {
         if (String(a.user_id) !== String(currentUser.id)) return false;
         const d = new Date(a.date);
         return (d.getMonth() + 1) === month && d.getFullYear() === year;
-    }).sort((a, b) => new Date(b.date) - new Date(a.date));
+    });
+
+    if (existingRecords.length === 0 && typeof firebaseDb !== 'undefined' && firebaseDb) {
+        try {
+            const monthStr = String(month).padStart(2, '0');
+            const startStr = `${year}-${monthStr}-01`;
+            const endStr = `${year}-${monthStr}-31`;
+            const snap = await firebaseDb.collection('attendance')
+                .where('user_id', '==', String(currentUser.id))
+                .where('date', '>=', startStr)
+                .where('date', '<=', endStr)
+                .get();
+            
+            if (!snap.empty) {
+                const fetched = snap.docs.map(doc => doc.data());
+                fetched.forEach(f => {
+                    if (!appData.attendance.some(e => e.id === f.id)) {
+                        appData.attendance.push(f);
+                    }
+                });
+                saveDataStore();
+                existingRecords = appData.attendance.filter(a => {
+                    if (String(a.user_id) !== String(currentUser.id)) return false;
+                    const d = new Date(a.date);
+                    return (d.getMonth() + 1) === month && d.getFullYear() === year;
+                });
+            }
+        } catch (err) {
+            console.warn('On-demand month fetch note:', err);
+        }
+    }
+
+    const records = existingRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     const tbody = document.getElementById('myAttendanceTableBody');
     if (records.length === 0) {
