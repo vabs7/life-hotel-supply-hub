@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,11 +21,12 @@
       align-items: center;
       justify-content: center;
       background: #f8fafc;
-      background-image: 
+      background-image:
         radial-gradient(at 0% 0%, rgba(113, 174, 73, 0.08) 0px, transparent 50%),
         radial-gradient(at 100% 100%, rgba(113, 174, 73, 0.05) 0px, transparent 50%);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
+
     .auth-card {
       width: 100%;
       max-width: 420px;
@@ -36,9 +38,10 @@
       text-align: center;
       box-sizing: border-box;
     }
+
     .logo-container {
-      width: 84px;
-      height: 84px;
+      width: 250px;
+      height: 100px;
       margin: 0 auto 1.25rem auto;
       border-radius: 1rem;
       background: #ffffff;
@@ -50,12 +53,14 @@
       padding: 6px;
       box-sizing: border-box;
     }
+
     .auth-logo {
       width: 100%;
       height: 100%;
       object-fit: contain;
       border-radius: 0.75rem;
     }
+
     .auth-title {
       color: #0f172a;
       font-size: 1.75rem;
@@ -63,16 +68,19 @@
       margin: 0 0 0.25rem 0;
       letter-spacing: -0.025em;
     }
+
     .auth-subhead {
       color: #64748b;
       font-size: 0.875rem;
       font-weight: 500;
       margin: 0 0 1.75rem 0;
     }
+
     .form-group {
       text-align: left;
       margin-bottom: 1.25rem;
     }
+
     .form-label {
       display: block;
       color: #334155;
@@ -80,6 +88,7 @@
       font-weight: 600;
       margin-bottom: 0.375rem;
     }
+
     .form-control {
       width: 100%;
       padding: 0.8rem 1rem;
@@ -91,12 +100,14 @@
       box-sizing: border-box;
       transition: all 0.2s ease;
     }
+
     .form-control:focus {
       outline: none;
       background: #ffffff;
       border-color: var(--primary);
       box-shadow: 0 0 0 3.5px var(--primary-glow);
     }
+
     .btn-login {
       width: 100%;
       padding: 0.875rem;
@@ -110,15 +121,18 @@
       box-shadow: 0 4px 12px var(--primary-glow);
       transition: all 0.2s ease;
     }
+
     .btn-login:hover {
       transform: translateY(-1px);
       box-shadow: 0 6px 16px var(--primary-glow);
     }
+
     .btn-login:disabled {
       opacity: 0.6;
       cursor: not-allowed;
       transform: none;
     }
+
     .login-footer-text {
       margin-top: 1.75rem;
       font-size: 0.75rem;
@@ -126,6 +140,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="auth-card">
@@ -134,25 +149,29 @@
     </div>
     <h2 class="auth-title">HUB</h2>
     <p class="auth-subhead">Life Hotel Supply Attendance & HR Portal</p>
-    
+
     <form id="loginForm" onsubmit="executeLogin(event)">
       <div class="form-group">
         <label class="form-label" for="loginUsername">Email or Username</label>
-        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your email or username" required autocomplete="username">
+        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your email or username" required
+          autocomplete="username">
       </div>
 
       <div class="form-group">
         <label class="form-label" for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+        <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required
+          autocomplete="current-password">
       </div>
 
-      <div id="loginError" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 0.85rem; display: none; text-align: left; font-weight: 500;"></div>
+      <div id="loginError"
+        style="color: #ef4444; font-size: 0.85rem; margin-bottom: 0.85rem; display: none; text-align: left; font-weight: 500;">
+      </div>
 
       <button type="submit" id="loginSubmitBtn" class="btn-login">Sign In</button>
     </form>
-    
+
     <div class="login-footer-text">
-      Copyright © 2009-2026 Life Hotel Supply. All Rights Reserved.
+      Copyright © 2009-2026 Life Hotel Supply. <br />All Rights Reserved.
     </div>
   </div>
 
@@ -165,7 +184,7 @@
           JSON.parse(existingUser);
           window.location.href = 'dashboard.html';
           return;
-        } catch (e) {}
+        } catch (e) { }
       }
 
       // Initialize Firebase Services
@@ -226,12 +245,12 @@
           const cachedUsersStr = localStorage.getItem('lhs_users');
           if (cachedUsersStr) {
             const cachedUsers = JSON.parse(cachedUsersStr);
-            user = cachedUsers.find(u => 
+            user = cachedUsers.find(u =>
               (u.username && u.username.toLowerCase() === usernameInput) ||
               (u.email && u.email.toLowerCase() === usernameInput)
             );
           }
-        } catch (err) {}
+        } catch (err) { }
       }
 
       if (!user) {
@@ -284,4 +303,5 @@
     }
   </script>
 </body>
+
 </html>

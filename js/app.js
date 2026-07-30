@@ -264,6 +264,17 @@ function formatTime(dateTimeStr) {
     return `${hours}:${minutes} ${ampm}`;
 }
 
+function formatRemarks(remarks) {
+    if (!remarks) return '-';
+    const str = String(remarks).trim();
+    if (!str) return '-';
+    // Hide legacy system timestamp strings stored in remarks (e.g. "2026-01-22 06:33:25")
+    if (/^\d{4}-\d{2}-\d{2}(\s+\d{2}:\d{2}(:\d{2})?)?$/.test(str)) {
+        return '-';
+    }
+    return escapeHtml(str);
+}
+
 // Authentication Logic
 function showLoginOverlay() {
     window.location.href = 'index.html';
@@ -691,7 +702,7 @@ async function renderMyAttendance(autoSelectLatest = false) {
                 <td>${formatTime(r.login_time)}</td>
                 <td>${formatTime(r.logout_time)}</td>
                 <td><span class="badge ${badgeClass}">${r.status}</span></td>
-                <td>${escapeHtml(r.remarks || '-')}</td>
+                <td>${formatRemarks(r.remarks)}</td>
             </tr>
         `;
     }).join('');
@@ -778,7 +789,7 @@ function drillDownEmployee(userId, displayName) {
                 <td>${formatTime(r.login_time)}</td>
                 <td>${formatTime(r.logout_time)}</td>
                 <td><span class="badge ${badgeClass}">${r.status}</span></td>
-                <td>${escapeHtml(r.remarks || '-')}</td>
+                <td>${formatRemarks(r.remarks)}</td>
                 <td>
                     <button class="btn btn-secondary btn-sm" onclick="editAttendanceModal('${r.id}')">Edit</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteAttendanceRecord('${r.id}')">Delete</button>
