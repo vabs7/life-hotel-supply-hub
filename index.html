@@ -13,34 +13,7 @@
 </head>
 <body>
 
-  <!-- AUTHENTICATION OVERLAY / LOGIN MODAL -->
-  <div id="authOverlay" class="auth-overlay" style="display: none;">
-    <div class="auth-card">
-      <img src="logo.jpg" alt="Logo" class="auth-logo">
-      <h2 class="auth-title">HUB</h2>
-      <p class="auth-subtitle">Sign in to manage daily attendance & payroll</p>
-      
-      <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label class="form-label" for="loginUsername">Email or Username</label>
-          <input type="text" id="loginUsername" class="form-control" placeholder="Enter your email or username" required autocomplete="username">
-        </div>
 
-        <div class="form-group">
-          <label class="form-label" for="loginPassword">Password</label>
-          <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
-        </div>
-
-        <div id="loginError" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 0.75rem; display: none; text-align: left; font-weight: 500;"></div>
-
-        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.25rem; padding: 0.85rem;">Sign In</button>
-      </form>
-      
-      <p style="font-size: 0.775rem; color: #64748b; margin-top: 1.25rem;">
-        Default Password for all restored profiles: <code>123456</code>
-      </p>
-    </div>
-  </div>
 
   <!-- MAIN APP APPLICATION CONTAINER -->
   <div id="app">

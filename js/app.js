@@ -257,10 +257,7 @@ function formatTime(dateTimeStr) {
 
 // Authentication Logic
 function showLoginOverlay() {
-    const authEl = document.getElementById('authOverlay');
-    const appEl = document.getElementById('app');
-    if (authEl) authEl.style.display = 'flex';
-    if (appEl) appEl.style.display = 'none';
+    window.location.href = 'login.html';
 }
 
 function checkAuthSession() {
@@ -271,10 +268,10 @@ function checkAuthSession() {
             onUserAuthenticated();
         } catch (e) {
             console.error('Error parsing saved session:', e);
-            showLoginOverlay();
+            window.location.href = 'login.html';
         }
     } else {
-        showLoginOverlay();
+        window.location.href = 'login.html';
     }
 }
 
@@ -395,13 +392,11 @@ function handleLogout() {
     localStorage.removeItem('lhs_cache_ts'); // Invalidate cache on logout
     appData.attendance = []; // Clear sensitive data from memory
     appData.salary_history = [];
-    showLoginOverlay();
+    window.location.href = 'login.html';
 }
 
 function onUserAuthenticated() {
-    const authEl = document.getElementById('authOverlay');
     const appEl = document.getElementById('app');
-    if (authEl) authEl.style.display = 'none';
     if (appEl) appEl.style.display = 'flex';
     
     // Update User Badge in Sidebar

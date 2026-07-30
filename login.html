@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - HUB</title>
+  <link rel="icon" type="image/png" href="favicon1.png">
+  <link rel="stylesheet" href="css/styles.css?v=2.1">
+  <!-- Firebase SDK Compat libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 2.5rem;
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(16px);
+      text-align: center;
+    }
+    .auth-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      object-fit: cover;
+      margin-bottom: 1rem;
+    }
+    .auth-title {
+      color: #f8fafc;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+    }
+    .auth-subtitle {
+      color: #94a3b8;
+      font-size: 0.875rem;
+      margin: 0 0 1.75rem 0;
+    }
+    .form-group {
+      text-align: left;
+      margin-bottom: 1.25rem;
+    }
+    .form-label {
+      display: block;
+      color: #cbd5e1;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.375rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+    .btn-primary {
+      width: 100%;
+      padding: 0.85rem;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <img src="logo.jpg" alt="Logo" class="auth-logo">
+    <h2 class="auth-title">HUB</h2>
+    <p class="auth-subtitle">Sign in to manage daily attendance & payroll</p>
+    
+    <form id="loginForm" onsubmit="executeLogin(event)">
+      <div class="form-group">
+        <label class="form-label" for="loginUsername">Email or Username</label>
+        <input type="text" id="loginUsername" class="form-control" placeholder="Enter your email or username" required autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="loginPassword">Password</label>
+        <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+      </div>
+
+      <div id="loginError" style="color: #ef4444; font-size: 0.85rem; margin-bottom: 0.75rem; display: none; text-align: left; font-weight: 500;"></div>
+
+      <button type="submit" id="loginSubmitBtn" class="btn btn-primary">Sign In</button>
+    </form>
+    
+    <p style="font-size: 0.775rem; color: #64748b; margin-top: 1.25rem;">
+      Default Password for all restored profiles: <code>123456</code>
+    </p>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      // If user is already authenticated, redirect immediately to dashboard
+      const existingUser = localStorage.getItem('lhs_current_user');
+      if (existingUser) {
+        try {
+          JSON.parse(existingUser);
+          window.location.href = 'index.html';
+          return;
+        } catch (e) {}
+      }
+
+      // Initialize Firebase Services
+      if (typeof initFirebaseServices === 'function') {
+        try {
+          await initFirebaseServices();
+        } catch (e) {
+          console.warn('Firebase init note:', e);
+        }
+      }
+    });
+
+    async function executeLogin(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById('loginUsername').value.trim().toLowerCase();
+      const passwordInput = document.getElementById('loginPassword').value.trim();
+      const errEl = document.getElementById('loginError');
+      const btn = document.getElementById('loginSubmitBtn');
+
+      if (errEl) {
+        errEl.style.display = 'none';
+        errEl.textContent = '';
+      }
+
+      if (!usernameInput) {
+        if (errEl) {
+          errEl.textContent = 'Please enter your email or username.';
+          errEl.style.display = 'block';
+        }
+        return;
+      }
+
+      if (btn) {
+        btn.textContent = 'Authenticating...';
+        btn.disabled = true;
+      }
+
+      let user = null;
+
+      // Query Firestore directly for the single matching user (1 read max)
+      if (typeof firebaseDb !== 'undefined' && firebaseDb) {
+        try {
+          let snap = await firebaseDb.collection('users').where('username', '==', usernameInput).get();
+          if (snap.empty) {
+            snap = await firebaseDb.collection('users').where('email', '==', usernameInput).get();
+          }
+          if (!snap.empty) {
+            user = snap.docs[0].data();
+          }
+        } catch (err) {
+          console.warn('Firestore direct auth check error:', err);
+        }
+      }
+
+      // Fallback check against local storage cache if network is offline
+      if (!user) {
+        try {
+          const cachedUsersStr = localStorage.getItem('lhs_users');
+          if (cachedUsersStr) {
+            const cachedUsers = JSON.parse(cachedUsersStr);
+            user = cachedUsers.find(u => 
+              (u.username && u.username.toLowerCase() === usernameInput) ||
+              (u.email && u.email.toLowerCase() === usernameInput)
+            );
+          }
+        } catch (err) {}
+      }
+
+      if (!user) {
+        if (errEl) {
+          errEl.textContent = 'Invalid email/username or account not found.';
+          errEl.style.display = 'block';
+        }
+        if (btn) {
+          btn.textContent = 'Sign In';
+          btn.disabled = false;
+        }
+        return;
+      }
+
+      // Block ex-employees
+      if (user.offboard_date) {
+        if (errEl) {
+          errEl.textContent = 'Access Denied: Offboarded ex-employees cannot log into the system.';
+          errEl.style.display = 'block';
+        }
+        if (btn) {
+          btn.textContent = 'Sign In';
+          btn.disabled = false;
+        }
+        return;
+      }
+
+      // Password Validation
+      const expectedPassword = user.password || '123456';
+      if (passwordInput !== expectedPassword) {
+        if (errEl) {
+          errEl.textContent = 'Incorrect password. Please check your password and try again.';
+          errEl.style.display = 'block';
+        }
+        if (btn) {
+          btn.textContent = 'Sign In';
+          btn.disabled = false;
+        }
+        return;
+      }
+
+      // Authenticated successfully: save session and invalidate cache so dashboard fetches correct data scope
+      localStorage.setItem('lhs_current_user', JSON.stringify(user));
+      localStorage.removeItem('lhs_cache_ts');
+
+      if (btn) btn.textContent = 'Signing in...';
+
+      // Redirect to main app
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

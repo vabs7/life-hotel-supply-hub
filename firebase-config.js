@@ -53,6 +53,12 @@ async function initFirebaseServices() {
                 }
                 firebaseAuth = firebase.auth();
                 firebaseDb = firebase.firestore();
+                try {
+                    await firebaseDb.enablePersistence({ synchronizeTabs: true });
+                    console.log('Firestore offline persistence enabled.');
+                } catch (pErr) {
+                    console.warn('Firestore persistence warning:', pErr.code || pErr);
+                }
                 isFirebaseConnected = true;
                 console.log('Firebase initialized successfully!');
             }
