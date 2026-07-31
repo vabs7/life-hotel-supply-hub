@@ -71,14 +71,16 @@ async function initDataStore() {
             let salQuery = null;
 
             if (currentUser) {
-                const isAdmin = currentUser.username === 'kedar_is' || currentUser.email === 'lifehotelsupply@gmail.com';
-                if (currentUser.role === 'Employee' && !isAdmin) {
-                    // Regular employees only fetch current month's records on initial load
-                    const now = new Date();
-                    const year = now.getFullYear();
-                    const month = String(now.getMonth() + 1).padStart(2, '0');
-                    const startStr = `${year}-${month}-01`;
-                    const endStr = `${year}-${month}-31`;
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const startStr = `${year}-${month}-01`;
+                const endStr = `${year}-${month}-31`;
+
+                const isHrOrAdmin = isHrOrAdminUser(currentUser);
+
+                if (!isHrOrAdmin) {
+                    // Regular employees only fetch their own current month's records on initial load
                     attQuery = firebaseDb.collection('attendance')
                         .where('user_id', '==', String(currentUser.id))
                         .where('date', '>=', startStr)
@@ -86,8 +88,11 @@ async function initDataStore() {
                         .get();
                     salQuery = firebaseDb.collection('salary_history').where('user_id', '==', String(currentUser.id)).get();
                 } else {
-                    // HR and Admin fetch all records
-                    attQuery = firebaseDb.collection('attendance').get();
+                    // HR and Admin fetch current month's records for all team members on initial load
+                    attQuery = firebaseDb.collection('attendance')
+                        .where('date', '>=', startStr)
+                        .where('date', '<=', endStr)
+                        .get();
                     salQuery = firebaseDb.collection('salary_history').get();
                 }
             }
@@ -669,6 +674,42 @@ async function toggleClockAction() {
     renderDashboard();
 }
 
+async function ensureMonthDataLoaded(month, year, userId = null) {
+    if (typeof firebaseDb === 'undefined' || !firebaseDb) return;
+    const existing = appData.attendance.filter(a => {
+        if (userId && !isSameUser(a.user_id, userId)) return false;
+        return isRecordInMonthYear(a.date, month, year);
+    });
+    if (existing.length > 0) return;
+
+    try {
+        const monthStr = String(month).padStart(2, '0');
+        const startStr = `${year}-${monthStr}-01`;
+        const endStr = `${year}-${monthStr}-31`;
+
+        let query = firebaseDb.collection('attendance')
+            .where('date', '>=', startStr)
+            .where('date', '<=', endStr);
+
+        if (userId) {
+            query = query.where('user_id', '==', String(userId));
+        }
+
+        const snap = await query.get();
+        if (!snap.empty) {
+            const fetched = snap.docs.map(doc => doc.data());
+            fetched.forEach(f => {
+                if (!appData.attendance.some(e => e.id === f.id)) {
+                    appData.attendance.push(f);
+                }
+            });
+            saveDataStore();
+        }
+    } catch (err) {
+        console.warn('Month data load note:', err);
+    }
+}
+
 // VIEW 2: MY ATTENDANCE HISTORY
 async function renderMyAttendance(autoSelectLatest = false) {
     if (!currentUser) return;
@@ -693,40 +734,12 @@ async function renderMyAttendance(autoSelectLatest = false) {
     const year = parseInt(yearEl.value);
 
     // On-Demand fetch from Firestore if records for this selected month are not in local memory yet
-    let existingRecords = appData.attendance.filter(a => {
+    await ensureMonthDataLoaded(month, year, currentUser.id);
+
+    const existingRecords = appData.attendance.filter(a => {
         if (!isSameUser(a.user_id, currentUser.id)) return false;
         return isRecordInMonthYear(a.date, month, year);
     });
-
-    if (existingRecords.length === 0 && typeof firebaseDb !== 'undefined' && firebaseDb) {
-        try {
-            const monthStr = String(month).padStart(2, '0');
-            const startStr = `${year}-${monthStr}-01`;
-            const endStr = `${year}-${monthStr}-31`;
-            const snap = await firebaseDb.collection('attendance')
-                .where('user_id', '==', String(currentUser.id))
-                .where('date', '>=', startStr)
-                .where('date', '<=', endStr)
-                .get();
-
-            if (!snap.empty) {
-                const fetched = snap.docs.map(doc => doc.data());
-                fetched.forEach(f => {
-                    if (!appData.attendance.some(e => e.id === f.id)) {
-                        appData.attendance.push(f);
-                    }
-                });
-                saveDataStore();
-                existingRecords = appData.attendance.filter(a => {
-                    if (String(a.user_id) !== String(currentUser.id)) return false;
-                    const d = new Date(a.date);
-                    return (d.getMonth() + 1) === month && d.getFullYear() === year;
-                });
-            }
-        } catch (err) {
-            console.warn('On-demand month fetch note:', err);
-        }
-    }
 
     const records = existingRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -751,11 +764,13 @@ async function renderMyAttendance(autoSelectLatest = false) {
 }
 
 // VIEW 3: TEAM ATTENDANCE (HR)
-function renderTeamAttendance() {
+async function renderTeamAttendance() {
     if (!isHrOrAdminUser()) return;
 
     const month = parseInt(document.getElementById('teamMonthFilter').value);
     const year = parseInt(document.getElementById('teamYearFilter').value);
+
+    await ensureMonthDataLoaded(month, year);
 
     // Build allowed users list (Active OR explicitly included Ex-Employees)
     let allowedUsers = appData.users.filter(u => !u.offboard_date || u.include_in_reports);
@@ -974,11 +989,13 @@ function switchSalarySubTab(tab) {
     document.getElementById('tabSalaryCalcBtn').className = tab === 'calc' ? 'btn btn-primary btn-sm' : 'btn btn-secondary btn-sm';
 }
 
-function renderPayrollMonthlyTab() {
+async function renderPayrollMonthlyTab() {
     const month = parseInt(document.getElementById('payrollMonthFilter').value);
     const year = parseInt(document.getElementById('payrollYearFilter').value);
     const totalDays = new Date(year, month, 0).getDate();
     const eomDate = `${year}-${String(month).padStart(2, '0')}-${totalDays}`;
+
+    await ensureMonthDataLoaded(month, year);
 
     let users = appData.users.filter(u => !u.offboard_date || u.include_in_reports);
     if (currentUser.username !== 'kedar_is') {
@@ -1404,9 +1421,11 @@ function formatMoney(amount, currency = 'INR') {
     return `${sym}${val}`;
 }
 
-function showPayslipModal(userId, month, year) {
-    const user = appData.users.find(u => String(u.id) === String(userId));
+async function showPayslipModal(userId, month, year) {
+    const user = appData.users.find(u => isSameUser(u.id, userId));
     if (!user) return;
+
+    await ensureMonthDataLoaded(month, year, userId);
 
     const totalDays = new Date(year, month, 0).getDate();
     const eomDate = `${year}-${String(month).padStart(2, '0')}-${totalDays}`;
