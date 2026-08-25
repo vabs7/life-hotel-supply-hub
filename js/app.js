@@ -664,10 +664,17 @@ function renderDashboard() {
     // Calculate Estimated Net Pay using exact days in current month
     const totalDaysInMonth = new Date(currentYear, currentMonth, 0).getDate();
     const baseSalObj = getLatestBaseSalary(currentUser.id, `${currentYear}-${String(currentMonth).padStart(2, '0')}-${totalDaysInMonth}`);
-    const perDay = baseSalObj.amount / totalDaysInMonth;
-    const deduction = (absentCount * perDay) + (halfCount * (perDay / 2));
-    const netPay = Math.max(0, baseSalObj.amount - deduction);
-    document.getElementById('statNetPay').textContent = formatMoney(netPay, baseSalObj.currency);
+    const statNetPayEl = document.getElementById('statNetPay');
+    if (statNetPayEl) {
+        if (baseSalObj.isSet && baseSalObj.amount > 0) {
+            const perDay = baseSalObj.amount / totalDaysInMonth;
+            const deduction = (absentCount * perDay) + (halfCount * (perDay / 2));
+            const netPay = Math.max(0, baseSalObj.amount - deduction);
+            statNetPayEl.textContent = formatMoney(netPay, baseSalObj.currency);
+        } else {
+            statNetPayEl.textContent = 'Not Set';
+        }
+    }
 
     // Render Today's Team Table for HR & Admin
     if (isHrOrAdminUser()) {
@@ -675,6 +682,7 @@ function renderDashboard() {
         if (currentUser.username !== 'kedar_is') {
             activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
         }
+        activeUsers.sort((a, b) => (a.display_name || '').localeCompare(b.display_name || ''));
         const tbody = document.getElementById('todayTeamTableBody');
         if (tbody) {
             tbody.innerHTML = activeUsers.map(u => {
@@ -912,6 +920,7 @@ async function renderTeamAttendance() {
     if (currentUser.username !== 'kedar_is') {
         allowedUsers = allowedUsers.filter(u => u.username !== 'kedar_is');
     }
+    allowedUsers.sort((a, b) => (a.display_name || '').localeCompare(b.display_name || ''));
 
     // Render Summary Panel
     document.getElementById('teamSummaryPanel').style.display = 'block';
@@ -1002,6 +1011,7 @@ function renderEmployeesRoster() {
     if (currentUser.username !== 'kedar_is') {
         activeUsers = activeUsers.filter(u => u.username !== 'kedar_is');
     }
+    activeUsers.sort((a, b) => (a.display_name || '').localeCompare(b.display_name || ''));
 
     const tbody = document.getElementById('employeesTableBody');
 
@@ -1149,27 +1159,38 @@ async function renderPayrollMonthlyTab() {
     if (currentUser.username !== 'kedar_is') {
         users = users.filter(u => u.username !== 'kedar_is');
     }
+    users.sort((a, b) => (a.display_name || '').localeCompare(b.display_name || ''));
 
     const tbody = document.getElementById('payrollTableBody');
     tbody.innerHTML = users.map(u => {
         const baseObj = getLatestBaseSalary(u.id, eomDate);
         const stats = getMonthlyCounts(u.id, month, year);
 
-        const perDay = baseObj.amount / totalDays; // Dynamic divisor: exact number of days in this month
-        const deduction = (stats.absent * perDay) + (stats.halfDay * (perDay / 2));
-        const netPayable = Math.max(0, baseObj.amount - deduction);
+        let baseDisplay = `<span style="color:var(--text-muted); font-style:italic;">Not Set</span>`;
+        let deductionDisplay = `<span style="color:var(--text-muted);">-</span>`;
+        let netPayableDisplay = `<span style="color:var(--text-muted); font-style:italic;">Not Set</span>`;
+
+        if (baseObj.isSet && baseObj.amount > 0) {
+            const perDay = baseObj.amount / totalDays; // Dynamic divisor: exact number of days in this month
+            const deduction = (stats.absent * perDay) + (stats.halfDay * (perDay / 2));
+            const netPayable = Math.max(0, baseObj.amount - deduction);
+
+            baseDisplay = formatMoney(baseObj.amount, baseObj.currency);
+            deductionDisplay = `<span style="color:#ef4444;">-${formatMoney(deduction, baseObj.currency)}</span>`;
+            netPayableDisplay = `<strong>${formatMoney(netPayable, baseObj.currency)}</strong>`;
+        }
 
         return `
             <tr>
                 <td><strong>${escapeHtml(u.display_name)}</strong> ${u.offboard_date ? '<span style="color:#ef4444; font-size:0.75rem;">(Ex)</span>' : ''}</td>
-                <td>${formatMoney(baseObj.amount, baseObj.currency)}</td>
+                <td>${baseDisplay}</td>
                 <td>
                     <span style="color:var(--status-present); font-weight:600;">${stats.present} P</span> / 
                     <span style="color:var(--status-absent); font-weight:600;">${stats.absent} A</span> / 
                     <span style="color:var(--status-halfday); font-weight:600;">${stats.halfDay} H</span>
                 </td>
-                <td style="color:#ef4444;">-${formatMoney(deduction, baseObj.currency)}</td>
-                <td><strong>${formatMoney(netPayable, baseObj.currency)}</strong></td>
+                <td>${deductionDisplay}</td>
+                <td>${netPayableDisplay}</td>
                 <td>
                     <button class="btn btn-secondary btn-sm" onclick="showPayslipModal('${u.id}', ${month}, ${year})">View Slip</button>
                 </td>
@@ -1580,11 +1601,19 @@ async function showPayslipModal(userId, month, year) {
     const baseObj = getLatestBaseSalary(userId, eomDate);
     const stats = getMonthlyCounts(userId, month, year);
 
-    const perDay = baseObj.amount / totalDays;
+    const perDay = baseObj.isSet && baseObj.amount > 0 ? baseObj.amount / totalDays : 0;
     const deduction = (stats.absent * perDay) + (stats.halfDay * (perDay / 2));
     const netPayable = Math.max(0, baseObj.amount - deduction);
 
     const monthName = new Date(year, month - 1, 1).toLocaleString('default', { month: 'long' });
+
+    const baseRateDisplay = baseObj.isSet && baseObj.amount > 0
+        ? formatMoney(baseObj.amount, baseObj.currency)
+        : '<span style="color:var(--text-muted); font-style:italic;">Not Set (Set in Base Salary Rates tab)</span>';
+
+    const netPayDisplay = baseObj.isSet && baseObj.amount > 0
+        ? formatMoney(netPayable, baseObj.currency)
+        : '<span style="color:var(--text-muted); font-style:italic;">Not Set</span>';
 
     const content = `
         <div style="text-align: center; margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary); padding-bottom: 1rem;">
@@ -1617,7 +1646,7 @@ async function showPayslipModal(userId, month, year) {
             <tbody>
                 <tr>
                     <td>Base Monthly Salary Rate</td>
-                    <td style="text-align: right;">${formatMoney(baseObj.amount, baseObj.currency)}</td>
+                    <td style="text-align: right;">${baseRateDisplay}</td>
                 </tr>
                 <tr>
                     <td>Days Present (${stats.present} Days)</td>
@@ -1625,11 +1654,11 @@ async function showPayslipModal(userId, month, year) {
                 </tr>
                 <tr>
                     <td>Absent Deductions (${stats.absent} Full + ${stats.halfDay} Half Days)</td>
-                    <td style="text-align: right; color: #ef4444;">-${formatMoney(deduction, baseObj.currency)}</td>
+                    <td style="text-align: right; color: #ef4444;">${baseObj.isSet && baseObj.amount > 0 ? `-${formatMoney(deduction, baseObj.currency)}` : '-'}</td>
                 </tr>
                 <tr style="font-weight: 700; background: #f8fafc;">
                     <td>NET PAYABLE SALARY</td>
-                    <td style="text-align: right; color: var(--primary); font-size: 1.1rem;">${formatMoney(netPayable, baseObj.currency)}</td>
+                    <td style="text-align: right; color: var(--primary); font-size: 1.1rem;">${netPayDisplay}</td>
                 </tr>
             </tbody>
         </table>
@@ -1660,10 +1689,11 @@ function getLatestBaseSalary(userId, dateStr) {
     if (userSalaries.length > 0) {
         return {
             amount: parseSalaryAmount(userSalaries[0].amount),
-            currency: userSalaries[0].currency || 'INR'
+            currency: userSalaries[0].currency || 'INR',
+            isSet: true
         };
     }
-    return { amount: 30000, currency: 'INR' };
+    return { amount: 0, currency: 'INR', isSet: false };
 }
 
 function getMonthlyCounts(userId, month, year) {
