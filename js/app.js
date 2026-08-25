@@ -83,13 +83,11 @@ async function initDataStore() {
                 const isHrOrAdmin = isHrOrAdminUser(currentUser);
 
                 if (!isHrOrAdmin) {
-                    // Regular employees only fetch their own current month's records on initial load
+                    // Regular employees fetch their own attendance records (single user_id index)
                     attQuery = firebaseDb.collection('attendance')
-                        .where('user_id', '==', String(currentUser.id))
-                        .where('date', '>=', startStr)
-                        .where('date', '<=', endStr)
+                        .where('user_id', '==', String(currentUser.id).trim())
                         .get();
-                    salQuery = firebaseDb.collection('salary_history').where('user_id', '==', String(currentUser.id)).get();
+                    salQuery = firebaseDb.collection('salary_history').where('user_id', '==', String(currentUser.id).trim()).get();
                 } else {
                     // HR and Admin fetch current month's records for all team members on initial load
                     attQuery = firebaseDb.collection('attendance')
@@ -820,16 +818,21 @@ async function ensureMonthDataLoaded(month, year, userId = null) {
         const startStr = `${year}-${monthStr}-01`;
         const endStr = `${year}-${monthStr}-31`;
 
-        let query = firebaseDb.collection('attendance')
-            .where('date', '>=', startStr)
-            .where('date', '<=', endStr);
-
+        let snap;
         if (userId) {
-            query = query.where('user_id', '==', String(userId));
+            // For a single user, fetch by user_id (automatic single-field index)
+            snap = await firebaseDb.collection('attendance')
+                .where('user_id', '==', String(userId).trim())
+                .get();
+        } else {
+            // For team reports, fetch by date range (automatic single-field index on date)
+            snap = await firebaseDb.collection('attendance')
+                .where('date', '>=', startStr)
+                .where('date', '<=', endStr)
+                .get();
         }
 
-        const snap = await query.get();
-        if (!snap.empty) {
+        if (snap && !snap.empty) {
             const fetched = snap.docs.map(doc => doc.data());
             fetched.forEach(f => {
                 if (!appData.attendance.some(e => e.id === f.id)) {
