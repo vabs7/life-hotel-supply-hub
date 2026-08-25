@@ -12,6 +12,9 @@ let appData = {
 
 // Initialize Application
 document.addEventListener('DOMContentLoaded', async () => {
+    // 0. Set all month/year dropdowns to current real-world month immediately
+    initDefaultMonthYearFilters();
+
     // 1. Immediately verify session from localStorage to display app/login without delay
     checkAuthSession();
 
@@ -1720,4 +1723,22 @@ function escapeHtml(str) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+}
+
+// Global Window Exports for HTML inline onclick handlers
+if (typeof window !== 'undefined') {
+    window.handleClockIn = handleClockIn;
+    window.handleClockOut = handleClockOut;
+    window.toggleClockAction = toggleClockAction;
+    window.switchView = switchView;
+    window.renderMyAttendance = renderMyAttendance;
+    window.renderTeamAttendance = renderTeamAttendance;
+    window.renderSalaryPayroll = renderSalaryPayroll;
+    window.renderEmployeesRoster = renderEmployeesRoster;
+    window.renderExEmployees = renderExEmployees;
+    window.renderFirebaseSetup = renderFirebaseSetup;
+    window.showPayslipModal = showPayslipModal;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.logout = logout;
 }
