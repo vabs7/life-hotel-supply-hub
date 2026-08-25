@@ -309,6 +309,41 @@ function formatRemarks(remarks) {
     return escapeHtml(str);
 }
 
+function getCurrentMonthYear() {
+    const today = getTodayString(); // Chicago CT based "YYYY-MM-DD"
+    const parts = today.split('-');
+    if (parts.length >= 3) {
+        return {
+            year: parts[0],
+            month: String(parseInt(parts[1], 10))
+        };
+    }
+    const now = new Date();
+    return {
+        year: String(now.getFullYear()),
+        month: String(now.getMonth() + 1)
+    };
+}
+
+function initDefaultMonthYearFilters() {
+    const current = getCurrentMonthYear();
+
+    const myMonth = document.getElementById('myMonthFilter');
+    const myYear = document.getElementById('myYearFilter');
+    if (myMonth && !myMonth.dataset.userChanged) myMonth.value = current.month;
+    if (myYear && !myYear.dataset.userChanged) myYear.value = current.year;
+
+    const teamMonth = document.getElementById('teamMonthFilter');
+    const teamYear = document.getElementById('teamYearFilter');
+    if (teamMonth && !teamMonth.dataset.userChanged) teamMonth.value = current.month;
+    if (teamYear && !teamYear.dataset.userChanged) teamYear.value = current.year;
+
+    const payMonth = document.getElementById('payrollMonthFilter');
+    const payYear = document.getElementById('payrollYearFilter');
+    if (payMonth && !payMonth.dataset.userChanged) payMonth.value = current.month;
+    if (payYear && !payYear.dataset.userChanged) payYear.value = current.year;
+}
+
 // Authentication Logic
 function showLoginOverlay() {
     window.location.href = 'index.html';
@@ -476,6 +511,9 @@ function onUserAuthenticated() {
         el.style.display = isAdmin ? '' : 'none';
     });
 
+    // Initialize month/year filters to current Chicago CT date
+    initDefaultMonthYearFilters();
+
     // Render Initial View
     switchView('dashboard');
 }
@@ -509,7 +547,7 @@ function switchView(viewName) {
 
     // Render view contents
     if (viewName === 'dashboard') renderDashboard();
-    if (viewName === 'myAttendance') renderMyAttendance(true);
+    if (viewName === 'myAttendance') renderMyAttendance();
     if (viewName === 'teamAttendance') renderTeamAttendance();
     if (viewName === 'employees') renderEmployeesRoster();
     if (viewName === 'salaryPayroll') renderSalaryPayroll();
@@ -525,44 +563,79 @@ function renderDashboard() {
     // Check today's punch for current user with robust matching
     const todayRecord = appData.attendance.find(a => isSameUser(a.user_id, currentUser.id) && isSameDate(a.date, today));
 
-    const btnClock = document.getElementById('btnClockAction');
+    const btnClockIn = document.getElementById('btnClockIn');
+    const btnClockOut = document.getElementById('btnClockOut');
+    const btnClockLegacy = document.getElementById('btnClockAction');
     const statusBadge = document.getElementById('clockStatusBadge');
     const todayTimes = document.getElementById('todayTimes');
 
     if (!todayRecord) {
+        // State 1: Not Clocked In Yet Today
         if (statusBadge) {
             statusBadge.textContent = 'Status: Not Clocked In Today';
             statusBadge.className = 'clock-status-pill';
             statusBadge.style.color = '#e2e8f0';
         }
-        if (btnClock) {
-            btnClock.textContent = 'Clock In';
-            btnClock.className = 'btn btn-primary';
-            btnClock.disabled = false;
+        if (btnClockIn) {
+            btnClockIn.textContent = 'Clock In';
+            btnClockIn.className = 'btn btn-primary btn-sm';
+            btnClockIn.disabled = false;
+        }
+        if (btnClockOut) {
+            btnClockOut.textContent = 'Clock Out';
+            btnClockOut.className = 'btn btn-secondary btn-sm';
+            btnClockOut.disabled = true;
+        }
+        if (btnClockLegacy) {
+            btnClockLegacy.textContent = 'Clock In';
+            btnClockLegacy.className = 'btn btn-primary';
+            btnClockLegacy.disabled = false;
         }
         if (todayTimes) todayTimes.textContent = '';
     } else if (todayRecord && !todayRecord.logout_time) {
+        // State 2: Clocked In (Shift in progress)
         if (statusBadge) {
             statusBadge.textContent = 'Status: Clocked In (Present)';
             statusBadge.className = 'clock-status-pill';
             statusBadge.style.color = 'var(--status-present)';
         }
-        if (btnClock) {
-            btnClock.textContent = 'Clock Out';
-            btnClock.className = 'btn btn-danger';
-            btnClock.disabled = false;
+        if (btnClockIn) {
+            btnClockIn.textContent = 'Clocked In';
+            btnClockIn.className = 'btn btn-secondary btn-sm';
+            btnClockIn.disabled = true;
+        }
+        if (btnClockOut) {
+            btnClockOut.textContent = 'Clock Out';
+            btnClockOut.className = 'btn btn-danger btn-sm';
+            btnClockOut.disabled = false;
+        }
+        if (btnClockLegacy) {
+            btnClockLegacy.textContent = 'Clock Out';
+            btnClockLegacy.className = 'btn btn-danger';
+            btnClockLegacy.disabled = false;
         }
         if (todayTimes) todayTimes.textContent = `In: ${formatTime(todayRecord.login_time)}`;
     } else {
+        // State 3: Shift Completed (Clocked Out)
         if (statusBadge) {
             statusBadge.textContent = 'Status: Clocked Out (Completed)';
             statusBadge.className = 'clock-status-pill';
             statusBadge.style.color = '#cbd5e1';
         }
-        if (btnClock) {
-            btnClock.textContent = 'Shift Completed';
-            btnClock.className = 'btn btn-secondary';
-            btnClock.disabled = true;
+        if (btnClockIn) {
+            btnClockIn.textContent = 'Clocked In';
+            btnClockIn.className = 'btn btn-secondary btn-sm';
+            btnClockIn.disabled = true;
+        }
+        if (btnClockOut) {
+            btnClockOut.textContent = 'Clocked Out';
+            btnClockOut.className = 'btn btn-secondary btn-sm';
+            btnClockOut.disabled = true;
+        }
+        if (btnClockLegacy) {
+            btnClockLegacy.textContent = 'Shift Completed';
+            btnClockLegacy.className = 'btn btn-secondary';
+            btnClockLegacy.disabled = true;
         }
         if (todayTimes) todayTimes.textContent = `In: ${formatTime(todayRecord.login_time)} | Out: ${formatTime(todayRecord.logout_time)}`;
     }
@@ -634,44 +707,93 @@ function toggleEmployeeReportInclusion(userId) {
     renderExEmployees();
 }
 
-// Clock Action Handler
-async function toggleClockAction() {
+// Clock In Handler
+async function handleClockIn() {
     if (!currentUser) return;
     const today = getTodayString();
     const nowStr = getDateTimeString();
     const remarksInput = document.getElementById('clockRemarks');
     const remarks = remarksInput ? remarksInput.value.trim() : '';
 
-    let todayRecord = appData.attendance.find(a => isSameUser(a.user_id, currentUser.id) && isSameDate(a.date, today));
+    const btnClockIn = document.getElementById('btnClockIn');
+    if (btnClockIn) {
+        btnClockIn.disabled = true;
+        btnClockIn.textContent = 'Clocking In...';
+    }
 
-    if (!todayRecord) {
-        // Clock In
-        const newRecord = {
-            id: String(Date.now()),
-            user_id: String(currentUser.id).trim(),
-            date: today,
-            login_time: nowStr,
-            logout_time: null,
-            status: 'Present',
-            remarks: remarks || 'Web Clock In',
-            ip_address: 'Client Web'
-        };
-        appData.attendance.unshift(newRecord);
-        saveDataStore();
-        await saveFirebaseDoc('attendance', newRecord.id, newRecord);
-    } else if (todayRecord && !todayRecord.logout_time) {
-        // Clock Out
-        todayRecord.logout_time = nowStr;
-        if (remarks) todayRecord.remarks = (todayRecord.remarks ? todayRecord.remarks + ' | ' : '') + remarks;
-        saveDataStore();
-        await saveFirebaseDoc('attendance', todayRecord.id, todayRecord);
-    } else {
-        alert('You have already clocked in and out for today.');
+    let todayRecord = appData.attendance.find(a => isSameUser(a.user_id, currentUser.id) && isSameDate(a.date, today));
+    if (todayRecord) {
+        alert('You are already clocked in for today.');
+        renderDashboard();
         return;
     }
 
+    const newRecord = {
+        id: String(Date.now()),
+        user_id: String(currentUser.id).trim(),
+        date: today,
+        login_time: nowStr,
+        logout_time: null,
+        status: 'Present',
+        remarks: remarks || 'Web Clock In',
+        ip_address: 'Client Web'
+    };
+
+    appData.attendance.unshift(newRecord);
+    saveDataStore();
+    await saveFirebaseDoc('attendance', newRecord.id, newRecord);
+
     if (remarksInput) remarksInput.value = '';
     renderDashboard();
+}
+
+// Clock Out Handler
+async function handleClockOut() {
+    if (!currentUser) return;
+    const today = getTodayString();
+    const nowStr = getDateTimeString();
+    const remarksInput = document.getElementById('clockRemarks');
+    const remarks = remarksInput ? remarksInput.value.trim() : '';
+
+    const btnClockOut = document.getElementById('btnClockOut');
+    if (btnClockOut) {
+        btnClockOut.disabled = true;
+        btnClockOut.textContent = 'Clocking Out...';
+    }
+
+    let todayRecord = appData.attendance.find(a => isSameUser(a.user_id, currentUser.id) && isSameDate(a.date, today));
+    if (!todayRecord) {
+        alert('Please clock in before clocking out.');
+        renderDashboard();
+        return;
+    }
+    if (todayRecord.logout_time) {
+        alert('You have already clocked out for today.');
+        renderDashboard();
+        return;
+    }
+
+    todayRecord.logout_time = nowStr;
+    if (remarks) todayRecord.remarks = (todayRecord.remarks ? todayRecord.remarks + ' | ' : '') + remarks;
+
+    saveDataStore();
+    await saveFirebaseDoc('attendance', todayRecord.id, todayRecord);
+
+    if (remarksInput) remarksInput.value = '';
+    renderDashboard();
+}
+
+// Clock Action Handler (Legacy / Fallback)
+async function toggleClockAction() {
+    const today = getTodayString();
+    const todayRecord = appData.attendance.find(a => isSameUser(a.user_id, currentUser.id) && isSameDate(a.date, today));
+    if (!todayRecord) {
+        await handleClockIn();
+    } else if (!todayRecord.logout_time) {
+        await handleClockOut();
+    } else {
+        alert('You have already clocked in and out for today.');
+    }
 }
 
 async function ensureMonthDataLoaded(month, year, userId = null) {
@@ -711,27 +833,24 @@ async function ensureMonthDataLoaded(month, year, userId = null) {
 }
 
 // VIEW 2: MY ATTENDANCE HISTORY
-async function renderMyAttendance(autoSelectLatest = false) {
+async function renderMyAttendance() {
     if (!currentUser) return;
 
     const monthEl = document.getElementById('myMonthFilter');
     const yearEl = document.getElementById('myYearFilter');
+    const current = getCurrentMonthYear();
 
-    if (autoSelectLatest) {
-        const myUserRecords = appData.attendance.filter(a => String(a.user_id) === String(currentUser.id))
-            .sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        if (myUserRecords.length > 0) {
-            const parts = myUserRecords[0].date.split('-');
-            if (parts.length === 3) {
-                yearEl.value = parts[0];
-                monthEl.value = String(parseInt(parts[1]));
-            }
-        }
+    if (monthEl && (!monthEl.value || !monthEl.dataset.initialized)) {
+        monthEl.value = current.month;
+        monthEl.dataset.initialized = 'true';
+    }
+    if (yearEl && (!yearEl.value || !yearEl.dataset.initialized)) {
+        yearEl.value = current.year;
+        yearEl.dataset.initialized = 'true';
     }
 
-    const month = parseInt(monthEl.value);
-    const year = parseInt(yearEl.value);
+    const month = parseInt(monthEl ? monthEl.value : current.month);
+    const year = parseInt(yearEl ? yearEl.value : current.year);
 
     // On-Demand fetch from Firestore if records for this selected month are not in local memory yet
     await ensureMonthDataLoaded(month, year, currentUser.id);
@@ -767,8 +886,21 @@ async function renderMyAttendance(autoSelectLatest = false) {
 async function renderTeamAttendance() {
     if (!isHrOrAdminUser()) return;
 
-    const month = parseInt(document.getElementById('teamMonthFilter').value);
-    const year = parseInt(document.getElementById('teamYearFilter').value);
+    const monthEl = document.getElementById('teamMonthFilter');
+    const yearEl = document.getElementById('teamYearFilter');
+    const current = getCurrentMonthYear();
+
+    if (monthEl && (!monthEl.value || !monthEl.dataset.initialized)) {
+        monthEl.value = current.month;
+        monthEl.dataset.initialized = 'true';
+    }
+    if (yearEl && (!yearEl.value || !yearEl.dataset.initialized)) {
+        yearEl.value = current.year;
+        yearEl.dataset.initialized = 'true';
+    }
+
+    const month = parseInt(monthEl ? monthEl.value : current.month);
+    const year = parseInt(yearEl ? yearEl.value : current.year);
 
     await ensureMonthDataLoaded(month, year);
 
@@ -990,8 +1122,21 @@ function switchSalarySubTab(tab) {
 }
 
 async function renderPayrollMonthlyTab() {
-    const month = parseInt(document.getElementById('payrollMonthFilter').value);
-    const year = parseInt(document.getElementById('payrollYearFilter').value);
+    const monthEl = document.getElementById('payrollMonthFilter');
+    const yearEl = document.getElementById('payrollYearFilter');
+    const current = getCurrentMonthYear();
+
+    if (monthEl && (!monthEl.value || !monthEl.dataset.initialized)) {
+        monthEl.value = current.month;
+        monthEl.dataset.initialized = 'true';
+    }
+    if (yearEl && (!yearEl.value || !yearEl.dataset.initialized)) {
+        yearEl.value = current.year;
+        yearEl.dataset.initialized = 'true';
+    }
+
+    const month = parseInt(monthEl ? monthEl.value : current.month);
+    const year = parseInt(yearEl ? yearEl.value : current.year);
     const totalDays = new Date(year, month, 0).getDate();
     const eomDate = `${year}-${String(month).padStart(2, '0')}-${totalDays}`;
 

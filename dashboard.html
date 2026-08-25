@@ -97,9 +97,14 @@
 
             <div class="clock-actions">
               <input type="text" id="clockRemarks" class="form-input" placeholder="Optional remark / note..." style="width: 220px; border: none; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
-              <button id="btnClockAction" class="btn btn-primary" onclick="toggleClockAction()">
-                Clock In
-              </button>
+              <div class="clock-btn-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <button id="btnClockIn" class="btn btn-primary btn-sm" style="min-width: 120px;" onclick="handleClockIn()">
+                  Clock In
+                </button>
+                <button id="btnClockOut" class="btn btn-secondary btn-sm" style="min-width: 120px;" onclick="handleClockOut()" disabled>
+                  Clock Out
+                </button>
+              </div>
             </div>
           </div>
 
@@ -178,7 +183,7 @@
                   <option value="4">April</option>
                   <option value="5">May</option>
                   <option value="6">June</option>
-                  <option value="7" selected>July</option>
+                  <option value="7">July</option>
                   <option value="8">August</option>
                   <option value="9">September</option>
                   <option value="10">October</option>
@@ -222,7 +227,7 @@
                   <option value="4">April</option>
                   <option value="5">May</option>
                   <option value="6">June</option>
-                  <option value="7" selected>July</option>
+                  <option value="7">July</option>
                   <option value="8">August</option>
                   <option value="9">September</option>
                   <option value="10">October</option>
@@ -328,7 +333,7 @@
                   <option value="4">April</option>
                   <option value="5">May</option>
                   <option value="6">June</option>
-                  <option value="7" selected>July</option>
+                  <option value="7">July</option>
                   <option value="8">August</option>
                   <option value="9">September</option>
                   <option value="10">October</option>
